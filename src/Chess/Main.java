@@ -21,6 +21,6 @@ public class Main
 
 		System.out.println("Ola Ola!");
 		System.out.println("Bonjour!");
-		System.out.println("Bonjour!");
+		System.out.println("Bonjour");
 	}
 }
