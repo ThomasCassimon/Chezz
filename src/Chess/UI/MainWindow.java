@@ -20,7 +20,6 @@ public class MainWindow extends JFrame
 	private Color colorWhite = Color.WHITE;
 
 
-
 	public MainWindow()
 	{
 		 super("Chezz!");
