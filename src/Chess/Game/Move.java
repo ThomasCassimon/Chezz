@@ -1,5 +1,7 @@
 package Chess.Game;
 
+import Chess.Exceptions.Unchecked.IllegalSquareException;
+
 /**
  * @author Thomas
  * @since 20/02/2017
@@ -106,6 +108,17 @@ public class Move
 	}
 
 	/**
+	 * Checks wheter or not a move contains an off-board space
+	 */
+	public void checkValid ()
+	{
+		if (((this.src & 0x88) != 0) || ((this.dst & 0x88) != 0))
+		{
+			throw new IllegalSquareException("Move from " + Byte.toString(this.src) + " to " + Byte.toString(this.dst) + " is not a valid move");
+		}
+	}
+
+	/**
 	 *
 	 * @return true if no captures are made by this move
 	 */
@@ -171,5 +184,20 @@ public class Move
 	public byte[] get2DDst ()
 	{
 		return ChessBoard.get2DCoord(this.dst);
+	}
+
+	/**
+	 * Converts the move to a string of the following format:
+	 * SRC - DST
+	 * Both SRC and DST are given in the usual file-first indexing, but with letter-number format
+	 * @return a string
+	 */
+	@Override
+	public String toString ()
+	{
+		byte[] srcCoords = ChessBoard.get2DCoord(this.src);
+		byte[] dstCoords = ChessBoard.get2DCoord(this.dst);
+
+		return ((char) (srcCoords[0] + ('A'-1))) + Byte.toString(srcCoords[1]) + "-" + ((char) (dstCoords[0] + ('A'-1))) + Byte.toString(dstCoords[1]);
 	}
 }
