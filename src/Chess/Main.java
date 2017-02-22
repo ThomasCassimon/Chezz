@@ -18,9 +18,5 @@ public class Main
 	public static void main (String[] args)
 	{
 		MainWindow mw = new MainWindow();
-
-		System.out.println("Ola Ola Ola!");
-		System.out.println("Bonjour!");
-		System.out.println("Bonjour");
 	}
 }
