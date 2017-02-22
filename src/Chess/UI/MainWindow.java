@@ -28,6 +28,8 @@ public class MainWindow extends JFrame
 		 	tiles[i] = new Tile();
 		 	panel.add(tiles[i]);
 		 }
+
+		 setVisible(true);
 	}
 
 
