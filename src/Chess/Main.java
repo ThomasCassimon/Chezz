@@ -20,5 +20,6 @@ public class Main
 		MainWindow mw = new MainWindow();
 
 		System.out.println("Ola!");
+		System.out.println("Bonjour!");
 	}
 }
