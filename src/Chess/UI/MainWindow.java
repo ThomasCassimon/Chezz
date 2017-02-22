@@ -37,6 +37,10 @@ public class MainWindow extends JFrame
 		 panel.setLayout(new GridLayout(8,8));
 
 
+		 /**
+		  * Forming the chess board
+		  */
+
 		 for (row=0; row <8; row++)
 		 {
 
