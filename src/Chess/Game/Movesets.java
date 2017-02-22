@@ -22,10 +22,10 @@ public final class Movesets
 	/*
 	 * Rook
 	 */
-	public static final byte[][] ROOK_MOVE = {  {0,1},  {0,2},  {0,3},  {0,4},  {0,5},  {0,6},  {0,7},  {0,8},          // Moving away of the player
-												{0,-1}, {0,-2}, {0,-3}, {0,-4}, {0,-5}, {0,-6}, {0,-7}, {0,-8},         // Moving towards the player
-												{1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},          // Moving to the player's right
-												{-1,0}, {-2,0}, {-3,0}, {-4,0}, {-5,0}, {-6,0}, {-7,0}, {-8,0}  };      // Moving to the player's left
+	public static final byte[][] ROOK_MOVE = {  {0,1},  {0,2},  {0,3},  {0,4},  {0,5},  {0,6},  {0,7},  {0,8},          // Moving away from the white player
+												{0,-1}, {0,-2}, {0,-3}, {0,-4}, {0,-5}, {0,-6}, {0,-7}, {0,-8},         // Moving towards the whute player
+												{1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},          // Moving to the white player's right
+												{-1,0}, {-2,0}, {-3,0}, {-4,0}, {-5,0}, {-6,0}, {-7,0}, {-8,0}  };      // Moving to the white player's left
 
 	/*
 	 * Knight
@@ -42,5 +42,8 @@ public final class Movesets
 													{-2,-1},	// Same as third
 													{2-1}};		// Same as fourth
 
-	public static final byte [][] BISHOP_MOVE = {{1,1}};
+	public static final byte [][] BISHOP_MOVE = {	{1,1},	{2,2},	{3,3},	{4,4},	{5,5},	{6,6},	{7,7},	{8,8},		// Bottom left to top right (from white's perspective)
+													{-1,1},	{-2,2},	{-3,3},	{-4,4},	{-5,5},	{-6,6},	{-7,7},	{-8,8},		// Bottom right to top left (from white's perspective)
+													{1,-1},	{2,-2},	{3,-3},	{4,-4},	{5,-5},	{6,-6},	{7,-7},	{8,-8},		// Top Left to bottom right (from white's perspective)
+													{-1,-1},{-2,-2},{-3,-3},{-4,-4},{-5,-5},{-6,-6},{-7,-7},{-8,-8}};	// Top right to bottom left (from white's perspective)
 }
