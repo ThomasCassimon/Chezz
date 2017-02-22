@@ -4,23 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by Astrid on 22/02/2017.
- */
+//Created by Astrid on 22/02/2017.
+
 public class MainWindow extends JFrame
 {
 	private JPanel panel = new JPanel();
 	private Tile tiles[] = new Tile[64];
 
-	/**
-	 *	Images
-	 */
+	//Images
 	private ImageIcon white_Pawn = new ImageIcon("PW.png");
 
 
-	/**
-	 *	Colors
-	 */
+	//Colors
 	private Color colorBlack = Color.BLACK;
 	private Color colorWhite = Color.WHITE;
 
@@ -38,9 +33,8 @@ public class MainWindow extends JFrame
 		 panel.setLayout(new GridLayout(8,8));
 
 
-		 /**
-		  * Forming the chess board
-		  */
+
+		//Forming the chess board
 
 		 for (row=0; row <8; row++)
 		 {
@@ -72,6 +66,4 @@ public class MainWindow extends JFrame
 		 add(panel);
 		 setVisible(true);
 	}
-
-
 }
