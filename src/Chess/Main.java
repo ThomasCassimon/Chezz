@@ -1,8 +1,5 @@
 package Chess;
 
-import Chess.Athena.AIPlayer;
-import Chess.Game.ChessBoard;
-import Chess.Game.PieceData;
 import Chess.UI.MainWindow;
 
 import java.util.Random;
