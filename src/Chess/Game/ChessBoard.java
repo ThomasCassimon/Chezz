@@ -1,0 +1,196 @@
+package Chess.Game;
+
+import Chess.Exceptions.Unchecked.IllegalSquareException;
+import Chess.Exceptions.Unchecked.IllegalPieceException;
+
+/**
+ * @author Thomas
+ * @since 20/02/2017
+ *
+ * Project: ChessGame
+ * Package: Chess.Game
+ */
+
+/**
+ * A Class to represent a chessboard. A 0x88 system is used to store board contents.</br>
+ * For more info: <a href="https://chessprogramming.wikispaces.com/0x88?responseToken=0e7f2c1d5523dda265cbd99001abf6ef1">ChessProgramming Wiki</a>
+ */
+public class ChessBoard
+{
+	private static final short BOARD_ARRAY_SIZE = 128;
+	/*
+	 *	Actual board...
+	 */
+	private byte[] board;
+
+	/**
+	 * Default Constructor, takes no arguments, initializes a board to an empty situation
+	 */
+	public ChessBoard()
+	{
+		this.board = new byte [BOARD_ARRAY_SIZE];
+	}
+
+	/**
+	 * Usually called right after the constructor, initializes the board to chess' default starting position
+	 * @return ChessBoard, returns itself for easy method chaining
+	 */
+	public ChessBoard init()
+	{
+		// Putting down pawns and empty spaces
+		for (byte i = 1; i <= 8; i++)
+		{
+			this.set(i, (byte) 2, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_MASK));
+			this.set(i, (byte) 3, (PieceData.EMPTY_BYTE));
+			this.set(i, (byte) 4, (PieceData.EMPTY_BYTE));
+			this.set(i, (byte) 5, (PieceData.EMPTY_BYTE));
+			this.set(i, (byte) 6, (PieceData.EMPTY_BYTE));
+			this.set(i, (byte) 7, (byte) (PieceData.PAWN_BYTE | PieceData.BLACK_MASK));
+		}
+
+		// Putting down Rooks
+		this.set((byte) 1, (byte) 1, (byte) (PieceData.ROOK_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 8, (byte) 1, (byte) (PieceData.ROOK_BYTE | PieceData.WHITE_MASK));
+
+		this.set((byte) 1, (byte) 8, (byte) (PieceData.ROOK_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 8, (byte) 8, (byte) (PieceData.ROOK_BYTE | PieceData.BLACK_MASK));
+
+		// Knights
+		this.set((byte) 2, (byte) 1, (byte) (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 7, (byte) 1, (byte) (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK));
+
+		this.set((byte) 2, (byte) 8, (byte) (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 7, (byte) 8, (byte) (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK));
+
+		// Bishops
+		this.set((byte) 3, (byte) 1, (byte) (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 6, (byte) 1, (byte) (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK));
+
+		this.set((byte) 3, (byte) 8, (byte) (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 6, (byte) 8, (byte) (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK));
+
+		// Queens
+		this.set((byte) 4, (byte) 1, (byte) (PieceData.QUEEN_BYTE | PieceData.WHITE_MASK));
+
+		this.set((byte) 4, (byte) 8, (byte) (PieceData.QUEEN_BYTE | PieceData.BLACK_MASK));
+
+		// Kings
+		this.set((byte) 5, (byte) 1, (byte) (PieceData.KING_BYTE | PieceData.WHITE_MASK));
+
+		this.set((byte) 5, (byte) 8, (byte) (PieceData.KING_BYTE | PieceData.BLACK_MASK));
+
+		return this;
+	}
+
+	/**
+	 * This method returns a byte-code that represents a certain piece.
+	 * A rank is a number from 1 to 7 (both inclusive)
+	 * A file is letter from A to H (both inclusive, case insensitive)
+	 * @param rank The rank of the piece (1-7)
+	 * @param file The file of the piece (A-H)
+	 * @return A byte representing the piece
+	 */
+	public byte get (byte file, byte rank) throws IllegalSquareException
+	{
+		return this.board[get0x88Index(file, rank)];
+	}
+
+	/**
+	 * Sets the specified square to contain the specified piece.
+	 * Throws an exception if either the square or the piece are invalid
+	 * @param file The piece's file
+	 * @param rank The piece's rank
+	 * @param piece The piece's byte representation
+	 * @throws IllegalSquareException
+	 * @throws IllegalPieceException
+	 */
+	public void set (byte file, byte rank, byte piece) throws IllegalSquareException, IllegalPieceException
+	{
+		byte bitMask = (byte) ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
+
+		byte index = get0x88Index(file, rank);
+
+		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
+		{
+			throw new IllegalPieceException(Byte.toString(piece) + " (" + (piece & bitMask) + ") is not a valid piece byte");
+		}
+		else
+		{
+			this.board[index] = piece;
+		}
+	}
+
+	/**
+	 * Translates file-first indexing to 0x88 indexing, throws exception for invalid coordinates
+	 * A rank is a number from 1 to 7 (both inclusive)
+	 * A file is letter from A to H (both inclusive, case insensitive)
+	 * @param rank The rank of the piece (1-7)
+	 * @param file The file of the piece (A-H)
+	 * @return A 0x88 index
+	 * @throws IllegalSquareException
+	 */
+	public static byte get0x88Index (byte file, byte rank) throws IllegalSquareException
+	{
+		byte index = (byte) ((16 * (rank - 1)) + (file - 1));   // Calculating 0x88 index
+		// The -1's correct for arrays starting at 0
+		// But board-indexing starting at 1
+
+		if ((index & 0x88) != 0)
+		{
+			throw new IllegalSquareException(Byte.toString(rank) + Byte.toString(file) + " is not a valid square");
+		}
+		else
+		{
+			return index;
+		}
+	}
+
+	/**
+	 * Translates 0x88 indexing to file-first indexing, throws exception for invalid coordinates
+	 * A rank is a number from 1 to 7 (both inclusive)
+	 * A file is letter from A to H (both inclusive, case insensitive)
+	 * @param index The 0x88 index of the square
+	 * @return A 2-byte array, file-first indexing
+	 * @throws IllegalSquareException
+	 */
+	public static byte[] get2DCoord (byte index)
+	{
+		byte[] res = new byte [2];
+
+		res[0] = (byte) ((index & 7) + 1);
+		res[1] = (byte) ((index >> 4) + 1);
+
+		return res;
+	}
+
+	/**
+	 * Returns a string representation of the board
+	 * @param localeByte A locale byte to indicate the desired locale
+	 * @return A string (containing newlines) that is a textual representation of the board
+	 */
+	public String toString (byte localeByte)
+	{
+		String res = "";
+
+		for (byte i = 1; i <= 8; i++)
+		{
+			for (byte j = 1; j <= 8; j++)
+			{
+				res += PieceData.toShortFromByte((byte) (this.get(j, i) & 0x0F), localeByte);
+			}
+
+			res += "\n";
+		}
+
+		return res;
+	}
+
+	/**
+	 * Wrapper method for {@link ChessBoard#toString()}
+	 * @param localeByte A byte representing the desired locale
+	 */
+	public void print (byte localeByte)
+	{
+		System.out.println(this.toString(localeByte));
+	}
+}
