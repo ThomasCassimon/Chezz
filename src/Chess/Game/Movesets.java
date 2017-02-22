@@ -23,9 +23,9 @@ public final class Movesets
 	 * Rook
 	 */
 	public static final byte[][] ROOK_MOVE = {  {0,1},  {0,2},  {0,3},  {0,4},  {0,5},  {0,6},  {0,7},  {0,8},          // Moving away from the white player
-												{0,-1}, {0,-2}, {0,-3}, {0,-4}, {0,-5}, {0,-6}, {0,-7}, {0,-8},         // Moving towards the whute player
+												{0,-1}, {0,-2}, {0,-3}, {0,-4}, {0,-5}, {0,-6}, {0,-7}, {0,-8},         // Moving towards the white player
 												{1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},          // Moving to the white player's right
-												{-1,0}, {-2,0}, {-3,0}, {-4,0}, {-5,0}, {-6,0}, {-7,0}, {-8,0}  };      // Moving to the white player's left
+												{-1,0}, {-2,0}, {-3,0}, {-4,0}, {-5,0}, {-6,0}, {-7,0}, {-8,0}  };		// Moving to the white player's left
 
 	/*
 	 * Knight
@@ -33,17 +33,40 @@ public final class Movesets
 	 * 								Followed by 4 moves in a down fashion (away from the black player)
 	 */
 
-	public static final byte[][] KNIGHT_MOVE =	{	{-1, 2},	// 		_|
+	public static final byte[][] KNIGHT_MOVE =	{	{-1,2},		// 		_|
 													{1,2},		//  		|_
 													{-2,1},		// __|
 													{2,1},		//		|__
 													{-1,-2},	// Same as first
 													{1,-2},		// Same as second
 													{-2,-1},	// Same as third
-													{2-1}};		// Same as fourth
-
+													{2,-1}};		// Same as fourth
+	/*
+	 * Bishop
+	 */
 	public static final byte [][] BISHOP_MOVE = {	{1,1},	{2,2},	{3,3},	{4,4},	{5,5},	{6,6},	{7,7},	{8,8},		// Bottom left to top right (from white's perspective)
 													{-1,1},	{-2,2},	{-3,3},	{-4,4},	{-5,5},	{-6,6},	{-7,7},	{-8,8},		// Bottom right to top left (from white's perspective)
 													{1,-1},	{2,-2},	{3,-3},	{4,-4},	{5,-5},	{6,-6},	{7,-7},	{8,-8},		// Top Left to bottom right (from white's perspective)
 													{-1,-1},{-2,-2},{-3,-3},{-4,-4},{-5,-5},{-6,-6},{-7,-7},{-8,-8}};	// Top right to bottom left (from white's perspective)
+
+	/*
+	 * Queen = Rook + Bishop
+	 */
+	public static final byte [][] QUEEN_MOVE =	{	{0,1},  {0,2},  {0,3},  {0,4},  {0,5},  {0,6},  {0,7},  {0,8},			// Moving away from the white player
+													{0,-1}, {0,-2}, {0,-3}, {0,-4}, {0,-5}, {0,-6}, {0,-7}, {0,-8},         // Moving towards the white player
+													{1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},          // Moving to the white player's right
+													{-1,0}, {-2,0}, {-3,0}, {-4,0}, {-5,0}, {-6,0}, {-7,0}, {-8,0},		    // Moving to the white player's left
+													{1,1},	{2,2},	{3,3},	{4,4},	{5,5},	{6,6},	{7,7},	{8,8},			// Bottom left to top right (from white's perspective)
+													{-1,1},	{-2,2},	{-3,3},	{-4,4},	{-5,5},	{-6,6},	{-7,7},	{-8,8},			// Bottom right to top left (from white's perspective)
+													{1,-1},	{2,-2},	{3,-3},	{4,-4},	{5,-5},	{6,-6},	{7,-7},	{8,-8},			// Top Left to bottom right (from white's perspective)
+													{-1,-1},{-2,-2},{-3,-3},{-4,-4},{-5,-5},{-6,-6},{-7,-7},{-8,-8}};		// Top right to bottom left (from white's perspective)
+
+	public static byte [][] KING_MOVE =		{	{0,1},		// Away from white
+												{0,-1},		// Closer to white
+												{1,0},		// To the right from white's perspective
+												{-1,0},		// To the left from white's perspective
+												{1,1},		// Away and to the right from white's view
+												{-1,1},		// Away and to the left from white's view
+												{1,-1},		// Closer and to the right from white's view
+												{-1,-1}};	// Closer and to the left from white's view
 }

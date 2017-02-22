@@ -76,11 +76,12 @@ public class GameManager
 		return this.activeColor;
 	}
 
-	// todo set active color to white
-	// todo reset players
 	public void init ()
 	{
 		this.cb.init();
+		this.activeColor = PieceData.WHITE_MASK;
+		this.players[0] = new HumanPlayer(PieceData.WHITE_MASK);
+		this.players[1] = new HumanPlayer(PieceData.BLACK_MASK);
 	}
 
 	public Piece get (byte file, byte rank)
