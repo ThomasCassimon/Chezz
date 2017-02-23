@@ -4,9 +4,6 @@ import Chess.Game.*;
 import Chess.UI.MainWindow;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static java.lang.Math.abs;
 
 /**
  * @author Thomas
@@ -19,16 +16,27 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		MainWindow mw = new MainWindow();
+		//MainWindow mw = new MainWindow();
 
 		GameManager gm = new GameManager();
 		gm.init();
 
 		ArrayList<Piece> whitePieces = gm.getAllWhitePieces();
+		ArrayList<Move> validMoves = new ArrayList<>();
 
 		for (Piece p : whitePieces)
 		{
-			System.out.println(p.toString());
+			if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+			{
+				validMoves = gm.getAllValidMoves(p);
+
+				System.out.println("Found " + validMoves.size() + " valid moves for " + p.toString());
+
+				for (byte i = 0; i < validMoves.size(); i++)
+				{
+					System.out.println("Rook moves: " + validMoves.get(i).toString());
+				}
+			}
 		}
 	}
 }
