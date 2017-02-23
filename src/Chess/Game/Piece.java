@@ -4,6 +4,8 @@ import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Exceptions.Unchecked.IllegalSquareException;
 
+import java.util.ArrayList;
+
 /**
  * @author Thomas
  * @since 20/02/2017
@@ -101,53 +103,36 @@ public class Piece
 	 * The only factor taken into account is wheter or not the moves would land the piece off the board
 	 * @return All moves that won't land the piece outside the board
 	 */
-	public Move[] getAllPossibleMoves ()
+	public ArrayList<Move> getAllPossibleMoves ()
 	{
 		int size = 0;
 		int j;
-		Move[] tmp;
-		Move[] moveArray;
+		ArrayList<Move> moves;
 
 		switch (this.pieceByte & (0x07))
 		{
 			case PieceData.PAWN_BYTE:
 				if ((this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK)) == PieceData.WHITE_MASK)
 				{
-					tmp = new Move[Movesets.PAWN_MOVE_WHITE.length];
+					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_WHITE.length);
 
-					for (int i = 0; i < tmp.length; i++)
+					for (int i = 0; i < Movesets.PAWN_MOVE_WHITE.length; i++)
 					{
-						byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-						oriPos[0] += Movesets.PAWN_MOVE_WHITE[i][0];
-						oriPos[1] += Movesets.PAWN_MOVE_WHITE[i][1];
-
-						try
+						if ((Movesets.PAWN_MOVE_WHITE[i] & 0x88) == 0)
 						{
-							tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-						}
-						catch (IllegalSquareException ise)
-						{
-							tmp[i] = null;
+							moves.add(new Move (this.positionByte, Movesets.PAWN_MOVE_WHITE[i], (byte) 0x0));
 						}
 					}
 				}
 				else if ((this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK)) == PieceData.BLACK_MASK)
 				{
-					tmp = new Move[Movesets.PAWN_MOVE_BLACK.length];
+					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_BLACK.length);
 
-					for (int i = 0; i < tmp.length; i++)
+					for (int i = 0; i < Movesets.PAWN_MOVE_BLACK.length; i++)
 					{
-						byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-						oriPos[0] += Movesets.PAWN_MOVE_BLACK[i][0];
-						oriPos[1] += Movesets.PAWN_MOVE_BLACK[i][1];
-
-						try
+						if ((Movesets.PAWN_MOVE_BLACK[i] & 0x88) == 0)
 						{
-							tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-						}
-						catch (IllegalSquareException ise)
-						{
-							tmp[i] = null;
+							moves.add(new Move (this.positionByte, Movesets.PAWN_MOVE_BLACK[i], (byte) 0x0));
 						}
 					}
 				}
@@ -156,246 +141,100 @@ public class Piece
 					throw new IllegalSideException(Byte.toString((byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK))) + " is not a valid side-byte.");
 				}
 
-				for (Move m : tmp)
-				{
-					if (m != null)
-					{
-						size++;
-					}
-				}
+				moves.trimToSize();
 
-				moveArray = new Move [size];
-
-				j = 0;
-
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] != null)
-					{
-						moveArray[j] = tmp[i];
-						moveArray[j].checkValid();
-						j++;
-					}
-				}
-
-				return moveArray;
+				return moves;
 
 			case PieceData.ROOK_BYTE:
-				tmp = new Move [Movesets.ROOK_MOVE.length];
+				moves = new ArrayList <Move> (Movesets.ROOK_MOVE.length);
 
-				for (int i = 0; i < tmp.length; i++)
+				for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
 				{
-					byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-					oriPos[0] += Movesets.ROOK_MOVE[i][0];
-					oriPos[1] += Movesets.ROOK_MOVE[i][1];
-
-					try
+					if ((Movesets.ROOK_MOVE[i] & 0x88) == 0)
 					{
-						tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-					}
-					catch (IllegalSquareException ise)
-					{
-						tmp[i] = null;
+						moves.add(new Move (this.positionByte, Movesets.ROOK_MOVE[i], (byte) 0x0));
 					}
 				}
 
-				for (Move m : tmp)
-				{
-					if (m != null)
-					{
-						size++;
-					}
-				}
+				moves.trimToSize();
 
-				moveArray = new Move [size];
-
-				j = 0;
-
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] != null)
-					{
-						moveArray[j] = tmp[i];
-						moveArray[j].checkValid();
-						j++;
-					}
-				}
-
-				return moveArray;
+				return moves;
 
 			case PieceData.KNIGHT_BYTE:
-				tmp = new Move [Movesets.KNIGHT_MOVE.length];
+				moves = new ArrayList <Move> (Movesets.KNIGHT_MOVE.length);
 
-				for (int i = 0; i < tmp.length; i++)
+				for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
 				{
-					byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-					oriPos[0] += Movesets.KNIGHT_MOVE[i][0];
-					oriPos[1] += Movesets.KNIGHT_MOVE[i][1];
-
-					try
+					if ((Movesets.KNIGHT_MOVE[i] & 0x88) == 0)
 					{
-						tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-					}
-					catch (IllegalSquareException ise)
-					{
-						tmp[i] = null;
-					}
-				}
-				for (Move m : tmp)
-				{
-					if (m != null)
-					{
-						size++;
+						moves.add(new Move (this.positionByte, Movesets.KNIGHT_MOVE[i], (byte) 0x0));
 					}
 				}
 
-				moveArray = new Move [size];
+				moves.trimToSize();
 
-				j = 0;
-
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] != null)
-					{
-						moveArray[j] = tmp[i];
-						moveArray[j].checkValid();
-						j++;
-					}
-				}
-
-				return moveArray;
+				return moves;
 
 			case PieceData.BISHOP_BYTE:
-				tmp = new Move [Movesets.BISHOP_MOVE.length];
+				moves = new ArrayList <Move> (Movesets.BISHOP_MOVE.length);
 
-				for (int i = 0; i < tmp.length; i++)
+				for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
 				{
-					byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-					oriPos[0] += Movesets.BISHOP_MOVE[i][0];
-					oriPos[1] += Movesets.BISHOP_MOVE[i][1];
-
-					try
+					if ((Movesets.BISHOP_MOVE[i] & 0x88) == 0)
 					{
-						tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-					}
-					catch (IllegalSquareException ise)
-					{
-						tmp[i] = null;
+						moves.add(new Move (this.positionByte, Movesets.BISHOP_MOVE[i], (byte) 0x0));
 					}
 				}
 
-				for (Move m : tmp)
-				{
-					if (m != null)
-					{
-						size++;
-					}
-				}
+				moves.trimToSize();
 
-				moveArray = new Move [size];
-
-				j = 0;
-
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] != null)
-					{
-						moveArray[j] = tmp[i];
-						moveArray[j].checkValid();
-						j++;
-					}
-				}
-
-				return moveArray;
+				return moves;
 
 			case PieceData.QUEEN_BYTE:
-				tmp = new Move [Movesets.QUEEN_MOVE.length];
+				moves = new ArrayList <Move> (Movesets.QUEEN_MOVE.length);
 
-				for (int i = 0; i < tmp.length; i++)
+				for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
 				{
-					byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-					oriPos[0] += Movesets.QUEEN_MOVE[i][0];
-					oriPos[1] += Movesets.QUEEN_MOVE[i][1];
-
-					try
+					if ((Movesets.QUEEN_MOVE[i] & 0x88) == 0)
 					{
-						tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-					}
-					catch (IllegalSquareException ise)
-					{
-						tmp[i] = null;
+						moves.add(new Move (this.positionByte, Movesets.QUEEN_MOVE[i], (byte) 0x0));
 					}
 				}
 
-				for (Move m : tmp)
-				{
-					if (m != null)
-					{
-						size++;
-					}
-				}
+				moves.trimToSize();
 
-				moveArray = new Move [size];
-
-				j = 0;
-
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] != null)
-					{
-						moveArray[j] = tmp[i];
-						moveArray[j].checkValid();
-						j++;
-					}
-				}
-
-				return moveArray;
+				return moves;
 
 			case PieceData.KING_BYTE:
-				tmp = new Move [Movesets.KING_MOVE.length];
+				moves = new ArrayList <Move> (Movesets.KING_MOVE.length);
 
-				for (int i = 0; i < tmp.length; i++)
+				for (int i = 0; i < Movesets.KING_MOVE.length; i++)
 				{
-					byte[] oriPos = ChessBoard.get2DCoord(this.getPositionByte());
-					oriPos[0] += Movesets.KING_MOVE[i][0];
-					oriPos[1] += Movesets.KING_MOVE[i][1];
-
-					try
+					if ((Movesets.KING_MOVE[i] & 0x88) == 0)
 					{
-						tmp[i] = new Move (this.positionByte, ChessBoard.get0x88Index(oriPos[0], oriPos[1]), (byte) 0x0);
-					}
-					catch (IllegalSquareException ise)
-					{
-						tmp[i] = null;
+						moves.add(new Move (this.positionByte, Movesets.KING_MOVE[i], (byte) 0x0));
 					}
 				}
 
-				for (Move m : tmp)
-				{
-					if (m != null)
-					{
-						size++;
-					}
-				}
+				moves.trimToSize();
 
-				moveArray = new Move [size];
+				return moves;
 
-				j = 0;
-
-				for (int i = 0; i < tmp.length; i++)
-				{
-					if (tmp[i] != null)
-					{
-						moveArray[j] = tmp[i];
-						moveArray[j].checkValid();
-						j++;
-					}
-				}
-
-				return moveArray;
 
 			default:
 				throw new IllegalPieceException(Byte.toString(this.pieceByte) + " is not a valid piece-byte.");
 		}
+	}
+
+	public byte getColorByte ()
+	{
+		return (byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK));
+	}
+
+	@Override
+	public String toString ()
+	{
+		byte[] coords = ChessBoard.get2DCoord(this.positionByte);
+		return PieceData.toStringFromByte((byte) (this.pieceByte & 0x07), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + ('A'-1))) + Byte.toString(coords[1]);
 	}
 }

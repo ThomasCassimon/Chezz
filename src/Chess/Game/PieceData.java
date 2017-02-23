@@ -1,6 +1,7 @@
 package Chess.Game;
 
 import Chess.Exceptions.Unchecked.IllegalPieceException;
+import Chess.Exceptions.Unchecked.IllegalSideException;
 
 /**
  * @author Thomas
@@ -324,6 +325,28 @@ public final class PieceData
 				return 0;
 			default:
 				throw new IllegalPieceException(Byte.toString(pieceByte) + " is not a valid piece byte");
+		}
+	}
+
+	/**
+	 * Thie function finds the color byte of the opponent
+	 * @param color The players color
+	 * @return The opponent's color
+	 * @throws IllegalSideException
+	 */
+	public static byte getOpponentColorByte (byte color) throws IllegalSideException
+	{
+		if (color == PieceData.WHITE_MASK)
+		{
+			return PieceData.BLACK_MASK;
+		}
+		else if (color == PieceData.BLACK_MASK)
+		{
+			return PieceData.WHITE_MASK;
+		}
+		else
+		{
+			throw new IllegalSideException(Byte.toString(color) + " is not a valid color byte.");
 		}
 	}
 }

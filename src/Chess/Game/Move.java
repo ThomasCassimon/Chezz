@@ -11,6 +11,8 @@ import Chess.Exceptions.Unchecked.IllegalSquareException;
  */
 public class Move
 {
+	public static final byte CAPTURE_MASK = 0x04;
+	public static final byte PROMO_MASK = 0x08;
 	/**
 	 * Both src and dst are stored as 0x88 squares
 	 */
@@ -101,10 +103,12 @@ public class Move
 	/**
 	 * Sets the objects special byte
 	 * @param special the desired special byte
+	 * @return returns the move after the changes have been made for easy method chaining
 	 */
-	public void setSpecial (byte special)
+	public Move setSpecial (byte special)
 	{
 		this.special = special;
+		return this;
 	}
 
 	/**

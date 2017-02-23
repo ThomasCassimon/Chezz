@@ -96,6 +96,17 @@ public class ChessBoard
 	}
 
 	/**
+	 * This method returns a byte-code that represents a certain piece.
+	 * The index is a valid 0x88 index
+	 * @param index
+	 * @return A byte representing the piece
+	 */
+	public byte get (byte index)
+	{
+		return this.board[index];
+	}
+
+	/**
 	 * Sets the specified square to contain the specified piece.
 	 * Throws an exception if either the square or the piece are invalid
 	 * @param file The piece's file
@@ -109,6 +120,28 @@ public class ChessBoard
 		byte bitMask = (byte) ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
 
 		byte index = get0x88Index(file, rank);
+
+		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
+		{
+			throw new IllegalPieceException(Byte.toString(piece) + " (" + (piece & bitMask) + ") is not a valid piece byte");
+		}
+		else
+		{
+			this.board[index] = piece;
+		}
+	}
+
+	/**
+	 * Sets the specified square to contain the specified piece.
+	 * Throws an exception if either the square or the piece are invalid
+	 * @param index
+	 * @param piece The piece's byte representation
+	 * @throws IllegalSquareException
+	 * @throws IllegalPieceException
+	 */
+	public void set (byte index, byte piece) throws IllegalSquareException, IllegalPieceException
+	{
+		byte bitMask = (byte) ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
 
 		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
 		{
