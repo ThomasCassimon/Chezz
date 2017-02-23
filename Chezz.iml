@@ -7,7 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
@@ -27,7 +27,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="hamcrest-core-1.31" level="project" />
     <orderEntry type="library" name="junit-4.12" level="project" />
+    <orderEntry type="library" name="hamcrest-core-1.31" level="project" />
   </component>
 </module>

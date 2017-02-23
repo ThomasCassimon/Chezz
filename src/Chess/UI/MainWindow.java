@@ -8,60 +8,23 @@ import java.util.ArrayList;
 
 public class MainWindow extends JFrame
 {
-	private JPanel panel = new JPanel();
-	private Tile tiles[] = new Tile[64];
+	//private JPanel panel = new JPanel();
+	private Board board;
 
-	//Images
-	private ImageIcon white_Pawn = new ImageIcon("PW.png");
-
-
-	//Colors
-	private Color colorBlack = Color.BLACK;
-	private Color colorWhite = Color.WHITE;
 
 	public MainWindow()
 	{
 		 super("Chezz!");
-
-		 int row,col, arrayIndex;
-
-		 setSize(800,800);
+		 board = new Board();
+		 setSize(900,900);
 		 setResizable(false);
 		 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		 panel.setLayout(new GridLayout(8,8));
 
+		 //panel.add(board);
 
+		 //add(panel);
+		this.add(board);
 
-		//Forming the chess board
-
-		 for (row=0; row <8; row++)
-		 {
-
-		 	for (col=0;col<8;col++)
-			{
-				arrayIndex = (row * 8) + col;
-
-
-				tiles[arrayIndex] = new Tile();
-
-				if ( (row + col)%2 == 0)
-				{
-					tiles[arrayIndex].setBackground(colorBlack);
-				}
-				else
-				{
-					tiles[arrayIndex].setBackground(colorWhite);
-				}
-
-				tiles[arrayIndex].setOpaque(true);
-				tiles[arrayIndex].setBorderPainted(false);
-
-				panel.add(tiles[arrayIndex]);
-			}
-
-		 }
-
-		 add(panel);
 		 setVisible(true);
 	}
 }
