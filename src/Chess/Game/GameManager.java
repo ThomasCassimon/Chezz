@@ -4,6 +4,8 @@ import Chess.Athena.AIPlayer;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.abs;
+
 /**
  * @author Thomas
  * @since 21/02/2017
@@ -153,23 +155,71 @@ public class GameManager
 
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
+		byte piece = p.getPieceWithoutColorByte();
 		byte color = p.getColorByte();
 		ArrayList <Move> possibleMoves = p.getAllPossibleMoves();
 
 		for (byte i = 0; i < possibleMoves.size(); i++)
 		{
 			Move m = possibleMoves.get(i);
-			byte src = possibleMoves.get(i).getSrc();
-			byte dst = possibleMoves.get(i).getDst();
+			byte src = m.getSrc();
+			byte dst = m.getDst();
+			byte deltaRank = (byte) abs((src >> 4) - (dst >> 4));
+			byte deltaFile = (byte) abs((src & 7) - (dst & 7));
 
 			if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (color))
 			{
 				possibleMoves.remove(i);
 				i--;
+				continue;
 			}
 			else if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (PieceData.getOpponentColorByte(color)))
 			{
 				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
+			}
+
+			switch (piece)
+			{
+				case PieceData.PAWN_BYTE:
+					// Checking for pieces along move path
+					if (deltaRank != 1)
+					{
+
+					}
+					break;
+				case PieceData.ROOK_BYTE:
+					// Checking for pieces along the move path
+
+					if (deltaRank != 0)
+					{
+						for (byte j = 1; j <= deltaRank; j++)
+						{
+							if (this.cb.get((byte) (src + (j * 0x10))) != 0)
+							{
+								possibleMoves.remove(i);
+								i--;
+								break;
+							}
+						}
+					}
+					else if (deltaFile != 0)
+					{
+						for (byte j = 1; j <= deltaFile; j++)
+						{
+							if (this.cb.get((byte) (src + j)) != 0)
+							{
+								possibleMoves.remove(i);
+								i--;
+								break;
+							}
+						}
+					}
+					else
+					{
+						possibleMoves.remove(i);
+						i--;
+					}
+					break;
 			}
 		}
 

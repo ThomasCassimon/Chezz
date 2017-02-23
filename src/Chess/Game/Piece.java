@@ -118,9 +118,9 @@ public class Piece
 
 					for (int i = 0; i < Movesets.PAWN_MOVE_WHITE.length; i++)
 					{
-						if ((Movesets.PAWN_MOVE_WHITE[i] & 0x88) == 0)
+						if (((this.positionByte + Movesets.PAWN_MOVE_WHITE[i]) & 0x88) == 0)
 						{
-							moves.add(new Move (this.positionByte, Movesets.PAWN_MOVE_WHITE[i], (byte) 0x0));
+							moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.PAWN_MOVE_WHITE[i]), (byte) 0x0));
 						}
 					}
 				}
@@ -130,9 +130,9 @@ public class Piece
 
 					for (int i = 0; i < Movesets.PAWN_MOVE_BLACK.length; i++)
 					{
-						if ((Movesets.PAWN_MOVE_BLACK[i] & 0x88) == 0)
+						if (((this.positionByte + Movesets.PAWN_MOVE_BLACK[i]) & 0x88) == 0)
 						{
-							moves.add(new Move (this.positionByte, Movesets.PAWN_MOVE_BLACK[i], (byte) 0x0));
+							moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.PAWN_MOVE_BLACK[i]), (byte) 0x0));
 						}
 					}
 				}
@@ -150,9 +150,9 @@ public class Piece
 
 				for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
 				{
-					if ((Movesets.ROOK_MOVE[i] & 0x88) == 0)
+					if (((this.positionByte + Movesets.ROOK_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, Movesets.ROOK_MOVE[i], (byte) 0x0));
+						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.ROOK_MOVE[i]), (byte) 0x0));
 					}
 				}
 
@@ -165,9 +165,9 @@ public class Piece
 
 				for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
 				{
-					if ((Movesets.KNIGHT_MOVE[i] & 0x88) == 0)
+					if (((this.positionByte + Movesets.KNIGHT_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, Movesets.KNIGHT_MOVE[i], (byte) 0x0));
+						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.KNIGHT_MOVE[i]), (byte) 0x0));
 					}
 				}
 
@@ -180,9 +180,9 @@ public class Piece
 
 				for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
 				{
-					if ((Movesets.BISHOP_MOVE[i] & 0x88) == 0)
+					if (((this.positionByte + Movesets.BISHOP_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, Movesets.BISHOP_MOVE[i], (byte) 0x0));
+						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.BISHOP_MOVE[i]), (byte) 0x0));
 					}
 				}
 
@@ -195,9 +195,9 @@ public class Piece
 
 				for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
 				{
-					if ((Movesets.QUEEN_MOVE[i] & 0x88) == 0)
+					if (((this.positionByte + Movesets.QUEEN_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, Movesets.QUEEN_MOVE[i], (byte) 0x0));
+						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.QUEEN_MOVE[i]), (byte) 0x0));
 					}
 				}
 
@@ -210,9 +210,9 @@ public class Piece
 
 				for (int i = 0; i < Movesets.KING_MOVE.length; i++)
 				{
-					if ((Movesets.KING_MOVE[i] & 0x88) == 0)
+					if (((this.positionByte + Movesets.KING_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, Movesets.KING_MOVE[i], (byte) 0x0));
+						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.KING_MOVE[i]), (byte) 0x0));
 					}
 				}
 
@@ -229,6 +229,11 @@ public class Piece
 	public byte getColorByte ()
 	{
 		return (byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK));
+	}
+
+	public byte getPieceWithoutColorByte ()
+	{
+		return (byte) (this.pieceByte & ~(PieceData.WHITE_MASK | PieceData.BLACK_MASK));
 	}
 
 	@Override
