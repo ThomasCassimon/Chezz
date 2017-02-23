@@ -151,19 +151,29 @@ public class GameManager
 		return pieces;
 	}
 
-	public void getAllValidMoves (Piece p)
+	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
-		byte pos = p.getPositionByte();
 		byte color = p.getColorByte();
 		ArrayList <Move> possibleMoves = p.getAllPossibleMoves();
 
 		for (byte i = 0; i < possibleMoves.size(); i++)
 		{
-			if (this.cb.get(possibleMoves.get(i).getDst()))
-			{
+			Move m = possibleMoves.get(i);
+			byte src = possibleMoves.get(i).getSrc();
+			byte dst = possibleMoves.get(i).getDst();
 
+			if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (color))
+			{
+				possibleMoves.remove(i);
+				i--;
+			}
+			else if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (PieceData.getOpponentColorByte(color)))
+			{
+				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
 			}
 		}
+
+		return possibleMoves;
 	}
 
 	/**
