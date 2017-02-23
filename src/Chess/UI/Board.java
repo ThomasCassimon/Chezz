@@ -13,8 +13,8 @@ public class Board extends JPanel
 	private static int BOARD_DIMENSION = 8;
 
 	//Colors
-	private Color colorBlack = new Color(139,69,19);
-	private Color colorWhite = new Color(210,180,140);
+	private Color colorBlack = new Color(140,70,20); 	//Saddlebrown (RGB 139,69,19)
+	private Color colorWhite = new Color(210,180,140); 	//Tan (RGB 210,180,140)
 
 	//Images
 	private ImageIcon white_Pawn = new ImageIcon("PW.png");
@@ -56,6 +56,15 @@ public class Board extends JPanel
 				this.add(tiles[arrayIndex]);
 			}
 
+			JLabel label = new JLabel(" " + Integer.toString(row+1));
+			label.setBackground(Color.white);
+			label.setHorizontalAlignment(SwingConstants.LEFT);
+			label.setVerticalAlignment(SwingConstants.CENTER);
+			label.setFont(label.getFont().deriveFont(35.0f));
+			label.setOpaque(true);
+
+			this.add(label);
+
 		}
 
 		for (col=0;col<8;col++)
@@ -69,6 +78,11 @@ public class Board extends JPanel
 			letter++;
 			this.add(label );
 		}
+
+		JLabel label = new JLabel("");
+		label.setBackground(Color.white);
+		label.setOpaque(true);
+		this.add(label);
 
 
 	}
