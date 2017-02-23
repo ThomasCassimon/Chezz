@@ -15,6 +15,7 @@ public class MainWindow extends JFrame
 	private ImageIcon white_Pawn = new ImageIcon("PW.png");
 
 
+
 	//Colors
 	private Color colorBlack = Color.BLACK;
 	private Color colorWhite = Color.WHITE;
