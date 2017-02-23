@@ -2,6 +2,8 @@ package Chess.Game;
 
 import Chess.Athena.AIPlayer;
 
+import java.util.ArrayList;
+
 /**
  * @author Thomas
  * @since 21/02/2017
@@ -59,23 +61,33 @@ public class GameManager
 		}
 	}
 
+	/**
+	 * Toggles the active player
+	 */
 	public void toggleActivePlayer ()
 	{
 		if (this.activeColor == PieceData.WHITE_MASK)
 		{
-			this.activeColor = PieceData.BLACK_MASK;
+			this.activeColor = (byte) (this.activeColor << 1);
 		}
 		else
 		{
-			this.activeColor = PieceData.WHITE_MASK;
+			this.activeColor = (byte) (this.activeColor >> 1);
 		}
 	}
 
+	/**
+	 * Returns the color byte of the currently active player
+	 * @return the color byte of the player who's turn it is
+	 */
 	public byte getActiveColorByte ()
 	{
 		return this.activeColor;
 	}
 
+	/**
+	 * Initializes the game to it's starting position/situation
+	 */
 	public void init ()
 	{
 		this.cb.init();
@@ -84,8 +96,83 @@ public class GameManager
 		this.players[1] = new HumanPlayer(PieceData.BLACK_MASK);
 	}
 
+	/**
+	 * Returns the piece at the specified file and rank
+	 * @param file	The file of the piece
+	 * @param rank	The rank of the piece
+	 * @return	The piece at coordinate file-rank
+	 */
 	public Piece get (byte file, byte rank)
 	{
 		return new Piece(this.cb.get(file, rank), ChessBoard.get0x88Index(file, rank));
+	}
+
+	/**
+	 * Returns an array of all pieces belonging to the white player
+	 * @return	All white pieces
+	 */
+	public ArrayList<Piece> getAllWhitePieces ()
+	{
+		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
+
+		for (byte i = 1; i <= 8; i++)
+		{
+			for (byte j = 1; j <= 8; j++)
+			{
+				if ((this.cb.get(i,j) & PieceData.WHITE_MASK) != 0)
+				{
+					pieces.add(new Piece (this.cb.get(i,j), i, j));
+				}
+			}
+		}
+
+		return pieces;
+	}
+
+	/**
+	 * Returns an array of all pieces belonging to the Black player
+	 * @return	All black pieces
+	 */
+	public ArrayList<Piece> getAllBlackPieces ()
+	{
+		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
+
+		for (byte i = 1; i <= 8; i++)
+		{
+			for (byte j = 1; j <= 8; j++)
+			{
+				if ((this.cb.get(i,j) & PieceData.BLACK_MASK) != 0)
+				{
+					pieces.add(new Piece (this.cb.get(i,j), i, j));
+				}
+			}
+		}
+
+		return pieces;
+	}
+
+	public void getAllValidMoves (Piece p)
+	{
+		byte pos = p.getPositionByte();
+		byte color = p.getColorByte();
+		ArrayList <Move> possibleMoves = p.getAllPossibleMoves();
+
+		for (byte i = 0; i < possibleMoves.size(); i++)
+		{
+			if (this.cb.get(possibleMoves.get(i).getDst()))
+			{
+
+			}
+		}
+	}
+
+	/**
+	 * Makes the specified move
+	 * @param m The move to be made
+	 */
+	public void makeMove (Move m)
+	{
+		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
+		this.cb.set(m.getSrc(), (byte) 0x0);	// Empty the source square
 	}
 }
