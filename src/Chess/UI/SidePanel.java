@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * Created by Astrid on 23/02/2017.
  */
-public class BottomPanel extends JPanel
+public class SidePanel extends JPanel
 {
 
 	private JButton pause;
@@ -17,7 +17,7 @@ public class BottomPanel extends JPanel
 	private JTextField textField;
 	private JTextArea history;
 
-	public BottomPanel()
+	public SidePanel()
 	{
 		super();
 
@@ -29,8 +29,9 @@ public class BottomPanel extends JPanel
 		undo = new JButton(("Undo"));
 		textField = new JTextField("<Insert your move here>");
 		history = new JTextArea("History:");
+		history.setEditable(false);
 
-		history.setPreferredSize(new Dimension(100,100));
+		history.setPreferredSize(new Dimension(100,750));
 
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 		textPanel.setBackground(Color.LIGHT_GRAY);
@@ -43,6 +44,8 @@ public class BottomPanel extends JPanel
 		this.add(pause);
 		this.add(undo);
 		this.add(textPanel);
+
+		this.setBackground(Color.BLACK);
 		//this.add(history);
 		//this.add(textField);
 	}

@@ -2,17 +2,17 @@ package Chess.UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 //Created by Astrid on 22/02/2017.
 
 public class MainWindow extends JFrame
 {
-	private static int BOARD_SIZE = 1200;
+	private static int WINDOW_HEIGHT = 1200;
+	private static int WINDOW_WIDTH = 850;
 
 	private JPanel panel;
 	private Board board;
-	private BottomPanel bottomPanel;
+	private SidePanel sidePanel;
 
 
 
@@ -21,20 +21,22 @@ public class MainWindow extends JFrame
 		 super("Chezz!");
 		 panel = new JPanel();
 		 board = new Board();
-		 bottomPanel = new BottomPanel();
+		 sidePanel = new SidePanel();
 
-		 //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		 panel.setBackground(Color.white);
 
-		 setSize(BOARD_SIZE, 1000);
+		 setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
 		 setResizable(false);
 		 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
 		panel.add(board);
-		panel.add(bottomPanel);
+		panel.add(sidePanel);
 
+		panel.setBackground(Color.BLACK);
 		this.add(panel);
+
+
 
 		 setVisible(true);
 	}
