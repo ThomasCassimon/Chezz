@@ -16,7 +16,7 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		//MainWindow mw = new MainWindow();
+		MainWindow mw = new MainWindow();
 
 		GameManager gm = new GameManager();
 		gm.init();
