@@ -2,6 +2,7 @@ package Chess.UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.server.UID;
 
 //Created by Astrid on 22/02/2017.
 
@@ -23,7 +24,7 @@ public class MainWindow extends JFrame
 		 board = new Board();
 		 sidePanel = new SidePanel();
 
-		 panel.setBackground(Color.white);
+		 panel.setBackground(UIData.BACKGROUND);
 
 		 setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
 		 setResizable(false);
@@ -33,7 +34,7 @@ public class MainWindow extends JFrame
 		panel.add(board);
 		panel.add(sidePanel);
 
-		panel.setBackground(Color.BLACK);
+		panel.setBackground(UIData.BACKGROUND);
 		this.add(panel);
 
 

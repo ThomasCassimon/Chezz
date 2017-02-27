@@ -22,7 +22,7 @@ public class SidePanel extends JPanel
 		super();
 
 		this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
-		this.setBackground(Color.WHITE);
+		this.setBackground(UIData.TEXT_BACKGROUND);
 
 		textPanel = new JPanel();
 		pause = new JButton("Pause");
@@ -45,7 +45,7 @@ public class SidePanel extends JPanel
 		this.add(undo);
 		this.add(textPanel);
 
-		this.setBackground(Color.BLACK);
+		this.setBackground(UIData.BACKGROUND);
 		//this.add(history);
 		//this.add(textField);
 	}
