@@ -2,7 +2,6 @@ package Chess.Game;
 
 import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
-import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 import java.util.ArrayList;
 
@@ -112,7 +111,7 @@ public class Piece
 		switch (this.pieceByte & (0x07))
 		{
 			case PieceData.PAWN_BYTE:
-				if ((this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK)) == PieceData.WHITE_MASK)
+				if ((this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.WHITE_BYTE)
 				{
 					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_WHITE.length);
 
@@ -124,7 +123,7 @@ public class Piece
 						}
 					}
 				}
-				else if ((this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK)) == PieceData.BLACK_MASK)
+				else if ((this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.BLACK_BYTE)
 				{
 					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_BLACK.length);
 
@@ -138,7 +137,7 @@ public class Piece
 				}
 				else
 				{
-					throw new IllegalSideException(Byte.toString((byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK))) + " is not a valid side-byte.");
+					throw new IllegalSideException(Byte.toString((byte) (this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE))) + " is not a valid side-byte.");
 				}
 
 				moves.trimToSize();
@@ -228,12 +227,12 @@ public class Piece
 
 	public byte getColorByte ()
 	{
-		return (byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK));
+		return (byte) (this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE));
 	}
 
 	public byte getPieceWithoutColorByte ()
 	{
-		return (byte) (this.pieceByte & ~(PieceData.WHITE_MASK | PieceData.BLACK_MASK));
+		return (byte) (this.pieceByte & ~(PieceData.WHITE_BYTE | PieceData.BLACK_BYTE));
 	}
 
 	@Override
@@ -241,5 +240,14 @@ public class Piece
 	{
 		byte[] coords = ChessBoard.get2DCoord(this.positionByte);
 		return PieceData.toStringFromByte((byte) (this.pieceByte & 0x07), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + ('A'-1))) + Byte.toString(coords[1]);
+	}
+
+	/**
+	 * returns the 2D coord of the piece
+	 * @return an array of bytes indexed file first
+	 */
+	public byte[] get2DCoord()
+	{
+		return ChessBoard.get2DCoord(this.positionByte);
 	}
 }

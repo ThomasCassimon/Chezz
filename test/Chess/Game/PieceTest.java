@@ -14,6 +14,12 @@ import static org.junit.Assert.*;
 public class PieceTest
 {
 	@Test
+	public void get2DCoord() throws Exception
+	{
+
+	}
+
+	@Test
 	public void getPieceByte() throws Exception
 	{
 		byte locationByte = 0x44;

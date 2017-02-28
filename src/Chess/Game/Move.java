@@ -9,6 +9,10 @@ import Chess.Exceptions.Unchecked.IllegalSquareException;
  * Project: ChessGame
  * Package: Chess.Game
  */
+
+
+
+// TODO: add to algebraic string method
 public class Move
 {
 	public static final byte CAPTURE_MASK = 0x04;

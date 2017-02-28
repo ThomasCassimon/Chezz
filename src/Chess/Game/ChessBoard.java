@@ -40,44 +40,44 @@ public class ChessBoard
 		// Putting down pawns and empty spaces
 		for (byte i = 1; i <= 8; i++)
 		{
-			this.set(i, (byte) 2, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_MASK));
+			this.set(i, (byte) 2, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE));
 			this.set(i, (byte) 3, (PieceData.EMPTY_BYTE));
 			this.set(i, (byte) 4, (PieceData.EMPTY_BYTE));
 			this.set(i, (byte) 5, (PieceData.EMPTY_BYTE));
 			this.set(i, (byte) 6, (PieceData.EMPTY_BYTE));
-			this.set(i, (byte) 7, (byte) (PieceData.PAWN_BYTE | PieceData.BLACK_MASK));
+			this.set(i, (byte) 7, (byte) (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE));
 		}
 
 		// Putting down Rooks
-		this.set((byte) 1, (byte) 1, (byte) (PieceData.ROOK_BYTE | PieceData.WHITE_MASK));
-		this.set((byte) 8, (byte) 1, (byte) (PieceData.ROOK_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 1, (byte) 1, (byte) (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE));
+		this.set((byte) 8, (byte) 1, (byte) (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE));
 
-		this.set((byte) 1, (byte) 8, (byte) (PieceData.ROOK_BYTE | PieceData.BLACK_MASK));
-		this.set((byte) 8, (byte) 8, (byte) (PieceData.ROOK_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 1, (byte) 8, (byte) (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE));
+		this.set((byte) 8, (byte) 8, (byte) (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE));
 
 		// Knights
-		this.set((byte) 2, (byte) 1, (byte) (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK));
-		this.set((byte) 7, (byte) 1, (byte) (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 2, (byte) 1, (byte) (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE));
+		this.set((byte) 7, (byte) 1, (byte) (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE));
 
-		this.set((byte) 2, (byte) 8, (byte) (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK));
-		this.set((byte) 7, (byte) 8, (byte) (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 2, (byte) 8, (byte) (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE));
+		this.set((byte) 7, (byte) 8, (byte) (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE));
 
 		// Bishops
-		this.set((byte) 3, (byte) 1, (byte) (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK));
-		this.set((byte) 6, (byte) 1, (byte) (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 3, (byte) 1, (byte) (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE));
+		this.set((byte) 6, (byte) 1, (byte) (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE));
 
-		this.set((byte) 3, (byte) 8, (byte) (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK));
-		this.set((byte) 6, (byte) 8, (byte) (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 3, (byte) 8, (byte) (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE));
+		this.set((byte) 6, (byte) 8, (byte) (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE));
 
 		// Queens
-		this.set((byte) 4, (byte) 1, (byte) (PieceData.QUEEN_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 4, (byte) 1, (byte) (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE));
 
-		this.set((byte) 4, (byte) 8, (byte) (PieceData.QUEEN_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 4, (byte) 8, (byte) (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE));
 
 		// Kings
-		this.set((byte) 5, (byte) 1, (byte) (PieceData.KING_BYTE | PieceData.WHITE_MASK));
+		this.set((byte) 5, (byte) 1, (byte) (PieceData.KING_BYTE | PieceData.WHITE_BYTE));
 
-		this.set((byte) 5, (byte) 8, (byte) (PieceData.KING_BYTE | PieceData.BLACK_MASK));
+		this.set((byte) 5, (byte) 8, (byte) (PieceData.KING_BYTE | PieceData.BLACK_BYTE));
 
 		return this;
 	}
@@ -117,7 +117,7 @@ public class ChessBoard
 	 */
 	public void set (byte file, byte rank, byte piece) throws IllegalSquareException, IllegalPieceException
 	{
-		byte bitMask = (byte) ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
+		byte bitMask = (byte) ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | 0x07); // First two disable color-bits, last one disables piece-bits
 
 		byte index = get0x88Index(file, rank);
 
@@ -141,7 +141,7 @@ public class ChessBoard
 	 */
 	public void set (byte index, byte piece) throws IllegalSquareException, IllegalPieceException
 	{
-		byte bitMask = (byte) ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
+		byte bitMask = (byte) ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | 0x07); // First two disable color-bits, last one disables piece-bits
 
 		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
 		{

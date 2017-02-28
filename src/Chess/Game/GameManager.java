@@ -25,7 +25,7 @@ public class GameManager
 	public GameManager ()
 	{
 		this.cb = new ChessBoard();
-		this.activeColor = PieceData.WHITE_MASK;
+		this.activeColor = PieceData.WHITE_BYTE;
 		this.players = new Player [2];
 	}
 
@@ -38,11 +38,11 @@ public class GameManager
 	{
 		if (human)
 		{
-			this.players[0] = new HumanPlayer (PieceData.WHITE_MASK);
+			this.players[0] = new HumanPlayer (PieceData.WHITE_BYTE);
 		}
 		else
 		{
-			this.players[0] = new AIPlayer (PieceData.WHITE_MASK);
+			this.players[0] = new AIPlayer (PieceData.WHITE_BYTE);
 		}
 	}
 
@@ -55,11 +55,11 @@ public class GameManager
 	{
 		if (human)
 		{
-			this.players[1] = new HumanPlayer (PieceData.BLACK_MASK);
+			this.players[1] = new HumanPlayer (PieceData.BLACK_BYTE);
 		}
 		else
 		{
-			this.players[1] = new AIPlayer (PieceData.BLACK_MASK);
+			this.players[1] = new AIPlayer (PieceData.BLACK_BYTE);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class GameManager
 	 */
 	public void toggleActivePlayer ()
 	{
-		if (this.activeColor == PieceData.WHITE_MASK)
+		if (this.activeColor == PieceData.WHITE_BYTE)
 		{
 			this.activeColor = (byte) (this.activeColor << 1);
 		}
@@ -93,9 +93,9 @@ public class GameManager
 	public void init ()
 	{
 		this.cb.init();
-		this.activeColor = PieceData.WHITE_MASK;
-		this.players[0] = new HumanPlayer(PieceData.WHITE_MASK);
-		this.players[1] = new HumanPlayer(PieceData.BLACK_MASK);
+		this.activeColor = PieceData.WHITE_BYTE;
+		this.players[0] = new HumanPlayer(PieceData.WHITE_BYTE);
+		this.players[1] = new HumanPlayer(PieceData.BLACK_BYTE);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class GameManager
 		{
 			for (byte j = 1; j <= 8; j++)
 			{
-				if ((this.cb.get(i,j) & PieceData.WHITE_MASK) != 0)
+				if ((this.cb.get(i,j) & PieceData.WHITE_BYTE) != 0)
 				{
 					pieces.add(new Piece (this.cb.get(i,j), i, j));
 				}
@@ -143,7 +143,7 @@ public class GameManager
 		{
 			for (byte j = 1; j <= 8; j++)
 			{
-				if ((this.cb.get(i,j) & PieceData.BLACK_MASK) != 0)
+				if ((this.cb.get(i,j) & PieceData.BLACK_BYTE) != 0)
 				{
 					pieces.add(new Piece (this.cb.get(i,j), i, j));
 				}
@@ -167,13 +167,13 @@ public class GameManager
 			byte deltaRank = (byte) abs((src >> 4) - (dst >> 4));
 			byte deltaFile = (byte) abs((src & 7) - (dst & 7));
 
-			if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (color))
+			if ((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (color))
 			{
 				possibleMoves.remove(i);
 				i--;
 				continue;
 			}
-			else if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (PieceData.getOpponentColorByte(color)))
+			else if ((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorByte(color)))
 			{
 				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
 			}
