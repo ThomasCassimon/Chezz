@@ -14,8 +14,8 @@ import Chess.Exceptions.Unchecked.IllegalSideException;
  */
 public final class PieceData
 {
-	public static final int WHITE_MASK =	0x10;
-	public static final int BLACK_MASK =	0x20;
+	public static final int WHITE_BYTE =	0x10;
+	public static final int BLACK_BYTE =	0x20;
 
 	public static final int EMPTY_BYTE =    0x00;
 	public static final int PAWN_BYTE =	 	0x01;
@@ -336,13 +336,13 @@ public final class PieceData
 	 */
 	public static int getOpponentColorNum (int color) throws IllegalSideException
 	{
-		if (color == PieceData.WHITE_MASK)
+		if (color == PieceData.WHITE_BYTE)
 		{
-			return PieceData.BLACK_MASK;
+			return PieceData.BLACK_BYTE;
 		}
-		else if (color == PieceData.BLACK_MASK)
+		else if (color == PieceData.BLACK_BYTE)
 		{
-			return PieceData.WHITE_MASK;
+			return PieceData.WHITE_BYTE;
 		}
 		else
 		{

@@ -148,8 +148,8 @@ public class Board extends JPanel
 	public void setPiece(Piece piece)
 	{
 		int index;
-		byte pieceByte;
-		byte colorByte;
+		int pieceByte;
+		int colorByte;
 
 		index = getIndex(piece);
 		pieceByte = piece.getPieceWithoutColorByte();
@@ -178,7 +178,7 @@ public class Board extends JPanel
 					tiles[index].setIcon(UIData.WK);
 					break;
 				default:
-					throw new IllegalPieceException(Byte.toString(pieceByte) + "not a valid piece");
+					throw new IllegalPieceException(Integer.toString(pieceByte) + "not a valid piece");
 			}
 		}
 		else if (colorByte == PieceData.BLACK_BYTE)
@@ -204,7 +204,7 @@ public class Board extends JPanel
 					tiles[index].setIcon(UIData.BK);
 					break;
 				default:
-					throw new IllegalPieceException(Byte.toString(pieceByte) + "not a valid piece");
+					throw new IllegalPieceException(Integer.toString(pieceByte) + "not a valid piece");
 			}
 
 		}
@@ -219,9 +219,9 @@ public class Board extends JPanel
 	 */
 	private int getIndex(Piece piece)
 	{
-		byte indexArr[];
+		int indexArr[];
 		int index;
-		byte file,rank;
+		int file,rank;
 		indexArr = piece.get2DCoord();
 		index = ((indexArr[1]-1) * 8) + (indexArr[0]-1);
 		return index;

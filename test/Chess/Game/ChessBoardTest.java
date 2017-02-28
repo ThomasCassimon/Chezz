@@ -20,7 +20,7 @@ public class ChessBoardTest
 		for (int i = 1; i <= 8; i++)
 		{
 			// White Pawns
-			assertEquals(PieceData.PAWN_BYTE | PieceData.WHITE_MASK, cb.get(i, 2));
+			assertEquals(PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, cb.get(i, 2));
 
 			for (int j = 3; j < 7; j++)
 			{
@@ -28,44 +28,44 @@ public class ChessBoardTest
 			}
 
 			// Black Pawns
-			assertEquals(PieceData.PAWN_BYTE | PieceData.BLACK_MASK, cb.get(i, 7));
+			assertEquals(PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, cb.get(i, 7));
 		}
 
 		// White Rooks
-		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_MASK, cb.get( 1,  1));
-		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_MASK, cb.get( 8,  1));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, cb.get( 1,  1));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, cb.get( 8,  1));
 
 		// Black Rooks
-		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_MASK, cb.get( 1,  8));
-		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_MASK, cb.get( 8,  8));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, cb.get( 1,  8));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, cb.get( 8,  8));
 
 		// White Knights
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK, cb.get( 2,  1));
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK, cb.get( 7,  1));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, cb.get( 2,  1));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, cb.get( 7,  1));
 
 		// Black Knights
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK, cb.get( 2,  8));
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK, cb.get( 7,  8));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, cb.get( 2,  8));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, cb.get( 7,  8));
 
 		// White Bishops
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK, cb.get( 3,  1));
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK, cb.get( 6,  1));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, cb.get( 3,  1));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, cb.get( 6,  1));
 
 		// Black Bishops
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK, cb.get( 3,  8));
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK, cb.get( 6,  8));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, cb.get( 3,  8));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, cb.get( 6,  8));
 
 		// White Queen
-		assertEquals(PieceData.QUEEN_BYTE | PieceData.WHITE_MASK, cb.get( 4,  1));
+		assertEquals(PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, cb.get( 4,  1));
 
 		// Black Queen
-		assertEquals(PieceData.QUEEN_BYTE | PieceData.BLACK_MASK, cb.get( 4,  8));
+		assertEquals(PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, cb.get( 4,  8));
 
 		// White King
-		assertEquals(PieceData.KING_BYTE | PieceData.WHITE_MASK, cb.get( 5,  1));
+		assertEquals(PieceData.KING_BYTE | PieceData.WHITE_BYTE, cb.get( 5,  1));
 
 		// Black King
-		assertEquals(PieceData.KING_BYTE | PieceData.BLACK_MASK, cb.get( 5,  8));
+		assertEquals(PieceData.KING_BYTE | PieceData.BLACK_BYTE, cb.get( 5,  8));
 	}
 
 	@Test
@@ -102,16 +102,16 @@ public class ChessBoardTest
 	public void setPositive() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
-		cb.set( 1,  1,  (PieceData.PAWN_BYTE | PieceData.WHITE_MASK));
+		cb.set( 1,  1,  (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE));
 
-		assertEquals( (PieceData.PAWN_BYTE | PieceData.WHITE_MASK), cb.get( 1,  1));
+		assertEquals( (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE), cb.get( 1,  1));
 	}
 
 	@Test (expected=IllegalSquareException.class)
 	public void setIllegalSquare() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
-		cb.set( -1,  -1,  (PieceData.PAWN_BYTE | PieceData.WHITE_MASK));
+		cb.set( -1,  -1,  (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE));
 	}
 
 	@Test (expected=IllegalPieceException.class)
