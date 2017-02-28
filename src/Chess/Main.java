@@ -34,7 +34,7 @@ public class Main
 
 				for (byte i = 0; i < validMoves.size(); i++)
 				{
-					System.out.println("Rook moves: " + validMoves.get(i).toString());
+					System.out.println(p.toString() + " moves: " + validMoves.get(i).toString());
 				}
 			}
 		}
