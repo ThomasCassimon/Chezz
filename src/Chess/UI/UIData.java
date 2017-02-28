@@ -10,6 +10,7 @@ import java.awt.*;
  */
 public final class UIData
 {
+
 	//CHESS PIECES
 	//Pawns
 	public static final  ImageIcon WP = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/PW.png"));
