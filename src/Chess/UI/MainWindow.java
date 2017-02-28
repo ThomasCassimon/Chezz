@@ -50,11 +50,20 @@ public class MainWindow extends JFrame
 
 	}
 
+	/**
+	 * Sets all the pieces in the right place at the beginning of the game
+	 */
 	private void initBoard()
 	{
 		ArrayList<Piece> pieces;
 		pieces = gameManager.getAllWhitePieces();
 
+		for (Piece piece: pieces)
+		{
+			board.setPiece(piece);
+		}
+
+		pieces = gameManager.getAllBlackPieces();
 		for (Piece piece: pieces)
 		{
 			board.setPiece(piece);

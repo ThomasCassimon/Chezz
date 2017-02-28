@@ -5,7 +5,9 @@ import Chess.Game.Piece;
 import Chess.Game.PieceData;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.rmi.server.UID;
 
 
 public class Board extends JPanel
@@ -22,7 +24,7 @@ public class Board extends JPanel
 
 		this.setPreferredSize(new Dimension(800,800));
 		this.setLayout(new GridLayout(NUMBER_TILES +2, NUMBER_TILES +2));
-
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		initBoard();
 
 	}
