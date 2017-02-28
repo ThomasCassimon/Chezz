@@ -20,8 +20,8 @@ public class AIPlayerTest
 	{
 		ChessBoard cb = new ChessBoard();
 
-		AIPlayer aiWhite = new AIPlayer(PieceData.WHITE_MASK);
-		AIPlayer aiBlack = new AIPlayer(PieceData.BLACK_MASK);
+		AIPlayer aiWhite = new AIPlayer(PieceData.WHITE_BYTE);
+		AIPlayer aiBlack = new AIPlayer(PieceData.BLACK_BYTE);
 
 		assertEquals(0, aiWhite.scoreGame(cb));
 		assertEquals(0, aiBlack.scoreGame(cb));
@@ -33,8 +33,8 @@ public class AIPlayerTest
 		ChessBoard cb = new ChessBoard();
 		cb.init();
 
-		AIPlayer aiWhite = new AIPlayer (PieceData.WHITE_MASK);
-		AIPlayer aiBlack = new AIPlayer (PieceData.BLACK_MASK);
+		AIPlayer aiWhite = new AIPlayer (PieceData.WHITE_BYTE);
+		AIPlayer aiBlack = new AIPlayer (PieceData.BLACK_BYTE);
 
 		// Expected values calculated using excel sheet
 		assertEquals(36827, aiWhite.scoreGame(cb));
