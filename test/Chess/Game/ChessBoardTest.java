@@ -20,7 +20,7 @@ public class ChessBoardTest
 		for (byte i = 1; i <= 8; i++)
 		{
 			// White Pawns
-			assertEquals(PieceData.PAWN_BYTE | PieceData.WHITE_MASK, cb.get(i,(byte) 2));
+			assertEquals(PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, cb.get(i,(byte) 2));
 
 			for (byte j = 3; j < 7; j++)
 			{
@@ -28,44 +28,44 @@ public class ChessBoardTest
 			}
 
 			// Black Pawns
-			assertEquals(PieceData.PAWN_BYTE | PieceData.BLACK_MASK, cb.get(i,(byte) 7));
+			assertEquals(PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, cb.get(i,(byte) 7));
 		}
 
 		// White Rooks
-		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_MASK, cb.get((byte) 1, (byte) 1));
-		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_MASK, cb.get((byte) 8, (byte) 1));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 1, (byte) 1));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 8, (byte) 1));
 
 		// Black Rooks
-		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_MASK, cb.get((byte) 1, (byte) 8));
-		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_MASK, cb.get((byte) 8, (byte) 8));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 1, (byte) 8));
+		assertEquals (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 8, (byte) 8));
 
 		// White Knights
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK, cb.get((byte) 2, (byte) 1));
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK, cb.get((byte) 7, (byte) 1));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 2, (byte) 1));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 7, (byte) 1));
 
 		// Black Knights
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK, cb.get((byte) 2, (byte) 8));
-		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK, cb.get((byte) 7, (byte) 8));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 2, (byte) 8));
+		assertEquals (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 7, (byte) 8));
 
 		// White Bishops
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK, cb.get((byte) 3, (byte) 1));
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_MASK, cb.get((byte) 6, (byte) 1));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 3, (byte) 1));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 6, (byte) 1));
 
 		// Black Bishops
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK, cb.get((byte) 3, (byte) 8));
-		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_MASK, cb.get((byte) 6, (byte) 8));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 3, (byte) 8));
+		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 6, (byte) 8));
 
 		// White Queen
-		assertEquals(PieceData.QUEEN_BYTE | PieceData.WHITE_MASK, cb.get((byte) 4, (byte) 1));
+		assertEquals(PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 4, (byte) 1));
 
 		// Black Queen
-		assertEquals(PieceData.QUEEN_BYTE | PieceData.BLACK_MASK, cb.get((byte) 4, (byte) 8));
+		assertEquals(PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 4, (byte) 8));
 
 		// White King
-		assertEquals(PieceData.KING_BYTE | PieceData.WHITE_MASK, cb.get((byte) 5, (byte) 1));
+		assertEquals(PieceData.KING_BYTE | PieceData.WHITE_BYTE, cb.get((byte) 5, (byte) 1));
 
 		// Black King
-		assertEquals(PieceData.KING_BYTE | PieceData.BLACK_MASK, cb.get((byte) 5, (byte) 8));
+		assertEquals(PieceData.KING_BYTE | PieceData.BLACK_BYTE, cb.get((byte) 5, (byte) 8));
 	}
 
 	@Test
@@ -102,16 +102,16 @@ public class ChessBoardTest
 	public void setPositive() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
-		cb.set((byte) 1, (byte) 1, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_MASK));
+		cb.set((byte) 1, (byte) 1, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE));
 
-		assertEquals((byte) (PieceData.PAWN_BYTE | PieceData.WHITE_MASK), cb.get((byte) 1, (byte) 1));
+		assertEquals((byte) (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE), cb.get((byte) 1, (byte) 1));
 	}
 
 	@Test (expected=IllegalSquareException.class)
 	public void setIllegalSquare() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
-		cb.set((byte) -1, (byte) -1, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_MASK));
+		cb.set((byte) -1, (byte) -1, (byte) (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE));
 	}
 
 	@Test (expected=IllegalPieceException.class)
