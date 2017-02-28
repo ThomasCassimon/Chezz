@@ -10,7 +10,7 @@ package Chess.Game;
  */
 public class HumanPlayer extends Player
 {
-	public HumanPlayer(byte colorByte)
+	public HumanPlayer(int colorByte)
 	{
 		super(colorByte);
 	}

@@ -15,13 +15,13 @@ import Chess.Exceptions.Unchecked.IllegalSquareException;
 // TODO: add to algebraic string method
 public class Move
 {
-	public static final byte CAPTURE_MASK = 0x04;
-	public static final byte PROMO_MASK = 0x08;
+	public static final int CAPTURE_MASK = 0x04;
+	public static final int PROMO_MASK = 0x08;
 	/**
 	 * Both src and dst are stored as 0x88 squares
 	 */
-	private byte src;
-	private byte dst;
+	private int src;
+	private int dst;
 	/**
 	 * The special byte indicates certain things about a move:
 	 * 1: Special0
@@ -54,23 +54,23 @@ public class Move
 	 * For more: <a href="https://chessprogramming.wikispaces.com/Encoding+Moves">ChessProgrammingWiki</a>
 	 * todo: Change promo/capture codes to match the bit-encoding for the different pieces
 	 */
-	private byte special;
+	private int special;
 
 	public Move ()
 	{
-		this.src = (byte) 0xFF;
-		this.dst = (byte) 0xFF;
-		this.special = (byte) 0xFF;
+		this.src = 0xFF;
+		this.dst = 0xFF;
+		this.special = 0xFF;
 	}
 
-	public Move (byte src, byte dst, byte special)
+	public Move (int src, int dst, int special)
 	{
 		this.src = src;
 		this.dst = dst;
 		this.special = special;
 	}
 
-	public Move (byte srcFile, byte srcRank, byte dstFile, byte dstRank, byte special)
+	public Move (int srcFile, int srcRank, int dstFile, int dstRank, int special)
 	{
 		this.src = ChessBoard.get0x88Index(srcRank, srcFile);
 		this.dst = ChessBoard.get0x88Index(dstRank, dstFile);
@@ -81,7 +81,7 @@ public class Move
 	 *
 	 * @return The source square (in 0x88 notation)
 	 */
-	public byte getSrc ()
+	public int getSrc ()
 	{
 		return this.src;
 	}
@@ -90,7 +90,7 @@ public class Move
 	 *
 	 * @return The destination square (in 0x88 notation)
 	 */
-	public byte getDst ()
+	public int getDst ()
 	{
 		return this.dst;
 	}
@@ -99,7 +99,7 @@ public class Move
 	 *
 	 * @return The special byte
 	 */
-	public byte getSpecial ()
+	public int getSpecial ()
 	{
 		return this.special;
 	}
@@ -109,7 +109,7 @@ public class Move
 	 * @param special the desired special byte
 	 * @return returns the move after the changes have been made for easy method chaining
 	 */
-	public Move setSpecial (byte special)
+	public Move setSpecial (int special)
 	{
 		this.special = special;
 		return this;
@@ -122,7 +122,7 @@ public class Move
 	{
 		if (((this.src & 0x88) != 0) || ((this.dst & 0x88) != 0))
 		{
-			throw new IllegalSquareException("Move from " + Byte.toString(this.src) + " to " + Byte.toString(this.dst) + " is not a valid move");
+			throw new IllegalSquareException("Move from " + Integer.toString(this.src) + " to " + Integer.toString(this.dst) + " is not a valid move");
 		}
 	}
 
@@ -184,12 +184,12 @@ public class Move
 	 *
 	 * @return The source square (in file first format)
 	 */
-	public byte[] get2DSrc ()
+	public int[] get2DSrc ()
 	{
 		return ChessBoard.get2DCoord(this.src);
 	}
 
-	public byte[] get2DDst ()
+	public int[] get2DDst ()
 	{
 		return ChessBoard.get2DCoord(this.dst);
 	}
@@ -203,9 +203,9 @@ public class Move
 	@Override
 	public String toString ()
 	{
-		byte[] srcCoords = ChessBoard.get2DCoord(this.src);
-		byte[] dstCoords = ChessBoard.get2DCoord(this.dst);
+		int[] srcCoords = ChessBoard.get2DCoord(this.src);
+		int[] dstCoords = ChessBoard.get2DCoord(this.dst);
 
-		return ((char) (srcCoords[0] + ('A'-1))) + Byte.toString(srcCoords[1]) + "-" + ((char) (dstCoords[0] + ('A'-1))) + Byte.toString(dstCoords[1]);
+		return ((char) (srcCoords[0] + ('A'-1))) + Integer.toString(srcCoords[1]) + "-" + ((char) (dstCoords[0] + ('A'-1))) + Integer.toString(dstCoords[1]);
 	}
 }

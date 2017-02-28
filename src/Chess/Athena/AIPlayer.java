@@ -17,7 +17,7 @@ import static Chess.Game.PieceData.BOTH_ROOKS_PENALTY;
  */
 public class AIPlayer extends Player
 {
-	public AIPlayer(byte colorByte)
+	public AIPlayer(int colorByte)
 	{
 		super(colorByte);
 	}

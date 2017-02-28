@@ -16,16 +16,16 @@ public class MoveTest
 	@Test
 	public void getSrc() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x0;
+		int special =  0x0;
 		Move m;
 
 		m = new Move ();
-		assertEquals((byte) 0xFF, m.getSrc());
+		assertEquals( 0xFF, m.getSrc());
 
 		m = new Move (src, dst, special);
 		assertEquals(src, m.getSrc());
@@ -37,16 +37,16 @@ public class MoveTest
 	@Test
 	public void getDst() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x0;
+		int special =  0x0;
 		Move m;
 
 		m = new Move ();
-		assertEquals((byte) 0xFF, m.getDst());
+		assertEquals( 0xFF, m.getDst());
 
 		m = new Move (src, dst, special);
 		assertEquals(dst, m.getDst());
@@ -58,16 +58,16 @@ public class MoveTest
 	@Test
 	public void getSpecial() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x0;
+		int special =  0x0;
 		Move m;
 
 		m = new Move ();
-		assertEquals((byte) 0xFF, m.getSpecial());
+		assertEquals( 0xFF, m.getSpecial());
 
 		m = new Move (src, dst, special);
 		assertEquals(special, m.getSpecial());
@@ -79,13 +79,13 @@ public class MoveTest
 	@Test
 	public void setSpecial() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special1 = (byte) 0x0;
-		byte special2 = (byte) 0x8;
+		int special1 =  0x0;
+		int special2 =  0x8;
 		Move m;
 
 		m = new Move ();
@@ -104,12 +104,12 @@ public class MoveTest
 	@Test
 	public void isQuiet() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x0;
+		int special =  0x0;
 		Move m;
 
 		m = new Move (src, dst, special);
@@ -122,12 +122,12 @@ public class MoveTest
 	@Test
 	public void isDoublePawnPush() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x1;
+		int special =  0x1;
 		Move m;
 
 		m = new Move (src, dst, special);
@@ -140,12 +140,12 @@ public class MoveTest
 	@Test
 	public void isKingCastle() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x2;
+		int special =  0x2;
 		Move m;
 
 		m = new Move (src, dst, special);
@@ -158,12 +158,12 @@ public class MoveTest
 	@Test
 	public void isQueenCastle() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x3;
+		int special =  0x3;
 		Move m;
 
 		m = new Move (src, dst, special);
@@ -176,12 +176,12 @@ public class MoveTest
 	@Test
 	public void isCapture() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x4;
+		int special =  0x4;
 		Move m;
 
 		m = new Move (src, dst, special);
@@ -190,7 +190,7 @@ public class MoveTest
 		m = new Move (srcFileRank[0], srcFileRank[1], dstFileRank[0], dstFileRank[1], special);
 		assertEquals(true, m.isCapture());
 
-		special = (byte) 0x5;
+		special =  0x5;
 
 		m = new Move (src, dst, special);
 		assertEquals(true, m.isCapture());
@@ -198,7 +198,7 @@ public class MoveTest
 		m = new Move (srcFileRank[0], srcFileRank[1], dstFileRank[0], dstFileRank[1], special);
 		assertEquals(true, m.isCapture());
 
-		for (byte i = 12; i <= 15; i++)
+		for (int i = 12; i <= 15; i++)
 		{
 			m = new Move (src, dst, i);
 			assertEquals(true, m.isCapture());
@@ -211,14 +211,14 @@ public class MoveTest
 	@Test
 	public void isPromotion() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
 		Move m;
 
-		for (byte i = 8; i <= 15; i++)
+		for (int i = 8; i <= 15; i++)
 		{
 			m = new Move (src, dst, i);
 			assertEquals(true, m.isPromotion());
@@ -231,18 +231,18 @@ public class MoveTest
 	@Test
 	public void get2DSrc() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x0;
+		int special =  0x0;
 		Move m;
 
 		/*
 		Throws invalid square exception (as it should)
 		m = new Move ();
-		assertEquals((byte) 0xFF, m.get2DSrc());
+		assertEquals( 0xFF, m.get2DSrc());
 		*/
 
 		m = new Move (src, dst, special);
@@ -255,18 +255,18 @@ public class MoveTest
 	@Test
 	public void get2DDst() throws Exception
 	{
-		byte src = (byte) 0x44;
-		byte dst = (byte) 0x33;
-		byte[] srcFileRank = ChessBoard.get2DCoord(src);
-		byte[] dstFileRank = ChessBoard.get2DCoord(dst);
+		int src =  0x44;
+		int dst =  0x33;
+		int[] srcFileRank = ChessBoard.get2DCoord(src);
+		int[] dstFileRank = ChessBoard.get2DCoord(dst);
 
-		byte special = (byte) 0x0;
+		int special =  0x0;
 		Move m;
 
 		/*
 		Throws invalid square exception (as it should)
 		m = new Move ();
-		assertEquals((byte) 0xFF, m.get2DSrc());
+		assertEquals( 0xFF, m.get2DSrc());
 		*/
 
 		m = new Move (src, dst, special);
