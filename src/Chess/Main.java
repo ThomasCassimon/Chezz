@@ -16,7 +16,7 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		//MainWindow mw = new MainWindow();
+		MainWindow mw = new MainWindow();
 
 		GameManager gm = new GameManager();
 		gm.init();
@@ -34,7 +34,7 @@ public class Main
 
 				for (byte i = 0; i < validMoves.size(); i++)
 				{
-					System.out.println("Rook moves: " + validMoves.get(i).toString());
+					System.out.println(p.toString() + " moves: " + validMoves.get(i).toString());
 				}
 			}
 		}
