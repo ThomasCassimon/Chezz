@@ -16,11 +16,6 @@ public class Board extends JPanel
 	private static final int NUMBER_TILES = 8;
 
 
-
-	//Images
-	private ImageIcon king = new ImageIcon(MainWindow.class.getResource("/home/thomas/Dropbox/Universiteit/Semester_4/Software_Design/Chezz/res/pieceSets/default"));
-
-
 	public Board()
 	{
 		super();
