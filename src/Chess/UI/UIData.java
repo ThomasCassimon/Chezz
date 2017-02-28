@@ -33,8 +33,8 @@ public final class UIData
 	//COLORS
 	public static final Color BROWN = new Color(140,70,20); 	//Saddlebrown (RGB 139,69,19)
 	public static final Color LIGHT_BROWN = new Color(210,180,140); 	//Tan (RGB 210,180,140)
-	public static final Color FRAMES = Color.LIGHT_GRAY;
-	public static final Color BACKGROUND = Color.BLACK;
+	public static final Color FRAMES = new Color (145,75,25);
+	public static final Color BACKGROUND = Color.WHITE;
 	public static final Color TEXT_BACKGROUND = Color.WHITE;
 
 	//FONTS

@@ -34,9 +34,10 @@ public class SidePanel extends JPanel
 		history.setPreferredSize(new Dimension(100,750));
 
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-		textPanel.setBackground(Color.LIGHT_GRAY);
-		history.setBackground(Color.LIGHT_GRAY);
-		textField.setBackground(Color.LIGHT_GRAY);
+		textPanel.setBackground(Color.WHITE);
+		history.setBackground(Color.WHITE);
+		textField.setBackground(Color.WHITE);
+		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		textPanel.add(history);
 		textPanel.add(textField);
 
