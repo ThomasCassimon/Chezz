@@ -40,43 +40,43 @@ public class ChessBoard
 		// Putting down pawns and empty spaces
 		for (int i = 1; i <= 8; i++)
 		{
-			this.set(i,2, PieceData.PAWN_BYTE | PieceData.WHITE_MASK);
+			this.set(i,2, PieceData.PAWN_BYTE | PieceData.WHITE_BYTE);
 			this.set(i,3, PieceData.EMPTY_BYTE);
 			this.set(i,4, PieceData.EMPTY_BYTE);
 			this.set(i,5, PieceData.EMPTY_BYTE);
 			this.set(i,6, PieceData.EMPTY_BYTE);
-			this.set(i,7, PieceData.PAWN_BYTE | PieceData.BLACK_MASK);
+			this.set(i,7, PieceData.PAWN_BYTE | PieceData.BLACK_BYTE);
 		}
 
 		// Putting down Rooks
-		this.set(1, 1, PieceData.ROOK_BYTE | PieceData.WHITE_MASK);
-		this.set(8, 1, PieceData.ROOK_BYTE | PieceData.WHITE_MASK);
+		this.set(1, 1, PieceData.ROOK_BYTE | PieceData.WHITE_BYTE);
+		this.set(8, 1, PieceData.ROOK_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(1, 8, PieceData.ROOK_BYTE | PieceData.BLACK_MASK);
-		this.set(8, 8, PieceData.ROOK_BYTE | PieceData.BLACK_MASK);
+		this.set(1, 8, PieceData.ROOK_BYTE | PieceData.BLACK_BYTE);
+		this.set(8, 8, PieceData.ROOK_BYTE | PieceData.BLACK_BYTE);
 
 		// Knights
-		this.set(2, 1, PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK);
-		this.set(7, 1, PieceData.KNIGHT_BYTE | PieceData.WHITE_MASK);
+		this.set(2, 1, PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE);
+		this.set(7, 1, PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(2, 8, PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK);
-		this.set(7, 8, PieceData.KNIGHT_BYTE | PieceData.BLACK_MASK);
+		this.set(2, 8, PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE);
+		this.set(7, 8, PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE);
 
 		// Bishops
-		this.set(3, 1, PieceData.BISHOP_BYTE | PieceData.WHITE_MASK);
-		this.set(6, 1, PieceData.BISHOP_BYTE | PieceData.WHITE_MASK);
+		this.set(3, 1, PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE);
+		this.set(6, 1, PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(3, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_MASK);
-		this.set(6, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_MASK);
+		this.set(3, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
+		this.set(6, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
 
 		// Queens
-		this.set(4, 1, PieceData.QUEEN_BYTE | PieceData.WHITE_MASK);
+		this.set(4, 1, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(4, 8, PieceData.QUEEN_BYTE | PieceData.BLACK_MASK);
+		this.set(4, 8, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
 
 		// Kings
-		this.set(5, 1, PieceData.KING_BYTE | PieceData.WHITE_MASK);
-		this.set(5, 8, PieceData.KING_BYTE | PieceData.BLACK_MASK);
+		this.set(5, 1, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
+		this.set(5, 8, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
 
 		return this;
 	}
@@ -116,7 +116,7 @@ public class ChessBoard
 	 */
 	public void set (int file, int rank, int piece) throws IllegalSquareException, IllegalPieceException
 	{
-		int bitMask = ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
+		int bitMask = ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | 0x07); // First two disable color-bits, last one disables piece-bits
 
 		int index = get0x88Index(file, rank);
 
@@ -140,7 +140,7 @@ public class ChessBoard
 	 */
 	public void set (int index, int piece) throws IllegalSquareException, IllegalPieceException
 	{
-		byte bitMask =  ~(PieceData.BLACK_MASK | PieceData.WHITE_MASK | 0x07); // First two disable color-bits, last one disables piece-bits
+		byte bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | 0x07); // First two disable color-bits, last one disables piece-bits
 
 		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
 		{
