@@ -16,15 +16,15 @@ import java.util.ArrayList;
 
 public class Piece
 {
-	private byte pieceByte;
-	private byte positionByte;
+	private int pieceByte;
+	private int positionByte;
 
 	/**
 	 * Constructor, takes a pieceByte and a 0x88 positionByte
 	 * @param pieceByte a piece byte
 	 * @param positionByte a (0x88) position byte
 	 */
-	public Piece (byte pieceByte, byte positionByte)
+	public Piece (int pieceByte, int positionByte)
 	{
 		this.pieceByte = pieceByte;
 		this.positionByte = positionByte;
@@ -36,7 +36,7 @@ public class Piece
 	 * @param file a file byte
 	 * @param rank a rank byte
 	 */
-	public Piece (byte pieceByte, byte file, byte rank)
+	public Piece (int pieceByte, int file, int rank)
 	{
 		this.pieceByte = pieceByte;
 		this.positionByte = ChessBoard.get0x88Index(file, rank);
@@ -50,15 +50,15 @@ public class Piece
 	 * @param positionByte a 0x88 position byte
 	 * @param localeByte a locale that goes with pieceString
 	 */
-	public Piece (String pieceString, byte positionByte, byte localeByte)
+	public Piece (String pieceString, int positionByte, int localeByte)
 	{
 		switch (pieceString.length())
 		{
 			case 1:
-				this.pieceByte = PieceData.toByteFromShort(pieceString, localeByte);
+				this.pieceByte = PieceData.toNumFromShort(pieceString, localeByte);
 				break;
 			default:
-				this.pieceByte = PieceData.toByteFromString(pieceString, localeByte);
+				this.pieceByte = PieceData.toNumFromString(pieceString, localeByte);
 				break;
 		}
 
@@ -74,27 +74,27 @@ public class Piece
 	 * @param rank  piece rank
 	 * @param localeByte locale that goes with pieceString
 	 */
-	public Piece (String pieceString, byte file, byte rank, byte localeByte)
+	public Piece (String pieceString, int file, int rank, int localeByte)
 	{
 		switch (pieceString.length())
 		{
 			case 1:
-				this.pieceByte = PieceData.toByteFromShort(pieceString, localeByte);
+				this.pieceByte = PieceData.toNumFromShort(pieceString, localeByte);
 				break;
 			default:
-				this.pieceByte = PieceData.toByteFromString(pieceString, localeByte);
+				this.pieceByte = PieceData.toNumFromString(pieceString, localeByte);
 				break;
 		}
 
 		this.positionByte = ChessBoard.get0x88Index(file,rank);
 	}
 
-	public byte getPieceByte ()
+	public int getPieceByte ()
 	{
 		return this.pieceByte;
 	}
 
-	public byte getPositionByte ()
+	public int getPositionByte ()
 	{
 		return this.positionByte;
 	}
@@ -120,7 +120,7 @@ public class Piece
 					{
 						if (((this.positionByte + Movesets.PAWN_MOVE_WHITE[i]) & 0x88) == 0)
 						{
-							moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.PAWN_MOVE_WHITE[i]), (byte) 0x0));
+							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_MOVE_WHITE[i]),  0x0));
 						}
 					}
 				}
@@ -132,13 +132,13 @@ public class Piece
 					{
 						if (((this.positionByte + Movesets.PAWN_MOVE_BLACK[i]) & 0x88) == 0)
 						{
-							moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.PAWN_MOVE_BLACK[i]), (byte) 0x0));
+							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_MOVE_BLACK[i]),  0x0));
 						}
 					}
 				}
 				else
 				{
-					throw new IllegalSideException(Byte.toString((byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK))) + " is not a valid side-byte.");
+					throw new IllegalSideException(Integer.toString((this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK))) + " is not a valid side-byte.");
 				}
 
 				moves.trimToSize();
@@ -152,7 +152,7 @@ public class Piece
 				{
 					if (((this.positionByte + Movesets.ROOK_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.ROOK_MOVE[i]), (byte) 0x0));
+						moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.ROOK_MOVE[i]),  0x0));
 					}
 				}
 
@@ -167,7 +167,7 @@ public class Piece
 				{
 					if (((this.positionByte + Movesets.KNIGHT_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.KNIGHT_MOVE[i]), (byte) 0x0));
+						moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.KNIGHT_MOVE[i]),  0x0));
 					}
 				}
 
@@ -182,7 +182,7 @@ public class Piece
 				{
 					if (((this.positionByte + Movesets.BISHOP_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.BISHOP_MOVE[i]), (byte) 0x0));
+						moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.BISHOP_MOVE[i]),  0x0));
 					}
 				}
 
@@ -197,7 +197,7 @@ public class Piece
 				{
 					if (((this.positionByte + Movesets.QUEEN_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.QUEEN_MOVE[i]), (byte) 0x0));
+						moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.QUEEN_MOVE[i]),  0x0));
 					}
 				}
 
@@ -212,7 +212,7 @@ public class Piece
 				{
 					if (((this.positionByte + Movesets.KING_MOVE[i]) & 0x88) == 0)
 					{
-						moves.add(new Move (this.positionByte, (byte) (this.positionByte + Movesets.KING_MOVE[i]), (byte) 0x0));
+						moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.KING_MOVE[i]),  0x0));
 					}
 				}
 
@@ -222,24 +222,24 @@ public class Piece
 
 
 			default:
-				throw new IllegalPieceException(Byte.toString(this.pieceByte) + " is not a valid piece-byte.");
+				throw new IllegalPieceException(Integer.toString(this.pieceByte) + " is not a valid piece-byte.");
 		}
 	}
 
-	public byte getColorByte ()
+	public int getColorByte ()
 	{
-		return (byte) (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK));
+		return  (this.pieceByte & (PieceData.WHITE_MASK | PieceData.BLACK_MASK));
 	}
 
-	public byte getPieceWithoutColorByte ()
+	public int getPieceWithoutColorByte ()
 	{
-		return (byte) (this.pieceByte & ~(PieceData.WHITE_MASK | PieceData.BLACK_MASK));
+		return  (this.pieceByte & ~(PieceData.WHITE_MASK | PieceData.BLACK_MASK));
 	}
 
 	@Override
 	public String toString ()
 	{
-		byte[] coords = ChessBoard.get2DCoord(this.positionByte);
-		return PieceData.toStringFromByte((byte) (this.pieceByte & 0x07), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + ('A'-1))) + Byte.toString(coords[1]);
+		int[] coords = ChessBoard.get2DCoord(this.positionByte);
+		return PieceData.toStringFromNum( (this.pieceByte & 0x07), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + ('A'-1))) + Integer.toString(coords[1]);
 	}
 }

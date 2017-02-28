@@ -14,16 +14,16 @@ import Chess.Exceptions.Unchecked.IllegalSideException;
  */
 public final class PieceData
 {
-	public static final byte WHITE_MASK =	(byte) 0x10;
-	public static final byte BLACK_MASK =	(byte) 0x20;
+	public static final int WHITE_MASK =	0x10;
+	public static final int BLACK_MASK =	0x20;
 
-	public static final byte EMPTY_BYTE =   (byte) 0x00;
-	public static final byte PAWN_BYTE =	(byte) 0x01;
-	public static final byte ROOK_BYTE =	(byte) 0x02;
-	public static final byte KNIGHT_BYTE =	(byte) 0x03;
-	public static final byte BISHOP_BYTE =	(byte) 0x04;
-	public static final byte QUEEN_BYTE =	(byte) 0x05;
-	public static final byte KING_BYTE =	(byte) 0x06;
+	public static final int EMPTY_BYTE =    0x00;
+	public static final int PAWN_BYTE =	 	0x01;
+	public static final int ROOK_BYTE =	 	0x02;
+	public static final int KNIGHT_BYTE =	0x03;
+	public static final int BISHOP_BYTE =	0x04;
+	public static final int QUEEN_BYTE =	0x05;
+	public static final int KING_BYTE =	 	0x06;
 
 	public static final int PAWN_SCORE =    100;
 	public static final int ROOK_SCORE =    500;
@@ -43,7 +43,7 @@ public final class PieceData
 	 */
 	public static final class EN_UK
 	{
-		public static final byte LOCALE_BYTE = 		0x0;
+		public static final int LOCALE_BYTE = 		0x0;
 
 		public static final String PAWN_NAME =		"Pawn";
 		public static final String ROOK_NAME =		"Rook";
@@ -67,7 +67,7 @@ public final class PieceData
 	 */
 	public static final class NL_BE
 	{
-		public static final byte LOCALE_BYTE = 		0x1;
+		public static final int LOCALE_BYTE = 		0x1;
 
 		public static final String PAWN_NAME =		"Pion";
 		public static final String ROOK_NAME =		"Toren";
@@ -85,19 +85,19 @@ public final class PieceData
 	}
 
 	/**
-	 * This method translates a byte to a human-readable string
-	 * @param pieceByte	The byte to be translated
-	 * @param localeByte A byte to indicate the desired locale
+	 * This method translates a int to a human-readable string
+	 * @param pieceNum	The int to be translated
+	 * @param localeNum A int to indicate the desired locale
 	 * @return The name of the piece, in the correct locale
 	 * @throws IllegalArgumentException
 	 * @throws IllegalPieceException
 	 */
-	public static String toStringFromByte(byte pieceByte, byte localeByte) throws IllegalArgumentException, IllegalPieceException
+	public static String toStringFromNum(int pieceNum, int localeNum) throws IllegalArgumentException, IllegalPieceException
 	{
-		switch (localeByte)
+		switch (localeNum)
 		{
 			case EN_UK.LOCALE_BYTE:
-				switch (pieceByte)
+				switch (pieceNum)
 				{
 					case PAWN_BYTE:
 						return EN_UK.PAWN_NAME;
@@ -114,10 +114,10 @@ public final class PieceData
 					case EMPTY_BYTE:
 						return "";
 					default:
-						throw new IllegalPieceException(Byte.toString(pieceByte) + " is not a valid piece byte");
+						throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 				}
 			case NL_BE.LOCALE_BYTE:
-				switch (pieceByte)
+				switch (pieceNum)
 				{
 					case PAWN_BYTE:
 						return NL_BE.PAWN_NAME;
@@ -134,24 +134,24 @@ public final class PieceData
 					case EMPTY_BYTE:
 						return "";
 					default:
-						throw new IllegalPieceException(Byte.toString(pieceByte) + " is not a valid piece byte");
+						throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 				}
 			default:
-				throw new IllegalArgumentException ("Invalid locale byte");
+				throw new IllegalArgumentException ("Invalid locale.");
 		}
 	}
 
 	/**
-	 * This method translates a human-readable string to a byte-code.
+	 * This method translates a human-readable string to a int-code.
 	 * @param pieceName The string representation of the piece
-	 * @param localeByte A byte to indicate the used locale
-	 * @return A byte to represent the piece
+	 * @param localeNum A int to indicate the used locale
+	 * @return A int to represent the piece
 	 * @throws IllegalPieceException
 	 * @throws IllegalArgumentException
 	 */
-	public static byte toByteFromString (String pieceName, byte localeByte) throws IllegalPieceException, IllegalArgumentException
+	public static int toNumFromString (String pieceName, int localeNum) throws IllegalPieceException, IllegalArgumentException
 	{
-		switch (localeByte)
+		switch (localeNum)
 		{
 			case EN_UK.LOCALE_BYTE:
 				switch (pieceName)
@@ -169,7 +169,7 @@ public final class PieceData
 					case EN_UK.KING_NAME:
 						return KING_BYTE;
 					default:
-						throw new IllegalPieceException(pieceName + " is not a valid piece name");
+						throw new IllegalPieceException(pieceName + " is not a valid piece name.");
 				}
 
 			case NL_BE.LOCALE_BYTE:
@@ -188,26 +188,26 @@ public final class PieceData
 					case NL_BE.KING_NAME:
 						return KING_BYTE;
 					default:
-						throw new IllegalPieceException(pieceName + " is not a valid piece name");
+						throw new IllegalPieceException(pieceName + " is not a valid piece name.");
 				}
 			default:
-				throw new IllegalArgumentException ("Invalid locale byte");
+				throw new IllegalArgumentException ("Invalid locale.");
 		}
 	}
 
 	/**
-	 * Translates a piece's byte to a 1-character string to represent that piece on a textual board
-	 * @param pieceByte A byte representing a piece
+	 * Translates a piece's int to a 1-character string to represent that piece on a textual board
+	 * @param pieceNum A int representing a piece
 	 * @return a 1-character string to represent that piece
 	 * @throws IllegalPieceException
 	 * @throws IllegalArgumentException
 	 */
-	public static String toShortFromByte(byte pieceByte, byte localeByte) throws IllegalPieceException, IllegalArgumentException
+	public static String toShortFromNum(int pieceNum, int localeNum) throws IllegalPieceException, IllegalArgumentException
 	{
-		switch (localeByte)
+		switch (localeNum)
 		{
 			case EN_UK.LOCALE_BYTE:
-				switch (pieceByte)
+				switch (pieceNum)
 				{
 					case PAWN_BYTE:
 						return EN_UK.PAWN_SHORT;
@@ -224,10 +224,10 @@ public final class PieceData
 					case EMPTY_BYTE:
 						return " ";
 					default:
-						throw new IllegalPieceException(Byte.toString(pieceByte) + " is not a valid piece byte");
+						throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 				}
 			case NL_BE.LOCALE_BYTE:
-				switch (pieceByte)
+				switch (pieceNum)
 				{
 					case PAWN_BYTE:
 						return NL_BE.PAWN_SHORT;
@@ -244,24 +244,24 @@ public final class PieceData
 					case EMPTY_BYTE:
 						return " ";
 					default:
-						throw new IllegalPieceException(Byte.toString(pieceByte) + " is not a valid piece byte");
+						throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 				}
 			default:
-				throw new IllegalArgumentException ("Invalid locale byte");
+				throw new IllegalArgumentException ("Invalid locale.");
 		}
 	}
 
 	/**
-	 * This method translates a 1-character string to a byte-code
+	 * This method translates a 1-character string to a int-code
 	 * @param pieceShort The 1-character string representation of the piece
-	 * @param localeByte A byte to indicate the used locale
-	 * @return A byte to represent the piece
+	 * @param localeNum A int to indicate the used locale
+	 * @return A int to represent the piece
 	 * @throws IllegalPieceException
 	 * @throws IllegalArgumentException
 	 */
-	public static byte toByteFromShort (String pieceShort, byte localeByte) throws IllegalPieceException, IllegalArgumentException
+	public static int toNumFromShort (String pieceShort, int localeNum) throws IllegalPieceException, IllegalArgumentException
 	{
-		switch (localeByte)
+		switch (localeNum)
 		{
 			case EN_UK.LOCALE_BYTE:
 				switch (pieceShort)
@@ -279,7 +279,7 @@ public final class PieceData
 					case EN_UK.KING_SHORT:
 						return KING_BYTE;
 					default:
-						throw new IllegalPieceException(pieceShort + " is not a valid piece short");
+						throw new IllegalPieceException(pieceShort + " is not a valid piece short.");
 				}
 
 			case NL_BE.LOCALE_BYTE:
@@ -298,16 +298,16 @@ public final class PieceData
 					case NL_BE.KING_SHORT:
 						return KING_BYTE;
 					default:
-						throw new IllegalPieceException(pieceShort + " is not a valid piece short");
+						throw new IllegalPieceException(pieceShort + " is not a valid piece short.");
 				}
 			default:
-				throw new IllegalArgumentException ("Invalid locale byte");
+				throw new IllegalArgumentException ("Invalid locale.");
 		}
 	}
 
-	public static int getPieceScore (byte pieceByte)
+	public static int getPieceScore (int pieceNum)
 	{
-		switch (pieceByte)
+		switch (pieceNum)
 		{
 			case PAWN_BYTE:
 				return PAWN_SCORE;
@@ -324,17 +324,17 @@ public final class PieceData
 			case EMPTY_BYTE:
 				return 0;
 			default:
-				throw new IllegalPieceException(Byte.toString(pieceByte) + " is not a valid piece byte");
+				throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 		}
 	}
 
 	/**
-	 * Thie function finds the color byte of the opponent
+	 * Thie function finds the color int of the opponent
 	 * @param color The players color
 	 * @return The opponent's color
 	 * @throws IllegalSideException
 	 */
-	public static byte getOpponentColorByte (byte color) throws IllegalSideException
+	public static int getOpponentColorNum (int color) throws IllegalSideException
 	{
 		if (color == PieceData.WHITE_MASK)
 		{
@@ -346,7 +346,7 @@ public final class PieceData
 		}
 		else
 		{
-			throw new IllegalSideException(Byte.toString(color) + " is not a valid color byte.");
+			throw new IllegalSideException(Integer.toString(color) + " is not a valid color.");
 		}
 	}
 }

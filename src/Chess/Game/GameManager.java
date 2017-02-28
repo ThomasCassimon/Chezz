@@ -19,7 +19,8 @@ public class GameManager
 	 * Stores the players, index 0 = White, index 1 = Black
 	 */
 	private Player[] players;
-	private byte activeColor;
+	private ArrayList <Move> moveHistory;
+	private int activeColor;
 	private ChessBoard cb;
 
 	public GameManager ()
@@ -27,6 +28,7 @@ public class GameManager
 		this.cb = new ChessBoard();
 		this.activeColor = PieceData.WHITE_MASK;
 		this.players = new Player [2];
+		this.moveHistory = new ArrayList <Move> ();
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class GameManager
 	 * Returns the color byte of the currently active player
 	 * @return the color byte of the player who's turn it is
 	 */
-	public byte getActiveColorByte ()
+	public int getActiveColorByte ()
 	{
 		return this.activeColor;
 	}
@@ -155,17 +157,17 @@ public class GameManager
 
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
-		byte piece = p.getPieceWithoutColorByte();
-		byte color = p.getColorByte();
+		int piece = p.getPieceWithoutColorByte();
+		int color = p.getColorByte();
 		ArrayList <Move> possibleMoves = p.getAllPossibleMoves();
 
-		for (byte i = 0; i < possibleMoves.size(); i++)
+		for (int i = 0; i < possibleMoves.size(); i++)
 		{
 			Move m = possibleMoves.get(i);
-			byte src = m.getSrc();
-			byte dst = m.getDst();
-			byte deltaRank = (byte) abs((src >> 4) - (dst >> 4));
-			byte deltaFile = (byte) abs((src & 7) - (dst & 7));
+			int src = m.getSrc();
+			int dst = m.getDst();
+			int deltaRank = (byte) abs((src >> 4) - (dst >> 4));
+			int deltaFile = (byte) abs((src & 7) - (dst & 7));
 
 			if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (color))
 			{
@@ -173,9 +175,16 @@ public class GameManager
 				i--;
 				continue;
 			}
-			else if ((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (PieceData.getOpponentColorByte(color)))
+			else if (((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (PieceData.getOpponentColorNum(color))) && (piece != PieceData.PAWN_BYTE))
 			{
+				// Pawns don't capture on their moves so they aren't included in this check
 				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
+			}
+			else if (((this.cb.get(dst) & (PieceData.BLACK_MASK | PieceData.WHITE_MASK)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE))
+			{
+				possibleMoves.remove(i);
+				i--;
+				continue;
 			}
 
 			switch (piece)
@@ -192,7 +201,7 @@ public class GameManager
 
 					if (deltaRank != 0)
 					{
-						for (byte j = 1; j <= deltaRank; j++)
+						for (int j = 1; j <= deltaRank; j++)
 						{
 							if (this.cb.get((byte) (src + (j * 0x10))) != 0)
 							{
@@ -204,7 +213,7 @@ public class GameManager
 					}
 					else if (deltaFile != 0)
 					{
-						for (byte j = 1; j <= deltaFile; j++)
+						for (int j = 1; j <= deltaFile; j++)
 						{
 							if (this.cb.get((byte) (src + j)) != 0)
 							{
@@ -233,6 +242,25 @@ public class GameManager
 	public void makeMove (Move m)
 	{
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
-		this.cb.set(m.getSrc(), (byte) 0x0);	// Empty the source square
+		this.cb.set(m.getSrc(), 0x0);	// Empty the source square
+		this.moveHistory.add(m);
+	}
+
+	/**
+	 * Returns the last move made
+	 * @return
+	 */
+	public Move getLastMove ()
+	{
+		return this.moveHistory.get(this.moveHistory.size() - 1);
+	}
+
+	/**
+	 * Returns the move history
+	 * @return an ArrayList containing all moves (in chronological order)
+	 */
+	public ArrayList<Move> getMoveHistory ()
+	{
+		return this.moveHistory;
 	}
 }

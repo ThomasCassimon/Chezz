@@ -9,9 +9,9 @@ package Chess.Game;
  */
 public abstract class Player
 {
-	protected byte colorByte;
+	protected int colorByte;
 
-	public Player (byte colorByte)
+	public Player (int colorByte)
 	{
 		this.colorByte = colorByte;
 	}

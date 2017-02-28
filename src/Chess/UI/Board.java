@@ -15,7 +15,7 @@ public class Board extends JPanel
 
 
 	//Images
-	private ImageIcon king = new ImageIcon(MainWindow.class.getResource("KB.png"));
+	private ImageIcon king = new ImageIcon(MainWindow.class.getResource("/home/thomas/Dropbox/Universiteit/Semester_4/Software_Design/Chezz/res/pieceSets/default"));
 
 
 	public Board()

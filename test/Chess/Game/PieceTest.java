@@ -23,11 +23,11 @@ public class PieceTest
 
 		for (byte pieceByte : pieceBytes)
 		{
-			pieceString = PieceData.toStringFromByte(pieceByte, PieceData.EN_UK.LOCALE_BYTE);
+			pieceString = PieceData.toStringFromNum(pieceByte, PieceData.EN_UK.LOCALE_BYTE);
 			p = new Piece(pieceString, locationByte, PieceData.EN_UK.LOCALE_BYTE);
 			assertEquals(pieceByte, p.getPieceByte());
 
-			pieceString = PieceData.toShortFromByte(pieceByte, PieceData.EN_UK.LOCALE_BYTE);
+			pieceString = PieceData.toShortFromNum(pieceByte, PieceData.EN_UK.LOCALE_BYTE);
 			p = new Piece(pieceString, locationByte, PieceData.EN_UK.LOCALE_BYTE);
 			assertEquals(pieceByte, p.getPieceByte());
 		}
@@ -39,11 +39,11 @@ public class PieceTest
 		byte pieceByte = PieceData.PAWN_BYTE;
 		Piece p;
 
-		for (byte i = 1; i <= 8; i++)
+		for (int i = 1; i <= 8; i++)
 		{
-			for (byte j = 1; j <= 8; j++)
+			for (int j = 1; j <= 8; j++)
 			{
-				byte index0x88 = ChessBoard.get0x88Index(i,j);
+				int index0x88 = ChessBoard.get0x88Index(i,j);
 
 				p = new Piece (pieceByte, i, j);
 				assertEquals(index0x88, p.getPositionByte());
