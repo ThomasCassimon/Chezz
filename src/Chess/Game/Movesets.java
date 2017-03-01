@@ -18,10 +18,6 @@ public final class Movesets
 	public static final byte[] PAWN_MOVE_WHITE = 	{0x10,	0x20};
 	//public static final byte[][] PAWN_MOVE_BLACK =      {{0,-1},	{0,-2}};
 	public static final byte[] PAWN_MOVE_BLACK =	{-0x10, -0x20};
-	//public static final byte[][] PAWN_CAPTURE_WHITE = 	{{-1,1},	{1,1}};
-	public static final byte[] PAWN_CAPTURE_WHITE =	{0x11,	0x09};
-	//public static final byte[][] PAWN_CAPTURE_BLACK = 	{{-1,-1},	{1,-1}};
-	public static final byte[] PAWN_CAPTURE_BLACK =	{-0x11,	-0x09};
 
 	/*
 	 * Rook

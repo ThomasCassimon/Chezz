@@ -70,13 +70,12 @@ public class ChessBoard
 		this.set(6, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
 
 		// Queens
-		this.set(4, 1, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
-
-		this.set(4, 8, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
+		this.set(5, 1, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
+		this.set(5, 8, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
 
 		// Kings
-		this.set(5, 1, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
-		this.set(5, 8, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
+		this.set(4, 1, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
+		this.set(4, 8, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
 
 		return this;
 	}
