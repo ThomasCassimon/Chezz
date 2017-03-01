@@ -27,6 +27,7 @@ public class MainWindow extends JFrame implements ActionListener
 	public MainWindow()
 	{
 		 super("Chezz!");
+
 		 this.gameManager = new GameManager();
 		 this.gameManager.init();
 		 panel = new JPanel();

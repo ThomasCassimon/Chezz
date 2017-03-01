@@ -180,7 +180,7 @@ public class GameManager
 				// Pawns don't capture on their moves so they aren't included in this check
 				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
 			}
-			else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE))
+			else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE) && (deltaRank == 0))
 			{
 				possibleMoves.remove(i);
 				i--;
@@ -193,8 +193,46 @@ public class GameManager
 					// Checking for pieces along move path
 					if (deltaRank != 1)
 					{
-
+						if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
+						{
+							possibleMoves.remove(i);
+							i--;
+							continue;
+						}
 					}
+
+					if (color == PieceData.WHITE_BYTE)
+					{
+						Move capL = new Move(src, src+0x0F, Move.CAPTURE_MASK);
+						Move capR = new Move(src, src+0x11, Move.CAPTURE_MASK);
+
+						if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
+						{
+							possibleMoves.add(capL);
+							i += 2;
+						}
+
+						if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
+						{
+							possibleMoves.add(capR);
+							i += 2;
+						}
+					}
+					else if (color == PieceData.BLACK_BYTE)
+					{
+						if ((this.cb.get(src - 0x0F) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color))
+						{
+							possibleMoves.add(new Move(src, src+0x0F, Move.CAPTURE_MASK));
+							i++;
+						}
+
+						if ((this.cb.get(src - 0x11) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color))
+						{
+							possibleMoves.add(new Move(src, src+0x0F, Move.CAPTURE_MASK));
+							i++;
+						}
+					}
+
 					break;
 				case PieceData.ROOK_BYTE:
 					// Checking for pieces along the move path
@@ -231,7 +269,6 @@ public class GameManager
 					break;
 			}
 		}
-
 
 		return possibleMoves;
 	}

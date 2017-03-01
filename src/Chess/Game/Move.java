@@ -206,6 +206,11 @@ public class Move
 		int[] srcCoords = ChessBoard.get2DCoord(this.src);
 		int[] dstCoords = ChessBoard.get2DCoord(this.dst);
 
-		return ((char) (srcCoords[0] + ('A'-1))) + Integer.toString(srcCoords[1]) + "-" + ((char) (dstCoords[0] + ('A'-1))) + Integer.toString(dstCoords[1]);
+		String res = ((char) (srcCoords[0] + ('A'-1))) + Integer.toString(srcCoords[1]) + "-" + ((char) (dstCoords[0] + ('A'-1))) + Integer.toString(dstCoords[1]);
+
+		res += " Capture: " + Boolean.toString((this.special & CAPTURE_MASK) == CAPTURE_MASK);
+		res += " Promo: " + Boolean.toString((this.special & PROMO_MASK) == PROMO_MASK);
+
+		return res;
 	}
 }
