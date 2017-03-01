@@ -233,7 +233,7 @@ public class Board extends JPanel
 	public int getIndex(int file, int rank)
 	{
 		int index;
-		index = ((rank -1)*8 + file +1);
+		index = ((rank -1)*8 + file -1);
 
 		return index;
 
