@@ -3,6 +3,8 @@ package Chess;
 import Chess.Game.*;
 import Chess.UI.MainWindow;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,27 +18,37 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		MainWindow mw = new MainWindow();
+		//MainWindow mw = new MainWindow();
+
+		int whitePieceIndex = 1;
+		int blackPieceIndex = 2;
+		int moveIndex = 1;
 
 		GameManager gm = new GameManager();
 		gm.init();
 
 		ArrayList<Piece> whitePieces = gm.getAllWhitePieces();
-		ArrayList<Move> validMoves = new ArrayList<>();
+		ArrayList<Move> validMoves = gm.getAllValidMoves(whitePieces.get(whitePieceIndex));
 
-		for (Piece p : whitePieces)
+		System.out.println("Found " + Integer.toString(validMoves.size()) + " valid moves for " + whitePieces.get(whitePieceIndex));
+
+		System.out.println("Moving: " + validMoves.get(moveIndex).toString());
+		gm.makeMove(validMoves.get(moveIndex));
+
+		ArrayList<Piece> blackPieces = gm.getAllBlackPieces();
+		validMoves = gm.getAllValidMoves(blackPieces.get(blackPieceIndex));
+
+		System.out.println("Moving: " + validMoves.get(moveIndex).toString());
+		gm.makeMove(validMoves.get(moveIndex));
+
+		whitePieces = gm.getAllWhitePieces();
+		validMoves = gm.getAllValidMoves(whitePieces.get(whitePieceIndex));
+
+		System.out.println("Found " + Integer.toString(validMoves.size()) + " valid moves for " + whitePieces.get(whitePieceIndex));
+
+		for (Move m : validMoves)
 		{
-			if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
-			{
-				validMoves = gm.getAllValidMoves(p);
-
-				System.out.println("Found " + validMoves.size() + " valid moves for " + p.toString());
-
-				for (byte i = 0; i < validMoves.size(); i++)
-				{
-					System.out.println(p.toString() + " moves: " + validMoves.get(i).toString());
-				}
-			}
+			System.out.println("Found move for " + whitePieces.get(whitePieceIndex).toString() + " :" + m.toString());
 		}
 	}
 }
