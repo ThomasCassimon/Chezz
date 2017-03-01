@@ -1,5 +1,6 @@
 package Chess.Game;
 
+import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 /**
@@ -65,16 +66,38 @@ public class Move
 
 	public Move (int src, int dst, int special)
 	{
-		this.src = src;
-		this.dst = dst;
-		this.special = special;
+		if ((src & 0x88) != 0)
+		{
+			throw new IllegalSquareException (Integer.toBinaryString(src) + " is not a valid position.");
+		}
+		else if ((dst & 0x88) != 0)
+		{
+			throw new IllegalSquareException (Integer.toBinaryString(dst) + " is not a valid position.");
+		}
+		else
+		{
+			this.src = src;
+			this.dst = dst;
+			this.special = special;
+		}
 	}
 
 	public Move (int srcFile, int srcRank, int dstFile, int dstRank, int special)
 	{
-		this.src = ChessBoard.get0x88Index(srcRank, srcFile);
-		this.dst = ChessBoard.get0x88Index(dstRank, dstFile);
-		this.special = special;
+		if (((1 > srcFile) || (srcFile > 8)) || ((1 > srcRank) || (srcRank > 8)))
+		{
+			throw new IllegalSquareException("Source: " + ((char) srcFile + 'A') + Integer.toString(srcRank) + " is not a valid position.");
+		}
+		else if (((1 > dstFile) || (dstFile > 8)) || ((1 > dstRank) || (dstRank > 8)))
+		{
+			throw new IllegalSquareException("Destination: " + ((char) srcFile + 'A') + Integer.toString(srcRank) + " is not a valid position.");
+		}
+		else
+		{
+			this.src = ChessBoard.get0x88Index(srcRank, srcFile);
+			this.dst = ChessBoard.get0x88Index(dstRank, dstFile);
+			this.special = special;
+		}
 	}
 
 	/**
