@@ -56,16 +56,16 @@ public class ChessBoardTest
 		assertEquals (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, cb.get( 6,  8));
 
 		// White Queen
-		assertEquals(PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, cb.get( 4,  1));
+		assertEquals(PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, cb.get( 5,  1));
 
 		// Black Queen
-		assertEquals(PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, cb.get( 4,  8));
+		assertEquals(PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, cb.get( 5,  8));
 
 		// White King
-		assertEquals(PieceData.KING_BYTE | PieceData.WHITE_BYTE, cb.get( 5,  1));
+		assertEquals(PieceData.KING_BYTE | PieceData.WHITE_BYTE, cb.get( 4,  1));
 
 		// Black King
-		assertEquals(PieceData.KING_BYTE | PieceData.BLACK_BYTE, cb.get( 5,  8));
+		assertEquals(PieceData.KING_BYTE | PieceData.BLACK_BYTE, cb.get( 4,  8));
 	}
 
 	@Test
@@ -140,16 +140,15 @@ public class ChessBoardTest
 	@Test
 	public void get2DCoord() throws Exception
 	{
-		int[] lowerLeft = {1,1};
-		assertArrayEquals(lowerLeft, ChessBoard.get2DCoord( 0x00));
-
-		int[] middleLeft = {1, 2};
-		assertArrayEquals(middleLeft, ChessBoard.get2DCoord( 0x10));
-
-		int[] middleRight = {8, 2};
-		assertArrayEquals(middleRight, ChessBoard.get2DCoord( 0x17));
-
-		int[] upperRight = {8,8};
-		assertArrayEquals(upperRight, ChessBoard.get2DCoord( 0x77));
+		for (int i = 1; i <= 8; i++)
+		{
+			for (int j = 1; j <= 8; j++)
+			{
+				int file = i - 1;
+				int rank = j - 1;
+				int[] coord = {i,j};
+				assertArrayEquals(coord, ChessBoard.get2DCoord((16 * rank) + file));
+			}
+		}
 	}
 }

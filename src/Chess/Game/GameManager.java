@@ -1,6 +1,7 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
+import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 import java.util.ArrayList;
 
@@ -204,33 +205,50 @@ public class GameManager
 
 					if (color == PieceData.WHITE_BYTE)
 					{
-						Move capL = new Move(src, src+0x0F, Move.CAPTURE_MASK);
-						Move capR = new Move(src, src+0x11, Move.CAPTURE_MASK);
-
-						if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
+						try
 						{
-							possibleMoves.add(capL);
-							i += 2;
+							Move capL = new Move(src, src + 0x0F, Move.CAPTURE_MASK);
+							Move capR = new Move(src, src + 0x11, Move.CAPTURE_MASK);
+
+							if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
+							{
+								possibleMoves.add(capL);
+								i += 2;
+							}
+
+							if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
+							{
+								possibleMoves.add(capR);
+								i += 2;
+							}
 						}
-
-						if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
+						catch (IllegalSquareException ise)
 						{
-							possibleMoves.add(capR);
-							i += 2;
+							ise.printStackTrace();
 						}
 					}
 					else if (color == PieceData.BLACK_BYTE)
 					{
-						if ((this.cb.get(src - 0x0F) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color))
+						try
 						{
-							possibleMoves.add(new Move(src, src+0x0F, Move.CAPTURE_MASK));
-							i++;
-						}
+							Move capL = new Move(src, src - 0x0F, Move.CAPTURE_MASK);
+							Move capR = new Move(src, src - 0x11, Move.CAPTURE_MASK);
 
-						if ((this.cb.get(src - 0x11) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color))
+							if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
+							{
+								possibleMoves.add(capL);
+								i += 2;
+							}
+
+							if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
+							{
+								possibleMoves.add(capR);
+								i += 2;
+							}
+						}
+						catch (IllegalSquareException ise)
 						{
-							possibleMoves.add(new Move(src, src+0x0F, Move.CAPTURE_MASK));
-							i++;
+							ise.printStackTrace();
 						}
 					}
 
@@ -242,7 +260,18 @@ public class GameManager
 					{
 						for (int j = 1; j <= deltaRank; j++)
 						{
-							if (this.cb.get(src + (j * 0x10)) != 0)
+							int index = src + (j * 0x10);
+
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
+							{
+								possibleMoves.remove(i);
+								i--;
+								break;
+							}
+
+							index = src - (j * 0x10);
+
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
 								possibleMoves.remove(i);
 								i--;
@@ -254,7 +283,16 @@ public class GameManager
 					{
 						for (int j = 1; j <= deltaFile; j++)
 						{
-							if (this.cb.get(src + j) != 0)
+							int index = src + j;
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
+							{
+								possibleMoves.remove(i);
+								i--;
+								break;
+							}
+
+							index = src - j;
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
 								possibleMoves.remove(i);
 								i--;
