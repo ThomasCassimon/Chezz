@@ -5,9 +5,12 @@ import Chess.Game.Piece;
 import Chess.Game.PieceData;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.rmi.server.UID;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import static java.lang.StrictMath.floor;
 
 
 public class Board extends JPanel
@@ -15,42 +18,42 @@ public class Board extends JPanel
 	private Tile tiles[] = new Tile[64];
 
 
-	private static final int NUMBER_TILES = 8;
 
 
-	public Board()
+
+	public Board(MainWindow mainWindow)
 	{
 		super();
 
 		this.setPreferredSize(new Dimension(800,800));
-		this.setLayout(new GridLayout(NUMBER_TILES +2, NUMBER_TILES +2));
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		initBoard();
+		this.setLayout(new GridLayout(UIData.NUMBER_TILES +2, UIData.NUMBER_TILES +2));
+		this.setBorder(BorderFactory.createLineBorder(UIData.BORDER_COLOR));
+		initBoard(mainWindow);
 
 	}
 
 	/**
 	 * Sets the layout of the board
 	 */
-	private void initBoard()
+	private void initBoard(MainWindow mainWindow)
 	{
 		//Forming the chess board
 		char letter='A';
-		int row, col, arrayIndex;
+		int rank, file, arrayIndex;
 
 
 		//TOP of frame
 
 		JLabel label = new JLabel("");
-		label.setBackground(UIData.FRAMES);
+		label.setBackground(UIData.FRAME_COLOR);
 		label.setOpaque(true);
 		this.add(label);
 
 
-		for (col=0;col<8;col++)
+		for (file=0;file<8;file++)
 		{
 			label = new JLabel (Character.toString(letter));
-			label.setBackground(UIData.FRAMES);
+			label.setBackground(UIData.FRAME_COLOR);
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setVerticalAlignment(SwingConstants.BOTTOM);
 			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
@@ -60,16 +63,16 @@ public class Board extends JPanel
 		}
 
 		label = new JLabel("");
-		label.setBackground(UIData.FRAMES);
+		label.setBackground(UIData.FRAME_COLOR);
 		label.setOpaque(true);
 		this.add(label);
 
 
-		for (row = NUMBER_TILES-1; row >=0; row--)
+		for (rank = UIData.NUMBER_TILES-1; rank >=0; rank--)
 		{
 			//LEFT of frame
-			label = new JLabel(Integer.toString(row+1)+" ");
-			label.setBackground(UIData.FRAMES);
+			label = new JLabel(Integer.toString(rank+1)+" ");
+			label.setBackground(UIData.FRAME_COLOR);
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setVerticalAlignment(SwingConstants.CENTER);
 			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
@@ -78,14 +81,14 @@ public class Board extends JPanel
 			this.add(label);
 
 			//TILES
-			for (col = NUMBER_TILES-1; col >=0; col--)
+			for (file = 0; file < UIData.NUMBER_TILES; file++)
 			{
-				arrayIndex = (row * 8) + col;
+				arrayIndex = (rank * 8) + file;
 
 
-				tiles[arrayIndex] = new Tile();
+				tiles[arrayIndex] = new Tile(file,rank);
 
-				if ((row + col) % 2 != 0)
+				if ((rank + file) % 2 != 0)
 				{
 					tiles[arrayIndex].setBackground(UIData.BROWN);
 				}
@@ -96,13 +99,14 @@ public class Board extends JPanel
 
 				tiles[arrayIndex].setOpaque(true);
 				tiles[arrayIndex].setBorderPainted(false);
+				tiles[arrayIndex].addActionListener(mainWindow);
 
 				this.add(tiles[arrayIndex]);
 			}
 
 			//RIGHT of frame
-			label = new JLabel(" " + Integer.toString(row+1));
-			label.setBackground(UIData.FRAMES);
+			label = new JLabel(" " + Integer.toString(rank+1));
+			label.setBackground(UIData.FRAME_COLOR);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			label.setVerticalAlignment(SwingConstants.CENTER);
 			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
@@ -115,15 +119,15 @@ public class Board extends JPanel
 
 		//BOTTOM of frame
 		label = new JLabel("");
-		label.setBackground(UIData.FRAMES);
+		label.setBackground(UIData.FRAME_COLOR);
 		label.setOpaque(true);
 		this.add(label);
 
 		letter = 'A';
-		for (col=0;col<8;col++)
+		for (file=0;file<8;file++)
 		{
 			label = new JLabel (Character.toString(letter));
-			label.setBackground(UIData.FRAMES);
+			label.setBackground(UIData.FRAME_COLOR);
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setVerticalAlignment(SwingConstants.TOP);
 			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
@@ -133,7 +137,7 @@ public class Board extends JPanel
 		}
 
 		label = new JLabel("");
-		label.setBackground(UIData.FRAMES);
+		label.setBackground(UIData.FRAME_COLOR);
 		label.setOpaque(true);
 		this.add(label);
 	}
@@ -214,7 +218,7 @@ public class Board extends JPanel
 	 * @param piece piece that holds the location
 	 * @return index of the piece
 	 */
-	private int getIndex(Piece piece)
+	public int getIndex(Piece piece)
 	{
 		int indexArr[];
 		int index;
@@ -222,8 +226,35 @@ public class Board extends JPanel
 		indexArr = piece.get2DCoord();
 		index = ((indexArr[1]-1) * 8) + (indexArr[0]-1);
 		return index;
-
 	}
 
 
+	/**
+	 * Returns 2D coordinates for a given index.
+	 * @param i index of a tile
+	 * @return array with file and rank (file first)
+	 */
+	public int[] get2DCoord(int i)
+	{
+		int index[] = new int[2];
+
+		index[0] =i%8 + 1;
+		System.out.println("File: " + index[0]);
+		index[1] = (int) (i/8 + 1);
+		System.out.println("Rank: " + index[1]);
+
+		return index;
+
+	}
+
+	public Tile getTile(int index)
+	{
+		return tiles[index];
+	}
+
+	public void highlightPiece(int[] indexArr)
+	{
+		int i = this.getIndex(new Piece(indexArr[0],indexArr[1]));
+		tiles[i].setBackground(UIData.HIGHLIGHT);
+	}
 }

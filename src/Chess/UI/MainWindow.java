@@ -1,6 +1,7 @@
 package Chess.UI;
 
 import Chess.Game.GameManager;
+import Chess.Game.Move;
 import Chess.Game.Piece;
 
 import javax.swing.*;
@@ -25,14 +26,13 @@ public class MainWindow extends JFrame implements ActionListener
 	public MainWindow()
 	{
 		 super("Chezz!");
-
 		 this.gameManager = new GameManager();
 		 this.gameManager.init();
 		 panel = new JPanel();
-		 board = new Board();
+		 board = new Board(this);
 		 sidePanel = new SidePanel();
 
-		 panel.setBackground(UIData.BACKGROUND);
+		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
 		 this.setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
 		 this.setResizable(false);
@@ -42,7 +42,7 @@ public class MainWindow extends JFrame implements ActionListener
 		panel.add(board);
 		panel.add(sidePanel);
 
-		panel.setBackground(UIData.BACKGROUND);
+		panel.setBackground(UIData.BACKGROUND_COLOR);
 		this.add(panel);
 		this.initBoard();
 
@@ -74,6 +74,30 @@ public class MainWindow extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		int i;
+		int[] indexArr;
+		ArrayList<Move> moves = new ArrayList<Move>();
+		Piece piece;
+
 		System.out.println("action detected");
+
+		for (i=0;i<UIData.NUMBER_TILES*UIData.NUMBER_TILES; i++)
+		{
+			if(e.getSource() == board.getTile(i))
+			{
+				indexArr = board.get2DCoord(i);
+				piece = gameManager.get(indexArr[1],indexArr[0]);
+				//System.out.println("Piece byte " + piece.getPieceByte());
+				moves = gameManager.getAllValidMoves(piece);
+
+				for(Move move: moves)
+				{
+					System.out.println("MOVE");
+					board.highlightPiece(move.get2DDst());
+				}
+
+			}
+		}
+
 	}
 }
