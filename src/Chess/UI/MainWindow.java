@@ -76,7 +76,7 @@ public class MainWindow extends JFrame implements ActionListener
 	{
 		int i;
 		int[] indexArr;
-		ArrayList<Move> moves = new ArrayList<Move>();
+		ArrayList<Move> moves;
 		Piece piece;
 
 		System.out.println("action detected");
@@ -87,13 +87,13 @@ public class MainWindow extends JFrame implements ActionListener
 			{
 				board.setActive(i);
 				indexArr = board.get2DCoord(i);
-				piece = gameManager.get(indexArr[1],indexArr[0]);
+				piece = gameManager.get(indexArr[0],indexArr[1]);
 				System.out.println("Piece byte " + piece.getPieceByte());
 				moves = gameManager.getAllValidMoves(piece);
 
 				for(Move move: moves)
 				{
-					System.out.println("MOVE");
+					System.out.println("MOVE ");
 					board.highlightPiece(move.get2DDst());
 				}
 
