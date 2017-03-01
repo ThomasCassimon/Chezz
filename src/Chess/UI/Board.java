@@ -222,12 +222,22 @@ public class Board extends JPanel
 	{
 		int indexArr[];
 		int index;
-		int file,rank;
 		indexArr = piece.get2DCoord();
+		System.out.println("File: " + indexArr[0] + "	Rank: " + indexArr[1]);
 		index = ((indexArr[1]-1) * 8) + (indexArr[0]-1);
+		//index = ((rank-1)*8 + file+1);
+		System.out.println("Index: " + index);
 		return index;
 	}
 
+	public int getIndex(int file, int rank)
+	{
+		int index;
+		index = ((rank -1)*8 + file +1);
+
+		return index;
+
+	}
 
 	/**
 	 * Returns 2D coordinates for a given index.
@@ -254,7 +264,8 @@ public class Board extends JPanel
 
 	public void highlightPiece(int[] indexArr)
 	{
-		int i = this.getIndex(new Piece(indexArr[0],indexArr[1]));
+		int i = this.getIndex(indexArr[0],indexArr[1]);
+		System.out.println("Highlighting File: " + indexArr[0] + "	Rank: " + indexArr[1]);
 		tiles[i].setBackground(UIData.HIGHLIGHT);
 	}
 
