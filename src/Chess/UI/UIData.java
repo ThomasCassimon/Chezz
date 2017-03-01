@@ -13,7 +13,7 @@ public final class UIData
 
 	//CHESS PIECES
 	//Pawns
-	public static final  ImageIcon WP = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/PW.png"));
+	public static final ImageIcon WP = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/PW.png"));
 	public static final ImageIcon BP = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/PB.png"));
 	//Kings
 	public static final ImageIcon WK = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/KW.png"));
