@@ -106,7 +106,7 @@ public class GameManager
 	 * @param rank	The rank of the piece
 	 * @return	The piece at coordinate file-rank
 	 */
-	public Piece get (byte file, byte rank)
+	public Piece get (int file, int rank)
 	{
 		return new Piece(this.cb.get(file, rank), ChessBoard.get0x88Index(file, rank));
 	}
@@ -166,8 +166,8 @@ public class GameManager
 			Move m = possibleMoves.get(i);
 			int src = m.getSrc();
 			int dst = m.getDst();
-			int deltaRank = (byte) abs((src >> 4) - (dst >> 4));
-			int deltaFile = (byte) abs((src & 7) - (dst & 7));
+			int deltaRank = abs((src >> 4) - (dst >> 4));
+			int deltaFile = abs((src & 7) - (dst & 7));
 
 			if ((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (color))
 			{
@@ -266,6 +266,54 @@ public class GameManager
 						possibleMoves.remove(i);
 						i--;
 					}
+					break;
+
+				case PieceData.BISHOP_BYTE:
+
+					if (deltaRank == deltaFile)
+					{
+						for (int j = 1; j < deltaRank; j++)
+						{
+							int forwardRightIndex = src + (j * 0x11);
+							int forwardLeftIndex = src + (j * 0x0F);
+							int backwardRightIndex = src - (j * 0x0F);
+							int backwardLeftIndex = src - (j * 0x11);
+
+							if ((forwardRightIndex > 0) && (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE))
+							{
+								possibleMoves.remove(i);
+								i--;
+								continue;
+							}
+							else if ((forwardLeftIndex > 0) && (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE))
+							{
+								possibleMoves.remove(i);
+								i--;
+								continue;
+							}
+							else if ((backwardRightIndex > 0) && (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE))
+							{
+								possibleMoves.remove(i);
+								i--;
+								continue;
+							}
+							else if ((backwardLeftIndex > 0) && (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE))
+							{
+								possibleMoves.remove(i);
+								i--;
+								continue;
+							}
+						}
+					}
+					else
+					{
+						possibleMoves.remove(i);
+						i--;
+						continue;
+					}
+					break;
+
+				default:
 					break;
 			}
 		}
