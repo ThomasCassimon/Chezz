@@ -201,6 +201,7 @@ public class GameManager
 						}
 					}
 
+
 					if (color == PieceData.WHITE_BYTE)
 					{
 						Move capL = new Move(src, src+0x0F, Move.CAPTURE_MASK);
