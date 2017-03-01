@@ -5,6 +5,8 @@ import Chess.Game.Piece;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.rmi.server.UID;
 import java.util.ArrayList;
 
@@ -25,6 +27,7 @@ public class MainWindow extends JFrame
 	public MainWindow()
 	{
 		 super("Chezz!");
+
 		 this.gameManager = new GameManager();
 		 this.gameManager.init();
 		 panel = new JPanel();
