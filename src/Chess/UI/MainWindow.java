@@ -4,10 +4,8 @@ import Chess.Game.GameManager;
 import Chess.Game.Piece;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.server.UID;
 import java.util.ArrayList;
 
 //Created by Astrid on 22/02/2017.
