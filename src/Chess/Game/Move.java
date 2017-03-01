@@ -68,11 +68,11 @@ public class Move
 	{
 		if ((src & 0x88) != 0)
 		{
-			throw new IllegalSquareException (Integer.toBinaryString(src) + " is not a valid position.");
+			throw new IllegalSquareException (Integer.toString(src) + " is not a valid position.");
 		}
 		else if ((dst & 0x88) != 0)
 		{
-			throw new IllegalSquareException (Integer.toBinaryString(dst) + " is not a valid position.");
+			throw new IllegalSquareException (Integer.toString(dst) + " is not a valid position.");
 		}
 		else
 		{
