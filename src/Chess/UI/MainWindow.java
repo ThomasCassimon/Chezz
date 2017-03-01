@@ -5,12 +5,14 @@ import Chess.Game.Piece;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.server.UID;
 import java.util.ArrayList;
 
 //Created by Astrid on 22/02/2017.
 
-public class MainWindow extends JFrame
+public class MainWindow extends JFrame implements ActionListener
 {
 	private static int WINDOW_HEIGHT = 1200;
 	private static int WINDOW_WIDTH = 850;
@@ -68,5 +70,11 @@ public class MainWindow extends JFrame
 		{
 			board.setPiece(piece);
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		System.out.println("action detected");
 	}
 }
