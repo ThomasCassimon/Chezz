@@ -18,7 +18,7 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		//MainWindow mw = new MainWindow();
+		MainWindow mw = new MainWindow();
 
 		int whitePieceIndex = 1;
 		int blackPieceIndex = 2;
