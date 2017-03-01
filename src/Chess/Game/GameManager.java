@@ -242,7 +242,7 @@ public class GameManager
 					{
 						for (int j = 1; j <= deltaRank; j++)
 						{
-							if (this.cb.get((byte) (src + (j * 0x10))) != 0)
+							if (this.cb.get(src + (j * 0x10)) != 0)
 							{
 								possibleMoves.remove(i);
 								i--;
@@ -254,7 +254,7 @@ public class GameManager
 					{
 						for (int j = 1; j <= deltaFile; j++)
 						{
-							if (this.cb.get((byte) (src + j)) != 0)
+							if (this.cb.get(src + j) != 0)
 							{
 								possibleMoves.remove(i);
 								i--;
@@ -317,6 +317,11 @@ public class GameManager
 				default:
 					break;
 			}
+		}
+
+		for (Move m : possibleMoves)
+		{
+			System.out.println("Generated: " + m.toString());
 		}
 
 		return possibleMoves;

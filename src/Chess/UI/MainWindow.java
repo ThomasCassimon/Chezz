@@ -87,7 +87,7 @@ public class MainWindow extends JFrame implements ActionListener
 			{
 				board.setActive(i);
 				indexArr = board.get2DCoord(i);
-				piece = gameManager.get(indexArr[1],indexArr[0]);
+				piece = gameManager.get(indexArr[0],indexArr[1]);
 				System.out.println("Piece byte " + piece.getPieceByte());
 				moves = gameManager.getAllValidMoves(piece);
 
