@@ -44,6 +44,7 @@ public final class UIData
 	public static final Color TEXT_BACKGROUND_COLOR = Color.WHITE;
 	public static final Color BORDER_COLOR = Color.BLACK;
 	public static final Color HIGHLIGHT = Color.GREEN;
+	public static final Color ACTIVE_PIECE = Color.YELLOW;
 
 	//FONTS
 	public static final float FONT_SIZE = 25.0f;

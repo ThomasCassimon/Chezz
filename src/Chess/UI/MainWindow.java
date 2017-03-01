@@ -85,9 +85,10 @@ public class MainWindow extends JFrame implements ActionListener
 		{
 			if(e.getSource() == board.getTile(i))
 			{
+				board.setActive(i);
 				indexArr = board.get2DCoord(i);
 				piece = gameManager.get(indexArr[1],indexArr[0]);
-				//System.out.println("Piece byte " + piece.getPieceByte());
+				System.out.println("Piece byte " + piece.getPieceByte());
 				moves = gameManager.getAllValidMoves(piece);
 
 				for(Move move: moves)

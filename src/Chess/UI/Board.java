@@ -257,4 +257,9 @@ public class Board extends JPanel
 		int i = this.getIndex(new Piece(indexArr[0],indexArr[1]));
 		tiles[i].setBackground(UIData.HIGHLIGHT);
 	}
+
+	public void setActive(int index)
+	{
+		tiles[index].setBackground(UIData.ACTIVE_PIECE);
+	}
 }
