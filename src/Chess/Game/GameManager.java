@@ -262,20 +262,27 @@ public class GameManager
 						{
 							int index = src + (j * 0x10);
 
-							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
+							try
 							{
-								possibleMoves.remove(i);
-								i--;
-								break;
+								if (this.cb.get(index) != 0)
+								{
+									possibleMoves.remove(i);
+									i--;
+									break;
+								}
+
+								index = src - (j * 0x10);
+
+								if (this.cb.get(index) != 0)
+								{
+									possibleMoves.remove(i);
+									i--;
+									break;
+								}
 							}
-
-							index = src - (j * 0x10);
-
-							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
+							catch (IllegalSquareException ise)
 							{
-								possibleMoves.remove(i);
-								i--;
-								break;
+								ise.printStackTrace();
 							}
 						}
 					}
