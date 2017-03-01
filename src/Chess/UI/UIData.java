@@ -40,5 +40,4 @@ public final class UIData
 
 	//FONTS
 	public static final float FONT_SIZE = 25.0f;
-
 }
