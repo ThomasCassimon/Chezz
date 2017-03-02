@@ -73,11 +73,11 @@ public class GameManager
 	{
 		if (this.activeColor == PieceData.WHITE_BYTE)
 		{
-			this.activeColor = (byte) (this.activeColor << 1);
+			this.activeColor = this.activeColor << 1;
 		}
 		else
 		{
-			this.activeColor = (byte) (this.activeColor >> 1);
+			this.activeColor = this.activeColor >> 1;
 		}
 	}
 
@@ -113,16 +113,42 @@ public class GameManager
 	}
 
 	/**
+	 * Returns all pieces of a specific color. Intended to replace the getAllWhitePieces() and getAllBlackPieces() methods
+	 * @param colorByte the color to be retrieved
+	 * @return	An ArrayList of pieces of the specified color
+	 */
+	public ArrayList<Piece> getAllPieces (int colorByte)
+	{
+		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
+
+		for (int i = 1; i <= 8; i++)
+		{
+			for (int j = 1; j <= 8; j++)
+			{
+				if ((this.cb.get(i,j) & colorByte) != 0)
+				{
+					pieces.add(new Piece (this.cb.get(i,j), i, j));
+				}
+			}
+		}
+
+		return pieces;
+	}
+
+
+	/**
 	 * Returns an array of all pieces belonging to the white player
 	 * @return	All white pieces
+	 * @Deprecated Please use getAllPieces() with the correct color byte instead
 	 */
+	@Deprecated
 	public ArrayList<Piece> getAllWhitePieces ()
 	{
 		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
 
-		for (byte i = 1; i <= 8; i++)
+		for (int i = 1; i <= 8; i++)
 		{
-			for (byte j = 1; j <= 8; j++)
+			for (int j = 1; j <= 8; j++)
 			{
 				if ((this.cb.get(i,j) & PieceData.WHITE_BYTE) != 0)
 				{
@@ -137,14 +163,16 @@ public class GameManager
 	/**
 	 * Returns an array of all pieces belonging to the Black player
 	 * @return	All black pieces
+	 * @Deprecated Please use getAllPieces() with the correct color byte instead
 	 */
+	@Deprecated
 	public ArrayList<Piece> getAllBlackPieces ()
 	{
 		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
 
-		for (byte i = 1; i <= 8; i++)
+		for (int i = 1; i <= 8; i++)
 		{
-			for (byte j = 1; j <= 8; j++)
+			for (int j = 1; j <= 8; j++)
 			{
 				if ((this.cb.get(i,j) & PieceData.BLACK_BYTE) != 0)
 				{
@@ -156,6 +184,11 @@ public class GameManager
 		return pieces;
 	}
 
+	/**
+	 * Returns all valid moves for a specified piece
+	 * @param p The piece whose moves are being requested
+	 * @return an ArrayList with all valid & legal moves
+	 */
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
 		int piece = p.getPieceWithoutColorByte();
@@ -181,7 +214,7 @@ public class GameManager
 			else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece != PieceData.PAWN_BYTE))
 			{
 				// Pawns don't capture on their moves so they aren't included in this check
-				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
+				possibleMoves.set(i, m.setSpecial((m.getSpecial() | Move.CAPTURE_MASK)));
 			}
 			// If you're a pawn and you're moving forward and you're ending on an opponent's piece you can't move there
 			else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE) && (deltaRank == 0))
@@ -537,7 +570,26 @@ public class GameManager
 					break;
 
 				case PieceData.KING_BYTE:
-					// The king also doesn't need any special rules
+					// For the king we will do check-checking
+					int opponentColor = PieceData.getOpponentColorNum(color);
+					ArrayList <Piece> opponentPieces = this.getAllPieces(opponentColor);
+
+					for (int j = 0; j < opponentPieces.size(); j++)
+					{
+						ArrayList <Move> opponentMoves = this.getAllValidMoves(opponentPieces.get(j));
+
+						for (int k = 0; k < opponentMoves.size(); k++)
+						{
+							if (possibleMoves.get(i).getDst() == opponentMoves.get(i).getDst())
+							{
+								possibleMoves.remove(i);
+								k = opponentMoves.size();
+								j = opponentMoves.size();
+								i--;
+							}
+						}
+					}
+
 					break;
 
 				default:
