@@ -167,20 +167,23 @@ public class GameManager
 			Move m = possibleMoves.get(i);
 			int src = m.getSrc();
 			int dst = m.getDst();
-			int deltaRank = abs((src >> 4) - (dst >> 4));
-			int deltaFile = abs((src & 7) - (dst & 7));
+			int deltaRank = (src >> 4) - (dst >> 4);
+			int deltaFile = (src & 7) - (dst & 7);
 
+			// You can't end on one of your own pieces
 			if ((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (color))
 			{
 				possibleMoves.remove(i);
 				i--;
 				continue;
 			}
+			// If you end on an opponent's piece it's a capture
 			else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece != PieceData.PAWN_BYTE))
 			{
 				// Pawns don't capture on their moves so they aren't included in this check
 				possibleMoves.set(i, m.setSpecial((byte) (m.getSpecial() | Move.CAPTURE_MASK)));
 			}
+			// If you're a pawn and you're moving forward and you're ending on an opponent's piece you can't move there
 			else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE) && (deltaRank == 0))
 			{
 				possibleMoves.remove(i);
@@ -191,80 +194,115 @@ public class GameManager
 			switch (piece)
 			{
 				case PieceData.PAWN_BYTE:
-					// Checking for pieces along move path
-					if (deltaRank != 1)
+					// If you're a pawn and you're moving 2 steps at a time
+					if (abs(deltaRank) == 2)
 					{
+						// If there's a piece in the middle of your 2 steps
 						if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
 						{
 							possibleMoves.remove(i);
 							i--;
 							continue;
 						}
+						else
+						{
+							// Setting the double pawn move mask
+							possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+						}
 					}
 
 
 					if (color == PieceData.WHITE_BYTE)
 					{
-						try
+						// If a pawn reaches the back rank it's move should be marked as a promotion
+						if ((dst & 0x70) == 0x70)
 						{
-							Move capL = new Move(src, src + 0x0F, Move.CAPTURE_MASK);
-							Move capR = new Move(src, src + 0x11, Move.CAPTURE_MASK);
+							possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.PROMO_MASK);
+						}
+
+						int indexL = src + 0x0F;
+						int indexR = dst + 0x11;
+
+						if ((indexL & 0x88) == 0)
+						{
+							// Moves up and left (from white's POV)
+							Move capL = new Move(src, indexL, Move.CAPTURE_MASK);
 
 							if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
 							{
+								// Up/Left capture is possible
+								//todo: check indices for captures etc.
 								possibleMoves.add(capL);
 								i += 2;
 							}
+						}
 
+						if ((indexR & 0x88) == 0)
+						{
+							// Moves up and right (from white's POV)
+							Move capR = new Move(src, indexR, Move.CAPTURE_MASK);
 							if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
 							{
+								// Up/Right capture is possible
+								//todo: check indices for captures etc.
 								possibleMoves.add(capR);
 								i += 2;
 							}
-						}
-						catch (IllegalSquareException ise)
-						{
-							ise.printStackTrace();
 						}
 					}
 					else if (color == PieceData.BLACK_BYTE)
 					{
-						try
+						// If a pawn reaches the back rank it's move should be marked as a promotion
+						if ((dst & 0x70) == 0x00)
 						{
-							Move capL = new Move(src, src - 0x0F, Move.CAPTURE_MASK);
-							Move capR = new Move(src, src - 0x11, Move.CAPTURE_MASK);
+							possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.PROMO_MASK);
+						}
 
+						int indexL = src - 0x0F;
+						int indexR = src - 0x11;
+
+						if ((indexL & 0x88) == 0)
+						{
+							// Moves down and left (from white's POV)
+							Move capL = new Move(src, src - 0x0F, Move.CAPTURE_MASK);
 							if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
 							{
+								// Down/Left capture is possible
+								//todo: check indices for captures etc.
 								possibleMoves.add(capL);
 								i += 2;
 							}
+						}
+
+						if ((indexR & 0x88) == 0)
+						{
+							// Moves down and right (from white's POV)
+							Move capR = new Move(src, src - 0x11, Move.CAPTURE_MASK);
+
 
 							if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
 							{
+								// Down/Right capture is possible
+								//todo: check indices for captures etc.
 								possibleMoves.add(capR);
 								i += 2;
 							}
-						}
-						catch (IllegalSquareException ise)
-						{
-							ise.printStackTrace();
 						}
 					}
 
 					break;
 				case PieceData.ROOK_BYTE:
-					// Checking for pieces along the move path
-
-					if (deltaRank != 0)
+					// Moving Top-Bottom
+					if ((deltaRank > 0) && (deltaFile == 0))
 					{
+						// Checking all squares along move path
 						for (int j = 1; j <= deltaRank; j++)
 						{
-							int index = src + (j * 0x10);
-
+							// Intermediate square index
 							try
 							{
-								if (this.cb.get(index) != 0)
+								int index = src + (j * 0x10);
+								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 								{
 									possibleMoves.remove(i);
 									i--;
@@ -273,7 +311,7 @@ public class GameManager
 
 								index = src - (j * 0x10);
 
-								if (this.cb.get(index) != 0)
+								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 								{
 									possibleMoves.remove(i);
 									i--;
@@ -286,9 +324,138 @@ public class GameManager
 							}
 						}
 					}
-					else if (deltaFile != 0)
+					else if ((deltaRank == 0) && (deltaFile > 0))
 					{
 						for (int j = 1; j <= deltaFile; j++)
+						{
+							// Intermediate square index
+							try
+							{
+								int index = src + j;
+								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
+								{
+									possibleMoves.remove(i);
+									i--;
+									break;
+								}
+
+								index = src - j;
+
+								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
+								{
+									possibleMoves.remove(i);
+									i--;
+									break;
+								}
+							}
+							catch (IllegalSquareException ise)
+							{
+								ise.printStackTrace();
+							}
+						}
+					}
+					else
+					{
+						possibleMoves.remove(i);
+						i--;
+					}
+					break;
+
+				case PieceData.KNIGHT_BYTE:
+					// There are no special rules for knights besides the ones that are handled outside of this switch
+					break;
+				case PieceData.BISHOP_BYTE:
+					// Checking if the move is a valid Bishop-type move
+					if (abs(deltaRank) == abs(deltaFile))
+					{
+						for (int j = 1; j <= abs(deltaRank); j++)
+						{
+							int forwardRightIndex = src + (j * 0x11);
+							int forwardLeftIndex = src + (j * 0x0F);
+							int backwardRightIndex = src - (j * 0x0F);
+							int backwardLeftIndex = src - (j * 0x11);
+
+							if ((forwardRightIndex & 0x88) == 0)
+							{
+								if (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+							}
+
+							if ((forwardLeftIndex & 0x88) == 0)
+							{
+								if (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+							}
+
+							if ((backwardRightIndex & 0x88) == 0)
+							{
+								if (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+							}
+
+							if ((backwardLeftIndex & 0x88) == 0)
+							{
+								if (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+							}
+						}
+					}
+					else
+					{
+						possibleMoves.remove(i);
+						i--;
+						continue;
+					}
+					break;
+
+				case PieceData.QUEEN_BYTE:
+					// Queen will just check Rook and Bishop moves sequentially
+					// Checking Rook-type moves
+					// Moving Top-Bottom
+					if ((deltaRank != 0) && (deltaFile == 0))
+					{
+						// Checking all squares along move path
+						for (int j = 1; j <= abs(deltaRank); j++)
+						{
+							int index = src + (j * 0x10);
+							// Intermediate square index
+
+							if (((index & 0x88) == 0) && (this.cb.get(index) != PieceData.EMPTY_BYTE))
+							{
+								possibleMoves.remove(i);
+								i--;
+								break;
+							}
+
+							index = src - (j * 0x10);
+
+							if (((index & 0x88) == 0) && (this.cb.get(index) != PieceData.EMPTY_BYTE))
+							{
+								possibleMoves.remove(i);
+								i--;
+								break;
+							}
+						}
+					}
+					else if ((deltaFile != 0) && (deltaRank == 0))
+					{
+						for (int j = 1; j <= abs(deltaFile); j++)
 						{
 							int index = src + j;
 							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
@@ -307,68 +474,82 @@ public class GameManager
 							}
 						}
 					}
-					else
-					{
-						possibleMoves.remove(i);
-						i--;
-					}
-					break;
-
-				case PieceData.BISHOP_BYTE:
-
-					if (deltaRank == deltaFile)
-					{
-						for (int j = 1; j < deltaRank; j++)
+					// Done checking Rook-type moves
+					// Checking Bishop-type moves
+					else if (abs(deltaRank) == abs(deltaFile))
 						{
-							int forwardRightIndex = src + (j * 0x11);
-							int forwardLeftIndex = src + (j * 0x0F);
-							int backwardRightIndex = src - (j * 0x0F);
-							int backwardLeftIndex = src - (j * 0x11);
+							for (int j = 1; j <= abs(deltaRank); j++)
+							{
+								int forwardRightIndex = src + (j * 0x11);
+								int forwardLeftIndex = src + (j * 0x0F);
+								int backwardRightIndex = src - (j * 0x0F);
+								int backwardLeftIndex = src - (j * 0x11);
 
-							if ((forwardRightIndex > 0) && (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE))
-							{
-								possibleMoves.remove(i);
-								i--;
-								continue;
-							}
-							else if ((forwardLeftIndex > 0) && (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE))
-							{
-								possibleMoves.remove(i);
-								i--;
-								continue;
-							}
-							else if ((backwardRightIndex > 0) && (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE))
-							{
-								possibleMoves.remove(i);
-								i--;
-								continue;
-							}
-							else if ((backwardLeftIndex > 0) && (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE))
-							{
-								possibleMoves.remove(i);
-								i--;
-								continue;
+								if ((forwardRightIndex & 0x88) == 0)
+								{
+									if (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										continue;
+									}
+								}
+
+								if ((forwardLeftIndex & 0x88) == 0)
+								{
+									if (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										continue;
+									}
+								}
+
+								if ((backwardRightIndex & 0x88) == 0)
+								{
+									if (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										continue;
+									}
+								}
+
+								if ((backwardLeftIndex & 0x88) == 0)
+								{
+									if (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										continue;
+									}
+								}
 							}
 						}
-					}
-					else
-					{
-						possibleMoves.remove(i);
-						i--;
-						continue;
-					}
+						else
+						{
+							possibleMoves.remove(i);
+							i--;
+							continue;
+						}
+					// Done checking bishop-type moves
+
+					break;
+
+				case PieceData.KING_BYTE:
+					// The king also doesn't need any special rules
 					break;
 
 				default:
 					break;
 			}
 		}
-
+		/*
 		for (Move m : possibleMoves)
 		{
 			System.out.println("Generated: " + m.toString());
 		}
-
+		*/
 		return possibleMoves;
 	}
 

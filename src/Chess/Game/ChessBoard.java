@@ -17,7 +17,8 @@ import Chess.Exceptions.Unchecked.IllegalPieceException;
  */
 public class ChessBoard
 {
-	private static final short BOARD_ARRAY_SIZE = 128;
+	public static final short BOARD_ARRAY_SIZE = 128;
+	public static final int ERROR = -1;
 	/*
 	 *	Actual board...
 	 */
@@ -166,14 +167,7 @@ public class ChessBoard
 		// The -1's correct for arrays starting at 0
 		// But board-indexing starting at 1
 
-		if ((index & 0x88) != 0)
-		{
-			throw new IllegalSquareException(Integer.toString(rank) + Integer.toString(file) + " is not a valid square.");
-		}
-		else
-		{
-			return index;
-		}
+		return index;
 	}
 
 	/**
