@@ -18,6 +18,7 @@ public class Move
 {
 	public static final int CAPTURE_MASK = 0x04;
 	public static final int PROMO_MASK = 0x08;
+	public static final int DOUBLE_PAWN_PUSH_MASK = 0x01;
 	/**
 	 * Both src and dst are stored as 0x88 squares
 	 */
@@ -66,38 +67,16 @@ public class Move
 
 	public Move (int src, int dst, int special)
 	{
-		if ((src & 0x88) != 0)
-		{
-			throw new IllegalSquareException (Integer.toString(src) + " is not a valid position.");
-		}
-		else if ((dst & 0x88) != 0)
-		{
-			throw new IllegalSquareException (Integer.toString(dst) + " is not a valid position.");
-		}
-		else
-		{
-			this.src = src;
-			this.dst = dst;
-			this.special = special;
-		}
+		this.src = src;
+		this.dst = dst;
+		this.special = special;
 	}
 
 	public Move (int srcFile, int srcRank, int dstFile, int dstRank, int special)
 	{
-		if (((1 > srcFile) || (srcFile > 8)) || ((1 > srcRank) || (srcRank > 8)))
-		{
-			throw new IllegalSquareException("Source: " + ((char) srcFile + 'A') + Integer.toString(srcRank) + " is not a valid position.");
-		}
-		else if (((1 > dstFile) || (dstFile > 8)) || ((1 > dstRank) || (dstRank > 8)))
-		{
-			throw new IllegalSquareException("Destination: " + ((char) srcFile + 'A') + Integer.toString(srcRank) + " is not a valid position.");
-		}
-		else
-		{
-			this.src = ChessBoard.get0x88Index(srcRank, srcFile);
-			this.dst = ChessBoard.get0x88Index(dstRank, dstFile);
-			this.special = special;
-		}
+		this.src = ChessBoard.get0x88Index(srcRank, srcFile);
+		this.dst = ChessBoard.get0x88Index(dstRank, dstFile);
+		this.special = special;
 	}
 
 	/**
