@@ -21,6 +21,7 @@ public class GameManager
 	 */
 	private Player[] players;
 	private ArrayList <Move> moveHistory;
+	private ArrayList <Move> cachedMoves;
 	private int activeColor;
 	private ChessBoard cb;
 
@@ -439,7 +440,8 @@ public class GameManager
 								index = src - (j * 0x0F);
 
 								if ((index & 0x88) == 0)
-								{
+								{									System.out.println("Move is on the board");
+
 									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
 									{
 										possibleMoves.remove(i);
@@ -667,7 +669,8 @@ public class GameManager
 	/**
 	 * Returns the last move made
 	 * @return
-	 */
+	 */									System.out.println("Move is on the board");
+
 	public Move getLastMove ()
 	{
 		return this.moveHistory.get(this.moveHistory.size() - 1);
@@ -680,5 +683,20 @@ public class GameManager
 	public ArrayList<Move> getMoveHistory ()
 	{
 		return this.moveHistory;
+	}
+
+	public void setCachedMoves (ArrayList <Move> moves)
+	{
+		this.cachedMoves = new ArrayList<Move>(moves.size());
+
+		for (Move m : moves)
+		{
+			this.cachedMoves.add(m);
+		}
+	}
+
+	public ArrayList <Move> getCachedMoves ()
+	{
+		return this.cachedMoves;
 	}
 }
