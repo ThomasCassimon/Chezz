@@ -21,6 +21,7 @@ public class GameManager
 	 */
 	private Player[] players;
 	private ArrayList <Move> moveHistory;
+	private ArrayList <Move> cachedMoves;
 	private int activeColor;
 	private ChessBoard cb;
 
@@ -200,8 +201,8 @@ public class GameManager
 			Move m = possibleMoves.get(i);
 			int src = m.getSrc();
 			int dst = m.getDst();
-			int deltaRank = (src >> 4) - (dst >> 4);
-			int deltaFile = (src & 7) - (dst & 7);
+			int deltaRank = (dst >> 4) - (src >> 4);
+			int deltaFile = (dst & 7) - (src & 7);
 
 			// You can't end on one of your own pieces
 			if ((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (color))
@@ -326,64 +327,50 @@ public class GameManager
 					break;
 				case PieceData.ROOK_BYTE:
 					// Moving Top-Bottom
-					if ((deltaRank > 0) && (deltaFile == 0))
+					if ((abs(deltaRank) > 0) && (deltaFile == 0))
 					{
 						// Checking all squares along move path
-						for (int j = 1; j <= deltaRank; j++)
+						for (int j = 1; j <= abs(deltaRank); j++)
 						{
 							// Intermediate square index
-							try
+							int index = src + (j * 0x10);
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
-								int index = src + (j * 0x10);
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-
-								index = src - (j * 0x10);
-
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
+								possibleMoves.remove(i);
+								i--;
+								break;
 							}
-							catch (IllegalSquareException ise)
+
+							index = src - (j * 0x10);
+
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
-								ise.printStackTrace();
+								possibleMoves.remove(i);
+								i--;
+								break;
 							}
 						}
 					}
-					else if ((deltaRank == 0) && (deltaFile > 0))
+					else if ((deltaRank == 0) && (abs(deltaFile) > 0))
 					{
-						for (int j = 1; j <= deltaFile; j++)
+						for (int j = 1; j <= abs(deltaFile); j++)
 						{
 							// Intermediate square index
-							try
+							int index = src + j;
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
-								int index = src + j;
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-
-								index = src - j;
-
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
+								possibleMoves.remove(i);
+								i--;
+								break;
 							}
-							catch (IllegalSquareException ise)
+
+							index = src - j;
+
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
-								ise.printStackTrace();
+								possibleMoves.remove(i);
+								i--;
+								break;
 							}
 						}
 					}
@@ -399,10 +386,71 @@ public class GameManager
 					break;
 				case PieceData.BISHOP_BYTE:
 					// Checking if the move is a valid Bishop-type move
+					//todo: Stop checking unnecessary squares
 					if (abs(deltaRank) == abs(deltaFile))
 					{
 						for (int j = 1; j <= abs(deltaRank); j++)
 						{
+							int index = 0;
+
+							if ((deltaRank > 0) && (deltaFile > 0))
+							{
+								index = src + (j * 0x11);
+
+								if ((index & 0x88) == 0)
+								{
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
+								}
+							}
+							else if ((deltaRank > 0) && (deltaFile < 0))
+							{
+								index = src + (j * 0x0F);
+
+								if ((index & 0x88) == 0)
+								{
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
+								}
+							}
+							else if ((deltaRank < 0) && (deltaFile > 0))
+							{
+								index = src - (j * 0x11);
+
+								if ((index & 0x88) == 0)
+								{
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
+								}
+							}
+							else if ((deltaRank < 0) && (deltaFile < 0))
+							{
+								index = src - (j * 0x0F);
+
+								if ((index & 0x88) == 0)
+								{									System.out.println("Move is on the board");
+
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
+								}
+							}
+							/*
 							int forwardRightIndex = src + (j * 0x11);
 							int forwardLeftIndex = src + (j * 0x0F);
 							int backwardRightIndex = src - (j * 0x0F);
@@ -414,7 +462,7 @@ public class GameManager
 								{
 									possibleMoves.remove(i);
 									i--;
-									continue;
+									break;
 								}
 							}
 
@@ -424,7 +472,7 @@ public class GameManager
 								{
 									possibleMoves.remove(i);
 									i--;
-									continue;
+									break;
 								}
 							}
 
@@ -434,7 +482,7 @@ public class GameManager
 								{
 									possibleMoves.remove(i);
 									i--;
-									continue;
+									break;
 								}
 							}
 
@@ -444,9 +492,11 @@ public class GameManager
 								{
 									possibleMoves.remove(i);
 									i--;
-									continue;
+									break;
 								}
 							}
+							*/
+
 						}
 					}
 					else
@@ -510,61 +560,61 @@ public class GameManager
 					// Done checking Rook-type moves
 					// Checking Bishop-type moves
 					else if (abs(deltaRank) == abs(deltaFile))
+					{
+						for (int j = 1; j <= abs(deltaRank); j++)
 						{
-							for (int j = 1; j <= abs(deltaRank); j++)
+							int forwardRightIndex = src + (j * 0x11);
+							int forwardLeftIndex = src + (j * 0x0F);
+							int backwardRightIndex = src - (j * 0x0F);
+							int backwardLeftIndex = src - (j * 0x11);
+
+							if ((forwardRightIndex & 0x88) == 0)
 							{
-								int forwardRightIndex = src + (j * 0x11);
-								int forwardLeftIndex = src + (j * 0x0F);
-								int backwardRightIndex = src - (j * 0x0F);
-								int backwardLeftIndex = src - (j * 0x11);
-
-								if ((forwardRightIndex & 0x88) == 0)
+								if (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE)
 								{
-									if (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE)
-									{
-										possibleMoves.remove(i);
-										i--;
-										continue;
-									}
+									possibleMoves.remove(i);
+									i--;
+									break;
 								}
+							}
 
-								if ((forwardLeftIndex & 0x88) == 0)
+							if ((forwardLeftIndex & 0x88) == 0)
+							{
+								if (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE)
 								{
-									if (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE)
-									{
-										possibleMoves.remove(i);
-										i--;
-										continue;
-									}
+									possibleMoves.remove(i);
+									i--;
+									break;
 								}
+							}
 
-								if ((backwardRightIndex & 0x88) == 0)
+							if ((backwardRightIndex & 0x88) == 0)
+							{
+								if (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE)
 								{
-									if (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE)
-									{
-										possibleMoves.remove(i);
-										i--;
-										continue;
-									}
+									possibleMoves.remove(i);
+									i--;
+									break;
 								}
+							}
 
-								if ((backwardLeftIndex & 0x88) == 0)
+							if ((backwardLeftIndex & 0x88) == 0)
+							{
+								if (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE)
 								{
-									if (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE)
-									{
-										possibleMoves.remove(i);
-										i--;
-										continue;
-									}
+									possibleMoves.remove(i);
+									i--;
+									break;
 								}
 							}
 						}
-						else
-						{
-							possibleMoves.remove(i);
-							i--;
-							continue;
-						}
+					}
+					else
+					{
+						possibleMoves.remove(i);
+						i--;
+						continue;
+					}
 					// Done checking bishop-type moves
 
 					break;
@@ -619,7 +669,8 @@ public class GameManager
 	/**
 	 * Returns the last move made
 	 * @return
-	 */
+	 */									System.out.println("Move is on the board");
+
 	public Move getLastMove ()
 	{
 		return this.moveHistory.get(this.moveHistory.size() - 1);
@@ -632,5 +683,20 @@ public class GameManager
 	public ArrayList<Move> getMoveHistory ()
 	{
 		return this.moveHistory;
+	}
+
+	public void setCachedMoves (ArrayList <Move> moves)
+	{
+		this.cachedMoves = new ArrayList<Move>(moves.size());
+
+		for (Move m : moves)
+		{
+			this.cachedMoves.add(m);
+		}
+	}
+
+	public ArrayList <Move> getCachedMoves ()
+	{
+		return this.cachedMoves;
 	}
 }
