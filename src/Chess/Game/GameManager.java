@@ -31,6 +31,7 @@ public class GameManager
 		this.activeColor = PieceData.WHITE_BYTE;
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <Move> ();
+		this.cachedMoves = new ArrayList <Move> ();
 	}
 
 	/**
@@ -648,7 +649,8 @@ public class GameManager
 
 	/**
 	 * Returns the last move made
-	 * @return
+	 * If you wish to undo a move, please use the undo() method
+	 * @return The last move that was made
 	 */
 	public Move getLastMove ()
 	{
@@ -664,6 +666,10 @@ public class GameManager
 		return this.moveHistory;
 	}
 
+	/**
+	 * copies all moves from the given array into the move cache
+	 * @param moves	The moves to be placed in cache
+	 */
 	public void setCachedMoves (ArrayList <Move> moves)
 	{
 		this.cachedMoves = new ArrayList<Move>(moves.size());
@@ -674,8 +680,22 @@ public class GameManager
 		}
 	}
 
+	/**
+	 * Returns the moves that were previously cached by setCachedMoves
+	 * @return	All moves in the move cache
+	 */
 	public ArrayList <Move> getCachedMoves ()
 	{
 		return this.cachedMoves;
+	}
+
+	/**
+	 * Undoes the last move made
+	 */
+	public void undo ()
+	{
+		Move m = this.getLastMove();
+		this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));	// Making a dummy move which is just the inverse of the last move
+		this.moveHistory.remove(this.moveHistory.size() - 1);	// Always remove the dummy-move from the move history
 	}
 }
