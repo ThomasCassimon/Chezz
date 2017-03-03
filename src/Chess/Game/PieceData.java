@@ -197,6 +197,7 @@ public final class PieceData
 
 	/**
 	 * Translates a piece's int to a 1-character string to represent that piece on a textual board
+	 * @param localeNum The locale to be used for determining the piece short
 	 * @param pieceNum A int representing a piece
 	 * @return a 1-character string to represent that piece
 	 * @throws IllegalPieceException
@@ -249,6 +250,18 @@ public final class PieceData
 			default:
 				throw new IllegalArgumentException ("Invalid locale.");
 		}
+	}
+
+	/**
+	 * Translates a piece's int to a 1-character string to represent that piece on a textual board. This uses the EN_UK locale.
+	 * @param pieceNum A int representing a piece
+	 * @return a 1-character string to represent that piece
+	 * @throws IllegalPieceException
+	 * @throws IllegalArgumentException
+	 */
+	public static String toShortFromNum(int pieceNum) throws IllegalPieceException, IllegalArgumentException
+	{
+		return toShortFromNum(pieceNum, EN_UK.LOCALE_BYTE);
 	}
 
 	/**

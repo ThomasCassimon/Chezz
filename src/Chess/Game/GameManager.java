@@ -450,53 +450,6 @@ public class GameManager
 									}
 								}
 							}
-							/*
-							int forwardRightIndex = src + (j * 0x11);
-							int forwardLeftIndex = src + (j * 0x0F);
-							int backwardRightIndex = src - (j * 0x0F);
-							int backwardLeftIndex = src - (j * 0x11);
-
-							if ((forwardRightIndex & 0x88) == 0)
-							{
-								if (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-
-							if ((forwardLeftIndex & 0x88) == 0)
-							{
-								if (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-
-							if ((backwardRightIndex & 0x88) == 0)
-							{
-								if (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-
-							if ((backwardLeftIndex & 0x88) == 0)
-							{
-								if (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-							*/
-
 						}
 					}
 					else
@@ -511,15 +464,14 @@ public class GameManager
 					// Queen will just check Rook and Bishop moves sequentially
 					// Checking Rook-type moves
 					// Moving Top-Bottom
-					if ((deltaRank != 0) && (deltaFile == 0))
+					if ((abs(deltaRank) > 0) && (deltaFile == 0))
 					{
 						// Checking all squares along move path
 						for (int j = 1; j <= abs(deltaRank); j++)
 						{
-							int index = src + (j * 0x10);
 							// Intermediate square index
-
-							if (((index & 0x88) == 0) && (this.cb.get(index) != PieceData.EMPTY_BYTE))
+							int index = src + (j * 0x10);
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
 								possibleMoves.remove(i);
 								i--;
@@ -528,7 +480,7 @@ public class GameManager
 
 							index = src - (j * 0x10);
 
-							if (((index & 0x88) == 0) && (this.cb.get(index) != PieceData.EMPTY_BYTE))
+							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
 								possibleMoves.remove(i);
 								i--;
@@ -536,10 +488,11 @@ public class GameManager
 							}
 						}
 					}
-					else if ((deltaFile != 0) && (deltaRank == 0))
+					else if ((deltaRank == 0) && (abs(deltaFile) > 0))
 					{
 						for (int j = 1; j <= abs(deltaFile); j++)
 						{
+							// Intermediate square index
 							int index = src + j;
 							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
@@ -549,6 +502,7 @@ public class GameManager
 							}
 
 							index = src - j;
+
 							if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
 							{
 								possibleMoves.remove(i);
@@ -557,54 +511,68 @@ public class GameManager
 							}
 						}
 					}
-					// Done checking Rook-type moves
 					// Checking Bishop-type moves
-					else if (abs(deltaRank) == abs(deltaFile))
+					if (abs(deltaRank) == abs(deltaFile))
 					{
 						for (int j = 1; j <= abs(deltaRank); j++)
 						{
-							int forwardRightIndex = src + (j * 0x11);
-							int forwardLeftIndex = src + (j * 0x0F);
-							int backwardRightIndex = src - (j * 0x0F);
-							int backwardLeftIndex = src - (j * 0x11);
+							int index = 0;
 
-							if ((forwardRightIndex & 0x88) == 0)
+							if ((deltaRank > 0) && (deltaFile > 0))
 							{
-								if (this.cb.get(forwardRightIndex) != PieceData.EMPTY_BYTE)
+								index = src + (j * 0x11);
+
+								if ((index & 0x88) == 0)
 								{
-									possibleMoves.remove(i);
-									i--;
-									break;
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
 								}
 							}
-
-							if ((forwardLeftIndex & 0x88) == 0)
+							else if ((deltaRank > 0) && (deltaFile < 0))
 							{
-								if (this.cb.get(forwardLeftIndex) != PieceData.EMPTY_BYTE)
+								index = src + (j * 0x0F);
+
+								if ((index & 0x88) == 0)
 								{
-									possibleMoves.remove(i);
-									i--;
-									break;
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
 								}
 							}
-
-							if ((backwardRightIndex & 0x88) == 0)
+							else if ((deltaRank < 0) && (deltaFile > 0))
 							{
-								if (this.cb.get(backwardRightIndex) != PieceData.EMPTY_BYTE)
+								index = src - (j * 0x11);
+
+								if ((index & 0x88) == 0)
 								{
-									possibleMoves.remove(i);
-									i--;
-									break;
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
 								}
 							}
-
-							if ((backwardLeftIndex & 0x88) == 0)
+							else if ((deltaRank < 0) && (deltaFile < 0))
 							{
-								if (this.cb.get(backwardLeftIndex) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
+								index = src - (j * 0x0F);
+
+								if ((index & 0x88) == 0)
+								{									System.out.println("Move is on the board");
+
+									if (this.cb.get(index) != PieceData.EMPTY_BYTE)
+									{
+										possibleMoves.remove(i);
+										i--;
+										break;
+									}
 								}
 							}
 						}
@@ -658,19 +626,30 @@ public class GameManager
 	/**
 	 * Makes the specified move
 	 * @param m The move to be made
+	 * @return a String in algebraic notation representing the move that was made
 	 */
-	public void makeMove (Move m)
+	public String makeMove (Move m)
 	{
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
-		this.cb.set(m.getSrc(), 0x0);	// Empty the source square
+		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);	// Empty the source square
 		this.moveHistory.add(m);
+
+		String moveString = "";
+
+		if (this.cb.get(m.getDst()) != PieceData.PAWN_BYTE)
+		{
+			moveString += PieceData.toShortFromNum(this.cb.get(m.getDst()) & 0x07);
+		}
+
+		moveString += m.getPrettyDstCoords();
+
+		return moveString;
 	}
 
 	/**
 	 * Returns the last move made
 	 * @return
-	 */									System.out.println("Move is on the board");
-
+	 */
 	public Move getLastMove ()
 	{
 		return this.moveHistory.get(this.moveHistory.size() - 1);

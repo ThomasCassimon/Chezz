@@ -74,8 +74,8 @@ public class Move
 
 	public Move (int srcFile, int srcRank, int dstFile, int dstRank, int special)
 	{
-		this.src = ChessBoard.get0x88Index(srcRank, srcFile);
-		this.dst = ChessBoard.get0x88Index(dstRank, dstFile);
+		this.src = ChessBoard.get0x88Index(srcFile, srcRank);
+		this.dst = ChessBoard.get0x88Index(dstFile, dstRank);
 		this.special = special;
 	}
 
@@ -214,5 +214,17 @@ public class Move
 		res += " Promo: " + Boolean.toString((this.special & PROMO_MASK) == PROMO_MASK);
 
 		return res;
+	}
+
+	public String getPrettySrcCoords ()
+	{
+		int[] coords = ChessBoard.get2DCoord(this.src);
+		return ((char) (coords[0] + 'a' - 1)) + Integer.toString(coords[1]);
+	}
+
+	public String getPrettyDstCoords ()
+	{
+		int[] coords = ChessBoard.get2DCoord(this.dst);
+		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
 	}
 }
