@@ -79,7 +79,7 @@ public class MainWindow extends JFrame implements ActionListener
 		ArrayList<Move> moves;
 		Piece piece;
 
-		System.out.println("action detected");
+		//System.out.println("action detected");
 
 		for (i=0;i<UIData.NUMBER_TILES*UIData.NUMBER_TILES; i++)
 		{
@@ -88,12 +88,12 @@ public class MainWindow extends JFrame implements ActionListener
 				board.setActive(i);
 				indexArr = board.get2DCoord(i);
 				piece = gameManager.get(indexArr[0],indexArr[1]);
-				System.out.println("Piece byte " + piece.getPieceByte());
+				//System.out.println("Piece byte " + piece.getPieceByte());
 				moves = gameManager.getAllValidMoves(piece);
 
 				for(Move move: moves)
 				{
-					System.out.println("MOVE ");
+					//System.out.println("MOVE ");
 					board.highlightPiece(move.get2DDst());
 				}
 

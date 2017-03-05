@@ -82,7 +82,7 @@ public class ChessBoardTest
 		}
 	}
 
-	@Test(expected=IllegalSquareException.class)
+	@Test(expected=ArrayIndexOutOfBoundsException.class)
 	public void getIndexTooHigh() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
@@ -90,7 +90,7 @@ public class ChessBoardTest
 		cb.get( 10,  10);
 	}
 
-	@Test(expected=IllegalSquareException.class)
+	@Test(expected=ArrayIndexOutOfBoundsException.class)
 	public void getIndexTooLow() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
@@ -107,7 +107,7 @@ public class ChessBoardTest
 		assertEquals( (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE), cb.get( 1,  1));
 	}
 
-	@Test (expected=IllegalSquareException.class)
+	@Test (expected=ArrayIndexOutOfBoundsException.class)
 	public void setIllegalSquare() throws Exception
 	{
 		ChessBoard cb = new ChessBoard();
