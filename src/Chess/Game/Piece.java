@@ -15,8 +15,24 @@ import java.util.ArrayList;
 
 public class Piece
 {
+	/*	Piece byte is used as follows:
+	 *	XXBB XXXX: BB is the color of the piece
+	 *	XXXX XBBB: BBB is the type of the piece
+	 *
+	 */
+
 	private int pieceByte;
 	private int positionByte;
+
+	/**
+	 * Default Constructor, only used to resolve "... Might not be initialzed" errors
+	 */
+	@Deprecated
+	public Piece ()
+	{
+		this.pieceByte = 0xFF;
+		this.positionByte = 0xFF;
+	}
 
 	/**
 	 * Constructor, takes a pieceByte and a 0x88 positionByte
@@ -218,8 +234,6 @@ public class Piece
 				moves.trimToSize();
 
 				return moves;
-
-
 			default:
 				throw new IllegalPieceException(Integer.toString(this.pieceByte) + " is not a valid piece-byte.");
 		}
@@ -249,5 +263,18 @@ public class Piece
 	public int[] get2DCoord()
 	{
 		return ChessBoard.get2DCoord(this.positionByte);
+	}
+
+	@Override
+	public boolean equals (Object o)
+	{
+		if (o instanceof Piece)
+		{
+			return (this.getPieceByte() == ((Piece) o).getPieceByte()) && (this.getPositionByte() == ((Piece) o).getPositionByte());
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

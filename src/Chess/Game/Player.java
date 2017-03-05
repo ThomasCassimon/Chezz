@@ -15,6 +15,4 @@ public abstract class Player
 	{
 		this.colorByte = colorByte;
 	}
-
-	public abstract Move playTurn ();
 }

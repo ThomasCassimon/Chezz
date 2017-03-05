@@ -16,7 +16,15 @@ public class PieceTest
 	@Test
 	public void get2DCoord() throws Exception
 	{
-
+		for (int i = 1; i <= 8; i++)
+		{
+			for (int j = 1; j <= 8; j++)
+			{
+				int index = ChessBoard.get0x88Index(i,j);
+				Piece p = new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, index);
+				assertArrayEquals(new int [] {i,j}, p.get2DCoord());
+			}
+		}
 	}
 
 	@Test

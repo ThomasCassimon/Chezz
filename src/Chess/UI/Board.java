@@ -223,10 +223,10 @@ public class Board extends JPanel
 		int indexArr[];
 		int index;
 		indexArr = piece.get2DCoord();
-		System.out.println("File: " + indexArr[0] + "	Rank: " + indexArr[1]);
+		//System.out.println("File: " + indexArr[0] + "	Rank: " + indexArr[1]);
 		index = ((indexArr[1]-1) * 8) + (indexArr[0]-1);
 		//index = ((rank-1)*8 + file+1);
-		System.out.println("Index: " + index);
+		//System.out.println("Index: " + index);
 		return index;
 	}
 
@@ -249,9 +249,9 @@ public class Board extends JPanel
 		int index[] = new int[2];
 
 		index[0] =i%8 + 1;
-		System.out.println("File: " + index[0]);
+		//System.out.println("File: " + index[0]);
 		index[1] = (int) (i/8 + 1);
-		System.out.println("Rank: " + index[1]);
+		//System.out.println("Rank: " + index[1]);
 
 		return index;
 
@@ -265,7 +265,7 @@ public class Board extends JPanel
 	public void highlightPiece(int[] indexArr)
 	{
 		int i = this.getIndex(indexArr[0],indexArr[1]);
-		System.out.println("Highlighting File: " + indexArr[0] + "	Rank: " + indexArr[1]);
+		//System.out.println("Highlighting File: " + indexArr[0] + "	Rank: " + indexArr[1]);
 		tiles[i].setBackground(UIData.HIGHLIGHT);
 	}
 

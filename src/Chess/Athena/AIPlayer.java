@@ -1,12 +1,14 @@
 package Chess.Athena;
 
 import Chess.Game.*;
+import Chess.Main;
 
 import java.util.ArrayList;
 
 import static Chess.Game.PieceData.BOTH_BISHOPS_BONUS;
 import static Chess.Game.PieceData.BOTH_KNIGHTS_PENALTY;
 import static Chess.Game.PieceData.BOTH_ROOKS_PENALTY;
+import static java.lang.Integer.max;
 
 /**
  * @author Thomas
@@ -17,6 +19,8 @@ import static Chess.Game.PieceData.BOTH_ROOKS_PENALTY;
  */
 public class AIPlayer extends Player
 {
+	private static final int inf = Integer.MAX_VALUE;
+
 	public AIPlayer(int colorByte)
 	{
 		super(colorByte);
@@ -28,22 +32,22 @@ public class AIPlayer extends Player
 	 *      Number of bishops alive (having both bishops results in +50)
 	 *      Number of Rooks alive (having both rooks results in -30)
 	 *      Number of Knights alive (having both knights results in -15)
-	 * @param cb The board to be scored
-	 * @return an int, the score
+	 * @param gm The GameManager that contains the game that needs to be scored
+	 * * @return an int, the score
 	 */
-	public int scoreGame (ChessBoard cb)
+	public int scoreGame (GameManager gm)
 	{
 		int score = 0;
 		ArrayList<Piece> pieces = new ArrayList<Piece> (8);
 
-		for (byte i = 1; i <= 8; i++)
+		for (int i = 1; i <= 8; i++)
 		{
-			for (byte j = 1; j <= 8; j++)
+			for (int j = 1; j <= 8; j++)
 			{
-				if ((cb.get(i,j) & 0x30) == colorByte)  // True if the piece's colorByte is identical to the player's
+				if (gm.get(i,j).getColorByte() == colorByte)  // True if the piece's colorByte is identical to the player's
 				{
-					score += PieceData.getPieceScore((byte) (cb.get(i,j) & 0x07));
-					pieces.add(new Piece(cb.get(i,j), ChessBoard.get0x88Index(i,j)));
+					score += PieceData.getPieceScore(gm.get(i,j).getPieceWithoutColorByte());
+					pieces.add(gm.get(i,j));
 				}
 			}
 		}
@@ -92,9 +96,65 @@ public class AIPlayer extends Player
 	 * Makes the AI play it's turn
 	 * @return The chosen move
 	 */
-	@Override
-	public Move playTurn()
+	public Move playTurn(GameManager gm, int searchDepth)
 	{
+		int score = 0;
+
+		try
+		{
+			score = this.NegaScout(gm, searchDepth, -inf, +inf, this.colorByte);
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception caught:");
+			e.printStackTrace();
+		}
+
 		return new Move();
+	}
+
+	private int NegaScout (GameManager gm, int depth, int alpha, int beta, int colorOnTurn) throws Exception
+	{
+		System.out.println("NEW LEVEL");
+		if ((gm.isCheckMate(PieceData.getOpponentColorNum(colorOnTurn))) || (depth == 0))
+		{
+			return this.scoreGame(gm);
+		}
+		else
+		{
+			int score = 0;
+			ArrayList <Move> moves = gm.getAllMoves(colorOnTurn);
+			System.out.println("Found " + Integer.toString(moves.size()) + " moves on search depth " + Integer.toString(Main.searchDepth - depth));
+
+			for (int i = 0; i < moves.size(); i++)
+			{
+				if (i != 0)
+				{
+					GameManager possibility = gm;
+					possibility.makeMove(moves.get(i));
+
+					score = -this.NegaScout(possibility, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
+
+					if ((alpha < score) && (score < beta))
+					{
+						score = -this.NegaScout(possibility, depth -1, -beta, -score, PieceData.getOpponentColorNum(colorOnTurn));
+					}
+					else
+					{
+						score = -this.NegaScout(possibility, depth - 1, -beta, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
+					}
+
+					alpha = max(alpha, score);
+
+					if (alpha >= beta)
+					{
+						break;
+					}
+
+				}
+			}
+
+			return alpha;
+		}
 	}
 }

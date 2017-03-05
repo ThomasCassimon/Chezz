@@ -15,8 +15,7 @@ public class HumanPlayer extends Player
 		super(colorByte);
 	}
 
-	@Override
-	public Move playTurn()
+	public Move playTurn(GameManager gm)
 	{
 		return new Move();
 	}
