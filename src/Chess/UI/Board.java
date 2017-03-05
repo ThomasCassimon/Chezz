@@ -6,11 +6,6 @@ import Chess.Game.PieceData;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import static java.lang.StrictMath.floor;
 
 
 public class Board extends JPanel
@@ -154,7 +149,7 @@ public class Board extends JPanel
 
 		index = getIndex(piece);
 		pieceByte = piece.getPieceWithoutColorByte();
-		colorByte = piece.getColorByte();
+		colorByte = piece.getColor();
 
 		if (colorByte == PieceData.WHITE_BYTE)
 		{

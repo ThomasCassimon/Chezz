@@ -44,7 +44,7 @@ public class AIPlayer extends Player
 		{
 			for (int j = 1; j <= 8; j++)
 			{
-				if (gm.get(i,j).getColorByte() == colorByte)  // True if the piece's colorByte is identical to the player's
+				if (gm.get(i,j).getColor() == colorByte)  // True if the piece's colorByte is identical to the player's
 				{
 					score += PieceData.getPieceScore(gm.get(i,j).getPieceWithoutColorByte());
 					pieces.add(gm.get(i,j));
@@ -100,22 +100,13 @@ public class AIPlayer extends Player
 	{
 		int score = 0;
 
-		try
-		{
-			score = this.NegaScout(gm, searchDepth, -inf, +inf, this.colorByte);
-		}
-		catch (Exception e)
-		{
-			System.out.println("Exception caught:");
-			e.printStackTrace();
-		}
+		score = this.NegaScout(gm, searchDepth, -inf, +inf, this.colorByte);
 
 		return new Move();
 	}
 
-	private int NegaScout (GameManager gm, int depth, int alpha, int beta, int colorOnTurn) throws Exception
+	private int NegaScout (GameManager gm, int depth, int alpha, int beta, int colorOnTurn)
 	{
-		System.out.println("NEW LEVEL");
 		if ((gm.isCheckMate(PieceData.getOpponentColorNum(colorOnTurn))) || (depth == 0))
 		{
 			return this.scoreGame(gm);
@@ -124,7 +115,7 @@ public class AIPlayer extends Player
 		{
 			int score = 0;
 			ArrayList <Move> moves = gm.getAllMoves(colorOnTurn);
-			System.out.println("Found " + Integer.toString(moves.size()) + " moves on search depth " + Integer.toString(Main.searchDepth - depth));
+			System.out.println("Found " + Integer.toString(moves.size()) + " moves on search depth " + Integer.toString(Main.searchDepth - depth + 1));
 
 			for (int i = 0; i < moves.size(); i++)
 			{

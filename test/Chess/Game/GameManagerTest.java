@@ -164,11 +164,20 @@ public class GameManagerTest
 		assertThat("comparing piecelists", gm.getAllPieces(PieceData.BLACK_BYTE), containsInAnyOrder(expectedPieces.toArray()));
 	}
 
-
+	// todo: DOES NOT WORK YET
 	@Test
-	public void getAllValidMoves() throws Exception
+	public void getAllValidPawnMoves() throws Exception
 	{
+		GameManager gm = new GameManager();
+		gm.init();
+		Piece pawn = gm.get(4,2);
+		ArrayList <Move> expectedMoves = new ArrayList<Move>();
 
+		// Moves from initial position
+		expectedMoves.add(new Move(4,2,4,3,0x0));
+		expectedMoves.add(new Move(4,2,4,4, Move.DOUBLE_PAWN_PUSH_MASK));
+
+		assertThat("comparing movelists", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 	}
 
 	@Test
@@ -198,11 +207,13 @@ public class GameManagerTest
 		assertEquals(m, gm.getLastMove());
 	}
 
+	/*
 	@Test
 	public void getAllMoves() throws Exception
 	{
 		ArrayList <Move> moves = new ArrayList<Move> ();
 	}
+	*/
 
 	@Test
 	public void init() throws Exception

@@ -239,14 +239,14 @@ public class Piece
 		}
 	}
 
-	public int getColorByte ()
+	public int getColor()
 	{
 		return  (this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE));
 	}
 
 	public int getPieceWithoutColorByte ()
 	{
-		return  (this.pieceByte & ~(PieceData.WHITE_BYTE | PieceData.BLACK_BYTE));
+		return  this.pieceByte & PieceData.PIECE_MASK;
 	}
 
 	@Override
