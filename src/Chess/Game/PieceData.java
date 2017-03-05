@@ -16,7 +16,9 @@ public final class PieceData
 {
 	public static final int WHITE_BYTE =	0x10;
 	public static final int BLACK_BYTE =	0x20;
+	public static final int COLOR_MASK = 	0x30;
 
+	public static final int PIECE_MASK =	0x07;
 	public static final int EMPTY_BYTE =    0x00;
 	public static final int PAWN_BYTE =	 	0x01;
 	public static final int ROOK_BYTE =	 	0x02;

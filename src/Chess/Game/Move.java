@@ -227,4 +227,16 @@ public class Move
 		int[] coords = ChessBoard.get2DCoord(this.dst);
 		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
 	}
+
+	public boolean equals (Object o)
+	{
+		if (o instanceof Move)
+		{
+			return ((this.getSrc() == ((Move) o).getSrc()) && (this.getDst() == ((Move) o).getDst())  && (this.getSpecial() == ((Move) o).getSpecial()));
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

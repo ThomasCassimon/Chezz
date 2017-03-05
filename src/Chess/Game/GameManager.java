@@ -1,7 +1,6 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
-import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 import java.util.ArrayList;
 
@@ -193,13 +192,23 @@ public class GameManager
 	 */
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
-		if (p.getPieceWithoutColorByte() == 0)
+		if (p.getPieceWithoutColorByte() != 0)
 		{
+			System.out.println("Just entered if");
+
 			int piece = p.getPieceWithoutColorByte();
-			int color = p.getColorByte();
+
+			System.out.println("Got piece");
+
+			int color = p.getColor();
+
+			System.out.println("Got color");
+
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
-			System.out.println("Piece: " + p.toString());
+			System.out.println("Got moves");
+
+			System.out.println("Found " + Integer.toString(possibleMoves.size()) + " moves to choose from");
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
@@ -210,8 +219,7 @@ public class GameManager
 				int deltaFile = (dst & 7) - (src & 7);
 
 				// You can't end on one of your own pieces
-				//System.out.println(m.toString() + " color of dst space: " + Integer.toString((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE))));
-				if ((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (color))
+				if ((this.cb.get(dst) & PieceData.COLOR_MASK) == color)
 				{
 					possibleMoves.remove(i);
 					i--;
@@ -220,8 +228,18 @@ public class GameManager
 				// If you end on an opponent's piece it's a capture
 				else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece != PieceData.PAWN_BYTE))
 				{
-					// Pawns don't capture on their moves so they aren't included in this check
-					possibleMoves.set(i, m.setSpecial((m.getSpecial() | Move.CAPTURE_MASK)));
+					if ((this.cb.get(dst) & PieceData.PIECE_MASK) == PieceData.KING_BYTE)
+					{
+						// Moves that actually capture the king are removed
+						possibleMoves.remove(i);
+						i--;
+						continue;
+					}
+					else
+					{
+						// Pawns don't capture on their moves so they aren't included in this check
+						possibleMoves.set(i, m.setSpecial((m.getSpecial() | Move.CAPTURE_MASK)));
+					}
 				}
 				// If you're a pawn and you're moving forward and you're ending on an opponent's piece you can't move there
 				else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE) && (deltaRank == 0))
@@ -628,17 +646,18 @@ public class GameManager
 						break;
 				}
 			}
-		/*
-		for (Move m : possibleMoves)
-		{
-			System.out.println("Generated: " + m.toString());
-		}
-		*/
+
+			System.out.println("Results for " + p.toString());
+
+			for (Move m : possibleMoves)
+			{
+				System.out.println("Generated: " + m.toString());
+			}
+
 			return possibleMoves;
 		}
 		else
 		{
-			System.out.println("Received empty piece");
 			return new ArrayList<Move>();
 		}
 	}
@@ -650,16 +669,8 @@ public class GameManager
 	 */
 	public String makeMove (Move m)
 	{
-		System.out.println("Making move: " + m.toString());
-
-		System.out.println("[PRE] Starting byte: " + Integer.toString(this.cb.get(m.getSrc())));
-		System.out.println("[PRE] Ending byte: " + Integer.toString(this.cb.get(m.getDst())));
-
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
 		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);	// Empty the source square
-
-		System.out.println("[POST] Starting byte: " + Integer.toString(this.cb.get(m.getSrc())));
-		System.out.println("[POST] Ending byte: " + Integer.toString(this.cb.get(m.getDst())));
 
 		this.moveHistory.add(m);
 
@@ -732,20 +743,13 @@ public class GameManager
 	 * @param color The colour to be checked
 	 * @return true if the player is check-mate, false if he is not
 	 */
-	public boolean isCheckMate (int color) throws Exception
+	public boolean isCheckMate (int color)
 	{
 		Piece king = this.getKing(color);
 
-		if (!king.equals(new Piece()))
-		{
-			ArrayList <Move> kingMoves = this.getAllValidMoves(king);
+		ArrayList <Move> kingMoves = this.getAllValidMoves(king);
 
-			return (kingMoves.size() == 0) && this.isCheck(color);
-		}
-		else
-		{
-			throw new Exception ("king was not found...");
-		}
+		return (kingMoves.size() == 0) && this.isCheck(color);
 	}
 
 	/**
@@ -753,52 +757,25 @@ public class GameManager
 	 * @param color	the colour to be checked
 	 * @return	true if the player is in check, false if he is not
 	 */
-	public boolean isCheck (int color ) throws Exception
+	public boolean isCheck (int color )
 	{
 		Piece king = this.getKing(color);
 
-		if (!king.equals(new Piece ()))
+		for (Move m : this.getAllMoves(PieceData.getOpponentColorNum(color)))
 		{
-			for (Move m : this.getAllMoves(PieceData.getOpponentColorNum(color)))
+			if (m.getDst() == king.getPositionByte())
 			{
-				if (m.getDst() == king.getPositionByte())
-				{
-					return true;
-				}
+				return true;
 			}
+		}
 
-			return false;
-		}
-		else
-		{
-			throw new Exception ("king was not found...");
-		}
+		return false;
 	}
 
 	private Piece getKing (int color)
 	{
 		Piece king = new Piece();
 		ArrayList <Piece> pieces = this.getAllPieces(color);
-
-		if (color == PieceData.WHITE_BYTE)
-		{
-			System.out.println("White: ");
-		}
-		else
-		{
-			System.out.println("Black: ");
-		}
-
-		String pieceStr = "[";
-
-		for (Piece p : pieces)
-		{
-			pieceStr += p.toString() + ", ";
-		}
-
-		pieceStr += "]";
-
-		System.out.println(pieceStr);
 
 		for (Piece p : this.getAllPieces(color))
 		{

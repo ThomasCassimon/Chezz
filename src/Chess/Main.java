@@ -17,7 +17,7 @@ import static java.lang.System.nanoTime;
  */
 public class Main
 {
-	public static final int searchDepth = 1;
+	public static final int searchDepth = 2;
 	public static void main (String[] args)
 	{
 		MainWindow mw = new MainWindow();
