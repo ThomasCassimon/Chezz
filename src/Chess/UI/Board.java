@@ -1,6 +1,7 @@
 package Chess.UI;
 
 import Chess.Exceptions.Unchecked.IllegalPieceException;
+import Chess.Game.Move;
 import Chess.Game.Piece;
 import Chess.Game.PieceData;
 
@@ -35,6 +36,7 @@ public class Board extends JPanel
 		//Forming the chess board
 		char letter='A';
 		int rank, file, arrayIndex;
+		int indexArr[] = new int[2];
 
 
 		//TOP of frame
@@ -82,15 +84,11 @@ public class Board extends JPanel
 
 
 				tiles[arrayIndex] = new Tile(file,rank);
+				indexArr[0] = file +1;
+				indexArr[1] = rank +1;
 
-				if ((rank + file) % 2 != 0)
-				{
-					tiles[arrayIndex].setBackground(UIData.BROWN);
-				}
-				else
-				{
-				tiles[arrayIndex].setBackground(UIData.LIGHT_BROWN);
-				}
+				System.out.println("1st index " + arrayIndex);
+				setNormalTileColor(indexArr);
 
 				tiles[arrayIndex].setOpaque(true);
 				tiles[arrayIndex].setBorderPainted(false);
@@ -225,10 +223,11 @@ public class Board extends JPanel
 		return index;
 	}
 
-	public int getIndex(int file, int rank)
+	public int getIndex(int[] indexArr)
 	{
 		int index;
-		index = ((rank -1)*8 + file -1);
+
+		index = ((indexArr[1]-1)*8 + indexArr[0]-1);
 
 		return index;
 
@@ -259,7 +258,7 @@ public class Board extends JPanel
 
 	public void highlightPiece(int[] indexArr)
 	{
-		int i = this.getIndex(indexArr[0],indexArr[1]);
+		int i = this.getIndex(indexArr);
 		//System.out.println("Highlighting File: " + indexArr[0] + "	Rank: " + indexArr[1]);
 		tiles[i].setBackground(UIData.HIGHLIGHT);
 	}
@@ -267,5 +266,27 @@ public class Board extends JPanel
 	public void setActive(int index)
 	{
 		tiles[index].setBackground(UIData.ACTIVE_PIECE);
+	}
+
+	public void setNormalTileColor(int[] indexArr)
+	{
+		int index = getIndex(indexArr);
+
+		System.out.println("2nd index " + index);
+
+		if ((indexArr[0] + indexArr[1]) % 2 != 0)
+		{
+			tiles[index].setBackground(UIData.BROWN);
+		}
+		else
+		{
+			tiles[index].setBackground(UIData.LIGHT_BROWN);
+		}
+	}
+
+	public void makeMove(Move move)
+	{
+		tiles[getIndex(move.get2DDst())].setIcon(tiles[getIndex(move.get2DSrc())].getIcon());
+		tiles[getIndex(move.get2DSrc())].setIcon(null);
 	}
 }

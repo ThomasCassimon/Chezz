@@ -734,6 +734,14 @@ public class GameManager
 	}
 
 	/**
+	 * empties cachedMoves
+	 */
+	public void resetCachedMoves()
+	{
+		this.cachedMoves = new ArrayList<Move>();
+	}
+
+	/**
 	 * Returns the moves that were previously cached by setCachedMoves
 	 * @return	All moves in the move cache
 	 */
