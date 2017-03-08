@@ -3,6 +3,7 @@ package Chess.UI;
 import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.Piece;
+import Chess.Main;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,13 +14,14 @@ import java.util.ArrayList;
 
 public class MainWindow extends JFrame implements ActionListener
 {
-	private static int WINDOW_HEIGHT = 1200;
-	private static int WINDOW_WIDTH = 850;
+	private static int WINDOW_WIDTH = 1400;
+	private static int WINDOW_HEIGHT = 850;
 	private GameManager gameManager;
 
 	private JPanel panel;
 	private Board board;
 	private SidePanel sidePanel;
+	private TimePanel timePanel;
 
 
 
@@ -31,18 +33,19 @@ public class MainWindow extends JFrame implements ActionListener
 		 panel = new JPanel();
 		 board = new Board(this);
 		 sidePanel = new SidePanel();
+		 timePanel = new TimePanel(Main.chronometerWhite, Main.chronometerBlack);
 
 		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
-		 this.setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
+		 this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		 this.setResizable(false);
 		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
 		panel.add(board);
 		panel.add(sidePanel);
+		panel.add(timePanel);
 
-		panel.setBackground(UIData.BACKGROUND_COLOR);
 		this.add(panel);
 		this.initBoard();
 
@@ -102,7 +105,7 @@ public class MainWindow extends JFrame implements ActionListener
 						gameManager.setCachedMoves(moves);
 						for (Move move : moves)
 						{
-							board.highlightPiece(move.get2DDst());
+							board.highlightPiece(move);
 						}
 
 					}

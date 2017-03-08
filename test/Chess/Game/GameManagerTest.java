@@ -44,55 +44,55 @@ public class GameManagerTest
 		GameManager gm = new GameManager();
 		gm.init();
 
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			// White Pawns
-			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, i, 2), gm.get(i, 2));
+			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, i, 1), gm.get(i, 1));
 
-			for (int j = 3; j < 7; j++)
+			for (int j = 2; j < 5; j++)
 			{
 				assertEquals(new Piece (0,i,j), gm.get(i, j));
 			}
 
 			// Black Pawns
-			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, i, 7), gm.get(i, 7));
+			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, i, 6), gm.get(i, 6));
 		}
 
 		// White Rooks
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(1,1)), gm.get( 1,  1));
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(8,1)), gm.get( 8,  1));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(0, 0)), gm.get(0, 0));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(7, 0)), gm.get(7, 0));
 
 		// Black Rooks
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(1,8)), gm.get( 1,  8));
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(8,8)), gm.get( 8,  8));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(0, 7)), gm.get(0,  7));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(7, 7)), gm.get(7,  7));
 
 		// White Knights
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(2,1)), gm.get( 2,  1));
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(7,1)), gm.get( 7,  1));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(1, 0)), gm.get(1, 0));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(6, 0)), gm.get(6, 0));
 
 		// Black Knights
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(2,8)), gm.get( 2,  8));
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(7,8)), gm.get( 7,  8));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(1, 7)), gm.get(1, 7));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(6, 7)), gm.get(6, 7));
 
 		// White Bishops
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(3,1)), gm.get( 3,  1));
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(6,1)), gm.get( 6,  1));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(2, 0)), gm.get(2, 0));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(5, 0)), gm.get(5, 0));
 
 		// Black Bishops
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(3,8)), gm.get( 3,  8));
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(6,8)), gm.get( 6,  8));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(2, 7)), gm.get(2, 7));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(5, 7)), gm.get(5, 7));
 
 		// White Queen
-		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(5,1)), gm.get( 5,  1));
+		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(4, 0)), gm.get(4, 0));
 
 		// Black Queen
-		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(5,8)), gm.get( 5,  8));
+		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(4, 7)), gm.get(4, 7));
 
 		// White King
-		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(4,1)), gm.get( 4,  1));
+		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(3, 0)), gm.get(3, 0));
 
 		// Black King
-		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(4,8)), gm.get( 4,  8));
+		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(3, 7)), gm.get(3, 7));
 	}
 
 	@Test
@@ -101,28 +101,28 @@ public class GameManagerTest
 		ArrayList<Piece> expectedPieces = new ArrayList<Piece>();
 
 		// Pawns
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			expectedPieces.add(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(i,2)));
+			expectedPieces.add(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(i,1)));
 		}
 
 		// Rooks
-		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(1,1)));
-		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(8,1)));
+		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(0, 0)));
+		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(7, 0)));
 
 		// Knights
-		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(2,1)));
-		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(7,1)));
+		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(1, 0)));
+		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(6, 0)));
 
 		// Bishops
-		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(3,1)));
-		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(6,1)));
+		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(2, 0)));
+		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(5, 0)));
 
 		// Queen
-		expectedPieces.add(new Piece (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(5,1)));
+		expectedPieces.add(new Piece (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(4, 0)));
 
 		// King
-		expectedPieces.add(new Piece (PieceData.KING_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(4,1)));
+		expectedPieces.add(new Piece (PieceData.KING_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(3, 0)));
 
 		GameManager gm = new GameManager();
 		gm.init();
@@ -136,28 +136,28 @@ public class GameManagerTest
 		ArrayList<Piece> expectedPieces = new ArrayList<Piece>();
 
 		// Pawns
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			expectedPieces.add(new Piece (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(i,7)));
+			expectedPieces.add(new Piece (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(i,6)));
 		}
 
 		// Rooks
-		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(1,8)));
-		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(8,8)));
+		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(0, 7)));
+		expectedPieces.add(new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(7, 7)));
 
 		// Knights
-		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(2,8)));
-		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(7,8)));
+		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(1, 7)));
+		expectedPieces.add(new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(6, 7)));
 
 		// Bishops
-		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(3,8)));
-		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(6,8)));
+		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(2, 7)));
+		expectedPieces.add(new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(5, 7)));
 
 		// Queen
-		expectedPieces.add(new Piece (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(5,8)));
+		expectedPieces.add(new Piece (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(4, 7)));
 
 		// King
-		expectedPieces.add(new Piece (PieceData.KING_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(4,8)));
+		expectedPieces.add(new Piece (PieceData.KING_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(3, 7)));
 
 		GameManager gm = new GameManager();
 		gm.init();
@@ -170,50 +170,50 @@ public class GameManagerTest
 	{
 		GameManager gm = new GameManager();
 		gm.init();
-		Piece pawn = gm.get(4,2);
+		Piece pawn = gm.get(3,1);
 		ArrayList <Move> expectedMoves = new ArrayList<Move>();
 
 		// Moves from initial position
-		expectedMoves.add(new Move(4,2,4,3,0x0));
-		expectedMoves.add(new Move(4,2,4,4, Move.DOUBLE_PAWN_PUSH_MASK));
+		expectedMoves.add(new Move(3, 1, 3, 2, 0x0));
+		expectedMoves.add(new Move(3, 1, 3, 3, Move.DOUBLE_PAWN_PUSH_MASK));
 
 		assertThat("comparing movelists for white pawn", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 
-		pawn = gm.get(5,7);
+		pawn = gm.get(4,6);
 		expectedMoves = new ArrayList<Move>();
 
 		// Moves from initial position
-		expectedMoves.add(new Move(5,7,5,6, 0x0));
-		expectedMoves.add(new Move(5,7,5,5, Move.DOUBLE_PAWN_PUSH_MASK));
+		expectedMoves.add(new Move(4, 6, 4, 5, 0x0));
+		expectedMoves.add(new Move(4, 6, 4, 4, Move.DOUBLE_PAWN_PUSH_MASK));
 
 		assertThat("comparing movelists for black pawn", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 
 		// Moved pawns in opposing, capturable positions
-		gm.makeMove(new Move (5, 7, 5, 5, Move.DOUBLE_PAWN_PUSH_MASK));
-		gm.makeMove(new Move (4, 2, 4, 4, Move.DOUBLE_PAWN_PUSH_MASK));
+		gm.makeMove(new Move (4, 6, 4, 4, Move.DOUBLE_PAWN_PUSH_MASK));
+		gm.makeMove(new Move (3, 1, 3, 3, Move.DOUBLE_PAWN_PUSH_MASK));
 
-		System.out.println("Piece at (5,5): " + gm.get(5,5).toString());
 		System.out.println("Piece at (4,4): " + gm.get(4,4).toString());
+		System.out.println("Piece at (3,3): " + gm.get(3,3).toString());
 
-		pawn = gm.get(4,4);
+		pawn = gm.get(3,3);
 		expectedMoves = new ArrayList<Move>();
 
 		System.out.println("Checking white pawn: " + pawn.toString());
 
 		// Moves from initial position
-		expectedMoves.add(new Move(4, 4, 4, 5, 0x0));
-		expectedMoves.add(new Move(4, 4, 5, 5, Move.CAPTURE_MASK));
+		expectedMoves.add(new Move(3, 3, 3, 4, 0x0));
+		expectedMoves.add(new Move(3, 3, 4, 4, Move.CAPTURE_MASK));
 
 		assertThat("comparing movelists for white pawn, capture possible", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 
-		pawn = gm.get(5,5);
+		pawn = gm.get(4,4);
 		expectedMoves = new ArrayList<Move>();
 
 		System.out.println("Checking black pawn: " + pawn.toString());
 
 		// Moves from initial position
-		expectedMoves.add(new Move(5,5,5,4, 0x0));
-		expectedMoves.add(new Move(5,5,4,4, Move.CAPTURE_MASK));
+		expectedMoves.add(new Move(4, 4, 4, 3, 0x0));
+		expectedMoves.add(new Move(4, 4, 3, 3, Move.CAPTURE_MASK));
 
 		assertThat("comparing movelists for black pawn, capture possible", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 //		assertThat("comparing movelists", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
@@ -224,10 +224,10 @@ public class GameManagerTest
 	{
 		GameManager gm = new GameManager();
 		gm.init();
-		Move m = new Move (1,2,1,4,Move.DOUBLE_PAWN_PUSH_MASK);
+		Move m = new Move (0,1,0,3,Move.DOUBLE_PAWN_PUSH_MASK);
 		gm.makeMove(m);
 
-		assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, 1,4), gm.get(1,4));
+		assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, 0,3), gm.get(0,3));
 	}
 
 	@Test
@@ -260,54 +260,54 @@ public class GameManagerTest
 		GameManager gm = new GameManager();
 		gm.init();
 
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			// White Pawns
-			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, i, 2), gm.get(i, 2));
+			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.WHITE_BYTE, i, 1), gm.get(i, 1));
 
-			for (int j = 3; j < 7; j++)
+			for (int j = 2; j < 6; j++)
 			{
-				assertEquals(new Piece (0,i,j), gm.get(i, j));
+				assertEquals(new Piece (0, i, j), gm.get(i, j));
 			}
 
 			// Black Pawns
-			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, i, 7), gm.get(i, 7));
+			assertEquals(new Piece (PieceData.PAWN_BYTE | PieceData.BLACK_BYTE, i, 6), gm.get(i, 6));
 		}
 
 		// White Rooks
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(1,1)), gm.get( 1,  1));
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(8,1)), gm.get( 8,  1));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(0, 0)), gm.get(0, 0));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(7, 0)), gm.get(7, 0));
 
 		// Black Rooks
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(1,8)), gm.get( 1,  8));
-		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(8,8)), gm.get( 8,  8));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(0, 7)), gm.get( 0, 7));
+		assertEquals (new Piece (PieceData.ROOK_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(7, 7)), gm.get( 7, 7));
 
 		// White Knights
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(2,1)), gm.get( 2,  1));
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(7,1)), gm.get( 7,  1));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(1, 0)), gm.get(1, 0));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(6, 0)), gm.get(6, 0));
 
 		// Black Knights
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(2,8)), gm.get( 2,  8));
-		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(7,8)), gm.get( 7,  8));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(1, 7)), gm.get(1, 7));
+		assertEquals (new Piece (PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(6, 7)), gm.get(6, 7));
 
 		// White Bishops
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(3,1)), gm.get( 3,  1));
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(6,1)), gm.get( 6,  1));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(2, 0)), gm.get(2, 0));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(5, 0)), gm.get(5, 0));
 
 		// Black Bishops
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(3,8)), gm.get( 3,  8));
-		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(6,8)), gm.get( 6,  8));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(2, 7)), gm.get(2, 7));
+		assertEquals (new Piece (PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(5, 7)), gm.get(5, 7));
 
 		// White Queen
-		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(5,1)), gm.get( 5,  1));
+		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(4, 0)), gm.get(4, 0));
 
 		// Black Queen
-		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(5,8)), gm.get( 5,  8));
+		assertEquals (new Piece (PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(4, 7)), gm.get(4, 7));
 
 		// White King
-		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(4,1)), gm.get( 4,  1));
+		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.WHITE_BYTE, ChessBoard.get0x88Index(3, 0)), gm.get(3, 0));
 
 		// Black King
-		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(4,8)), gm.get( 4,  8));
+		assertEquals (new Piece (PieceData.KING_BYTE | PieceData.BLACK_BYTE, ChessBoard.get0x88Index(3, 7)), gm.get(3, 7));
 	}
 }

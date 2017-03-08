@@ -262,13 +262,13 @@ public class Piece
 	public String toString ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.positionByte);
-		return PieceData.toStringFromNum( (this.pieceByte & 0x07), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + ('a'-1))) + Integer.toString(coords[1]);
+		return PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
 	}
 
 	public String toLongString ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.positionByte);
-		return PieceData.toStringFromNum( (this.pieceByte & 0x07), PieceData.EN_UK.LOCALE_BYTE) + " @ " + Integer.toBinaryString(this.positionByte);
+		return PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + Integer.toBinaryString(this.positionByte);
 	}
 
 	/**

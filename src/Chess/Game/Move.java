@@ -211,13 +211,13 @@ public class Move
 	public String getPrettySrcCoords ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.src);
-		return ((char) (coords[0] + 'a' - 1)) + Integer.toString(coords[1]);
+		return ((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
 	}
 
 	public String getPrettyDstCoords ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.dst);
-		return Character.toString((char) (coords[0] + 'a' - 1)) + Integer.toString(coords[1]);
+		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
 	}
 
 	public boolean equals (Object o)
