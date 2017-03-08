@@ -164,7 +164,6 @@ public class GameManagerTest
 		assertThat("comparing piecelists", gm.getAllPieces(PieceData.BLACK_BYTE), containsInAnyOrder(expectedPieces.toArray()));
 	}
 
-	// todo: DOES NOT WORK YET
 	@Test
 	public void getAllValidPawnMoves() throws Exception
 	{
@@ -177,7 +176,45 @@ public class GameManagerTest
 		expectedMoves.add(new Move(4,2,4,3,0x0));
 		expectedMoves.add(new Move(4,2,4,4, Move.DOUBLE_PAWN_PUSH_MASK));
 
-		assertThat("comparing movelists", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+		assertThat("comparing movelists for white pawn", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+
+		pawn = gm.get(5,7);
+		expectedMoves = new ArrayList<Move>();
+
+		// Moves from initial position
+		expectedMoves.add(new Move(5,7,5,6, 0x0));
+		expectedMoves.add(new Move(5,7,5,5, Move.DOUBLE_PAWN_PUSH_MASK));
+
+		assertThat("comparing movelists for black pawn", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+
+		// Moved pawns in opposing, capturable positions
+		gm.makeMove(new Move (5, 7, 5, 5, Move.DOUBLE_PAWN_PUSH_MASK));
+		gm.makeMove(new Move (4, 2, 4, 4, Move.DOUBLE_PAWN_PUSH_MASK));
+
+		System.out.println("Piece at (5,5): " + gm.get(5,5).toString());
+		System.out.println("Piece at (4,4): " + gm.get(4,4).toString());
+
+		pawn = gm.get(4,4);
+		expectedMoves = new ArrayList<Move>();
+
+		System.out.println("Checking white pawn: " + pawn.toString());
+
+		// Moves from initial position
+		expectedMoves.add(new Move(4, 4, 4, 5, 0x0));
+		expectedMoves.add(new Move(4, 4, 5, 5, Move.CAPTURE_MASK));
+
+		assertThat("comparing movelists for white pawn, capture possible", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+
+		pawn = gm.get(5,5);
+		expectedMoves = new ArrayList<Move>();
+
+		System.out.println("Checking black pawn: " + pawn.toString());
+
+		// Moves from initial position
+		expectedMoves.add(new Move(5,5,5,4, 0x0));
+		expectedMoves.add(new Move(5,5,4,4, Move.CAPTURE_MASK));
+
+		assertThat("comparing movelists for black pawn, capture possible", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 	}
 
 	@Test

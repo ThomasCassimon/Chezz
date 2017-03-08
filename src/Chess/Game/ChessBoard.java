@@ -163,11 +163,9 @@ public class ChessBoard
 	 */
 	public static int get0x88Index (int file, int rank) throws IllegalSquareException
 	{
-		int index =  ((16 * (rank - 1)) + (file - 1));   // Calculating 0x88 index
+		return  ((16 * (rank - 1)) + (file - 1));   // Calculating 0x88 index
 		// The -1's correct for arrays starting at 0
 		// But board-indexing starting at 1
-
-		return index;
 	}
 
 	/**
