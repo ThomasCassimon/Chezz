@@ -249,6 +249,15 @@ public class Piece
 		return  this.pieceByte & PieceData.PIECE_MASK;
 	}
 
+	/**
+	 * Used to check if a piece is empty
+	 * @return returns true if and only if the piecebyte of the this piece is 0
+	 */
+	public boolean isEmpty ()
+	{
+		return (this.pieceByte == 0);
+	}
+
 	@Override
 	public String toString ()
 	{
