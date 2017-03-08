@@ -205,15 +205,7 @@ public class Move
 	@Override
 	public String toString ()
 	{
-		int[] srcCoords = ChessBoard.get2DCoord(this.src);
-		int[] dstCoords = ChessBoard.get2DCoord(this.dst);
-
-		String res = ((char) (srcCoords[0] + ('A'-1))) + Integer.toString(srcCoords[1]) + "-" + ((char) (dstCoords[0] + ('A'-1))) + Integer.toString(dstCoords[1]);
-
-		res += " Capture: " + Boolean.toString((this.special & CAPTURE_MASK) == CAPTURE_MASK);
-		res += " Promo: " + Boolean.toString((this.special & PROMO_MASK) == PROMO_MASK);
-
-		return res;
+		return this.getPrettySrcCoords() + "-" + this.getPrettyDstCoords() + " Special: " + Integer.toString(this.special);
 	}
 
 	public String getPrettySrcCoords ()
@@ -225,7 +217,7 @@ public class Move
 	public String getPrettyDstCoords ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.dst);
-		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
+		return Character.toString((char) (coords[0] + 'a' - 1)) + Integer.toString(coords[1]);
 	}
 
 	public boolean equals (Object o)

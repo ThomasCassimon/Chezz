@@ -1,7 +1,6 @@
 package Chess.Athena;
 
 import Chess.Game.*;
-import Chess.Main;
 
 import java.util.ArrayList;
 
@@ -100,12 +99,12 @@ public class AIPlayer extends Player
 	{
 		int score = 0;
 
-		score = this.NegaScout(gm, searchDepth, -inf, +inf, this.colorByte);
+		score = this.negaScout(gm, searchDepth, -inf, +inf, this.colorByte);
 
 		return new Move();
 	}
 
-	private int NegaScout (GameManager gm, int depth, int alpha, int beta, int colorOnTurn)
+	private int negaScout(GameManager gm, int depth, int alpha, int beta, int colorOnTurn)
 	{
 		if ((gm.isCheckMate(PieceData.getOpponentColorNum(colorOnTurn))) || (depth == 0))
 		{
@@ -115,7 +114,6 @@ public class AIPlayer extends Player
 		{
 			int score = 0;
 			ArrayList <Move> moves = gm.getAllMoves(colorOnTurn);
-			System.out.println("Found " + Integer.toString(moves.size()) + " moves on search depth " + Integer.toString(Main.searchDepth - depth + 1));
 
 			for (int i = 0; i < moves.size(); i++)
 			{
@@ -124,15 +122,15 @@ public class AIPlayer extends Player
 					GameManager possibility = gm;
 					possibility.makeMove(moves.get(i));
 
-					score = -this.NegaScout(possibility, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
+					score = -this.negaScout(possibility, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
 
 					if ((alpha < score) && (score < beta))
 					{
-						score = -this.NegaScout(possibility, depth -1, -beta, -score, PieceData.getOpponentColorNum(colorOnTurn));
+						score = -this.negaScout(possibility, depth -1, -beta, -score, PieceData.getOpponentColorNum(colorOnTurn));
 					}
 					else
 					{
-						score = -this.NegaScout(possibility, depth - 1, -beta, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
+						score = -this.negaScout(possibility, depth - 1, -beta, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
 					}
 
 					alpha = max(alpha, score);

@@ -186,6 +186,141 @@ public class GameManager
 	}
 
 	/**
+	 * Checks if the specified move is a valid bishop-type move. Does not verify if the given piece is actually a bishop
+	 * @param m The move to be checked
+	 * @return True if and only if the move is a valid bishop-type move
+	 */
+	private boolean isValidBishopMove (Move m)
+	{
+		System.out.println("Move: " + m.toString());
+		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
+		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
+
+		if (abs(deltaRank) != abs(deltaFile))
+		{
+			return false;
+		}
+		else if (deltaRank == 0)
+		{
+			return false;
+		}
+		else
+		{
+			int rankDir = deltaRank / abs(deltaRank);
+			int fileDir = deltaFile / abs(deltaFile);
+
+			for (int i = 1; i < abs(deltaRank); i++)
+			{
+				int file = m.get2DSrc()[0] + (fileDir * i);
+				int rank = m.get2DSrc()[1] + (rankDir * i);
+
+				if (!this.get(file, rank).isEmpty())
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if the move is a valid Rook-type move
+	 * @param m The move to be checked
+	 * @return	True if and only if the move is a valid Rook-type move.
+	 */
+	private boolean isValidRookTypeMove (Move m)
+	{
+		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
+		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
+
+		if ((abs(deltaFile) != 0) && (abs(deltaRank) != 0))
+		{
+			return false;
+		}
+		else
+		{
+			if (abs(deltaFile) != 0)
+			{
+				int fileDir = deltaFile / abs(deltaFile);
+
+				for (int i = 1; i < abs(deltaFile); i++)
+				{
+					int file = m.get2DSrc()[0] + (i * fileDir);
+					int rank = m.get2DSrc()[1];
+
+					if (!this.get(file,rank).isEmpty())
+					{
+						return false;
+					}
+				}
+			}
+			else if (abs(deltaRank) != 0)
+			{
+				int rankDir = deltaRank / abs(deltaRank);
+
+				for (int i = 1; i < abs(deltaRank); i++)
+				{
+					int file = m.get2DSrc()[0];
+					int rank = m.get2DSrc()[1] + (i * rankDir);
+
+					if (!this.get(file,rank).isEmpty())
+					{
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks wheter or not a move is a valid king-type move. This entails checking if the move will check the king.
+	 * @param color
+	 * @param m
+	 * @return
+	 */
+	private boolean isValidKingTypeMove (int color, Move m)
+	{
+		int opponentColor = PieceData.getOpponentColorNum(color);
+
+		ArrayList<Piece> opponentPieces = this.getAllPieces(opponentColor);
+
+		for (Piece p : opponentPieces)
+		{
+			if (p.getPieceWithoutColorByte() != PieceData.KING_BYTE)
+			{
+				ArrayList<Move> opponentMoves = this.getAllValidMoves(p);
+
+				for (Move om : opponentMoves)
+				{
+					if (m.getDst() == om.getDst())
+					{
+						System.out.println("Enemy stepped on dst");
+						return false;
+					}
+				}
+			}
+			else
+			{
+				int ownFile = m.get2DSrc()[0];
+				int ownRank = m.get2DSrc()[1];
+				int opponentFile = p.get2DCoord()[0];
+				int opponentRank = p.get2DCoord()[1];
+
+				if ((abs(ownFile - opponentFile) <= 1) && (abs(ownRank - opponentRank) <= 1))
+				{
+					System.out.println("In proximity to enemy king.");
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Returns all valid moves for a specified piece
 	 * @param p The piece whose moves are being requested
 	 * @return an ArrayList with all valid & legal moves
@@ -194,21 +329,11 @@ public class GameManager
 	{
 		if (p.getPieceWithoutColorByte() != 0)
 		{
-			System.out.println("Just entered if");
-
 			int piece = p.getPieceWithoutColorByte();
-
-			System.out.println("Got piece");
 
 			int color = p.getColor();
 
-			System.out.println("Got color");
-
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
-
-			System.out.println("Got moves");
-
-			System.out.println("Found " + Integer.toString(possibleMoves.size()) + " moves to choose from");
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
@@ -256,14 +381,15 @@ public class GameManager
 						if (abs(deltaRank) == 2)
 						{
 							// If there's a piece in the middle of your 2 steps
-							if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
+							if (color == PieceData.WHITE_BYTE)
 							{
-								possibleMoves.remove(i);
-								i--;
-								continue;
-							}
-							else if (color == PieceData.WHITE_BYTE)
-							{
+								if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+
 								if ((src >> 4) != 1)
 								{
 									// Pawn isn't on it's initial rank, so it's not allowed to double-move
@@ -271,14 +397,35 @@ public class GameManager
 									i--;
 									continue;
 								}
+								else
+								{
+									// Setting the double pawn move mask
+									possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+								}
 							}
-							else
+							else if (color == PieceData.BLACK_BYTE)
 							{
-								// Setting the double pawn move mask
-								possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+								if (this.cb.get(dst - 0x10) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+
+								if ((src >> 4) != 6)
+								{
+									// Pawn isn't on it's initial rank, so it's not allowed to double-move
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+								else
+								{
+									// Setting the double pawn move mask
+									possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+								}
 							}
 						}
-
 
 						if (color == PieceData.WHITE_BYTE)
 						{
@@ -293,6 +440,7 @@ public class GameManager
 
 							if ((indexL & 0x88) == 0)
 							{
+								System.out.println("Checking up-left capture");
 								// Moves up and left (from white's POV)
 								Move capL = new Move(src, indexL, Move.CAPTURE_MASK);
 
@@ -307,6 +455,7 @@ public class GameManager
 
 							if ((indexR & 0x88) == 0)
 							{
+								System.out.println("Checking up-right capture");
 								// Moves up and right (from white's POV)
 								Move capR = new Move(src, indexR, Move.CAPTURE_MASK);
 								if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
@@ -360,284 +509,47 @@ public class GameManager
 
 						break;
 					case PieceData.ROOK_BYTE:
-						// Moving Top-Bottom
-						if ((abs(deltaRank) > 0) && (deltaFile == 0))
-						{
-							// Checking all squares along move path
-							for (int j = 1; j <= abs(deltaRank); j++)
-							{
-								// Intermediate square index
-								int index = src + (j * 0x10);
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
 
-								index = src - (j * 0x10);
-
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-						}
-						else if ((deltaRank == 0) && (abs(deltaFile) > 0))
-						{
-							for (int j = 1; j <= abs(deltaFile); j++)
-							{
-								// Intermediate square index
-								int index = src + j;
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-
-								index = src - j;
-
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-						}
-						else
+						if (!this.isValidRookTypeMove(m))
 						{
 							possibleMoves.remove(i);
 							i--;
+							continue;
 						}
+
 						break;
 
 					case PieceData.KNIGHT_BYTE:
 						// There are no special rules for knights besides the ones that are handled outside of this switch
 						break;
 					case PieceData.BISHOP_BYTE:
-						// Checking if the move is a valid Bishop-type move
-						//todo: Stop checking unnecessary squares
-						if (abs(deltaRank) == abs(deltaFile))
-						{
-							for (int j = 1; j <= abs(deltaRank); j++)
-							{
-								int index = 0;
 
-								if ((deltaRank > 0) && (deltaFile > 0))
-								{
-									index = src + (j * 0x11);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-								else if ((deltaRank > 0) && (deltaFile < 0))
-								{
-									index = src + (j * 0x0F);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-								else if ((deltaRank < 0) && (deltaFile > 0))
-								{
-									index = src - (j * 0x11);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-								else if ((deltaRank < 0) && (deltaFile < 0))
-								{
-									index = src - (j * 0x0F);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-							}
-						}
-						else
+						if (!this.isValidBishopMove(m))
 						{
 							possibleMoves.remove(i);
 							i--;
 							continue;
 						}
+
 						break;
 
 					case PieceData.QUEEN_BYTE:
-						// Queen will just check Rook and Bishop moves sequentially
-						// Checking Rook-type moves
-						// Moving Top-Bottom
-						if ((abs(deltaRank) > 0) && (deltaFile == 0))
-						{
-							// Checking all squares along move path
-							for (int j = 1; j <= abs(deltaRank); j++)
-							{
-								// Intermediate square index
-								int index = src + (j * 0x10);
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-
-								index = src - (j * 0x10);
-
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-						}
-						else if ((deltaRank == 0) && (abs(deltaFile) > 0))
-						{
-							for (int j = 1; j <= abs(deltaFile); j++)
-							{
-								// Intermediate square index
-								int index = src + j;
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-
-								index = src - j;
-
-								if (((index & 0x88) == 0) && (this.cb.get(index) != 0))
-								{
-									possibleMoves.remove(i);
-									i--;
-									break;
-								}
-							}
-						}
-						// Checking Bishop-type moves
-						else if (abs(deltaRank) == abs(deltaFile))
-						{
-							for (int j = 1; j <= abs(deltaRank); j++)
-							{
-								int index = 0;
-
-								if ((deltaRank > 0) && (deltaFile > 0))
-								{
-									index = src + (j * 0x11);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-								else if ((deltaRank > 0) && (deltaFile < 0))
-								{
-									index = src + (j * 0x0F);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-								else if ((deltaRank < 0) && (deltaFile > 0))
-								{
-									index = src - (j * 0x11);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-								else if ((deltaRank < 0) && (deltaFile < 0))
-								{
-									index = src - (j * 0x0F);
-
-									if ((index & 0x88) == 0)
-									{
-										if (this.cb.get(index) != PieceData.EMPTY_BYTE)
-										{
-											possibleMoves.remove(i);
-											i--;
-											break;
-										}
-									}
-								}
-							}
-						}
-						else
+						if ((!this.isValidBishopMove(m)) && (!this.isValidRookTypeMove(m)))
 						{
 							possibleMoves.remove(i);
 							i--;
 							continue;
 						}
-						// Done checking bishop-type moves
 
 						break;
 
 					case PieceData.KING_BYTE:
-						// For the king we will do check-checking
-						int opponentColor = PieceData.getOpponentColorNum(color);
-						ArrayList<Piece> opponentPieces = this.getAllPieces(opponentColor);
 
-						for (int j = 0; j < opponentPieces.size(); j++)
+						if (!this.isValidKingTypeMove(color, m))
 						{
-							ArrayList<Move> opponentMoves = this.getAllValidMoves(opponentPieces.get(j));
-
-							for (int k = 0; k < opponentMoves.size(); k++)
-							{
-								if (possibleMoves.get(i).getDst() == opponentMoves.get(k).getDst())
-								{
-									possibleMoves.remove(i);
-									k = opponentMoves.size();
-									j = opponentMoves.size();
-									i--;
-								}
-							}
+							possibleMoves.remove(i);
+							i--;
+							continue;
 						}
 
 						break;
@@ -645,13 +557,6 @@ public class GameManager
 					default:
 						break;
 				}
-			}
-
-			System.out.println("Results for " + p.toString());
-
-			for (Move m : possibleMoves)
-			{
-				System.out.println("Generated: " + m.toString());
 			}
 
 			return possibleMoves;

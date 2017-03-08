@@ -36,5 +36,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="java-hamcrest-2.0.0.0" level="project" />
   </component>
 </module>

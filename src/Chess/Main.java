@@ -18,10 +18,10 @@ import static java.lang.System.nanoTime;
  */
 public class Main
 {
+
 	public static final int searchDepth = 2;
 	public static Chronometer chronometerWhite;
 	public static Chronometer chronometerBlack;
-
 
 
 	public static void main (String[] args)
@@ -31,23 +31,5 @@ public class Main
 
 
 		MainWindow mw = new MainWindow();
-
-		GameManager gm = new GameManager();
-		gm.init();
-
-		AIPlayer athena = new AIPlayer(PieceData.WHITE_BYTE);
-
-		long start = 0;
-		long end = 0;
-		Move move;
-
-		start = System.nanoTime();
-
-		move = athena.playTurn(gm, searchDepth);
-
-		end = System.nanoTime();
-
-		System.out.println("Took " + Long.toString(end - start) + "ns (= " + Long.toString((end - start) / 1000) + "µs = " + Long.toString((end - start) / 1000000) + "ms) to search " + Integer.toString(searchDepth) + " levels deep");
-		System.out.println("Chosen move: " + move.toString());
 	}
 }
