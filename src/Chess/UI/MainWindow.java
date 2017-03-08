@@ -72,6 +72,9 @@ public class MainWindow extends JFrame implements ActionListener
 	}
 
 	@Override
+	/**
+	 * Called when a button is pressed.
+	 */
 	public void actionPerformed(ActionEvent e)
 	{
 		int i;
@@ -79,26 +82,60 @@ public class MainWindow extends JFrame implements ActionListener
 		ArrayList<Move> moves;
 		Piece piece;
 
-		//System.out.println("action detected");
-
-		for (i=0;i<UIData.NUMBER_TILES*UIData.NUMBER_TILES; i++)
-		{
-			if(e.getSource() == board.getTile(i))
+			if (gameManager.getCachedMoves().isEmpty())
 			{
-				board.setActive(i);
-				indexArr = board.get2DCoord(i);
-				piece = gameManager.get(indexArr[0],indexArr[1]);
-				//System.out.println("Piece byte " + piece.getPieceByte());
-				moves = gameManager.getAllValidMoves(piece);
-
-				for(Move move: moves)
+				for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
 				{
-					//System.out.println("MOVE ");
-					board.highlightPiece(move.get2DDst());
+					if (e.getSource() == board.getTile(i))
+					{
+
+						indexArr = board.get2DCoord(i);
+						piece = gameManager.get(indexArr[0], indexArr[1]);
+						moves = gameManager.getAllValidMoves(piece);
+
+						if (!moves.isEmpty())
+						{
+							board.setActive(i);
+						}
+
+
+						gameManager.setCachedMoves(moves);
+						for (Move move : moves)
+						{
+							board.highlightPiece(move.get2DDst());
+						}
+
+					}
+				}
+			}
+			else
+			{
+				moves = gameManager.getCachedMoves();
+
+				board.setNormalTileColor(moves.get(0).get2DSrc());
+
+				for (i=0;i<UIData.NUMBER_TILES*UIData.NUMBER_TILES;i++)
+				{
+					if(e.getSource() == board.getTile(i))
+					{
+						for(Move move: moves)
+						{
+							board.setNormalTileColor(move.get2DDst());
+							if (i == board.getIndex(move.get2DDst()))
+							{
+								gameManager.makeMove(move);
+								board.makeMove(move);
+							}
+						}
+					}
 				}
 
+
+				gameManager.resetCachedMoves();
 			}
+
+
 		}
 
-	}
+
 }
