@@ -256,11 +256,18 @@ public class Board extends JPanel
 		return tiles[index];
 	}
 
-	public void highlightPiece(int[] indexArr)
+	public void highlightPiece(Move move)
 	{
-		int i = this.getIndex(indexArr);
-		//System.out.println("Highlighting File: " + indexArr[0] + "	Rank: " + indexArr[1]);
-		tiles[i].setBackground(UIData.HIGHLIGHT);
+		int i = this.getIndex(move.get2DDst());
+		if (move.isCapture())
+		{
+			tiles[i].setBackground(UIData.CAPTURE);
+		}
+		else
+		{
+			tiles[i].setBackground(UIData.HIGHLIGHT);
+		}
+
 	}
 
 	public void setActive(int index)
@@ -271,8 +278,6 @@ public class Board extends JPanel
 	public void setNormalTileColor(int[] indexArr)
 	{
 		int index = getIndex(indexArr);
-
-		System.out.println("2nd index " + index);
 
 		if ((indexArr[0] + indexArr[1]) % 2 != 0)
 		{
