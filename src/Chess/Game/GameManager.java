@@ -194,21 +194,11 @@ public class GameManager
 	{
 		if (p.getPieceWithoutColorByte() != 0)
 		{
-			System.out.println("Just entered if");
-
 			int piece = p.getPieceWithoutColorByte();
-
-			System.out.println("Got piece");
 
 			int color = p.getColor();
 
-			System.out.println("Got color");
-
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
-
-			System.out.println("Got moves");
-
-			System.out.println("Found " + Integer.toString(possibleMoves.size()) + " moves to choose from");
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
@@ -256,14 +246,15 @@ public class GameManager
 						if (abs(deltaRank) == 2)
 						{
 							// If there's a piece in the middle of your 2 steps
-							if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
+							if (color == PieceData.WHITE_BYTE)
 							{
-								possibleMoves.remove(i);
-								i--;
-								continue;
-							}
-							else if (color == PieceData.WHITE_BYTE)
-							{
+								if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+
 								if ((src >> 4) != 1)
 								{
 									// Pawn isn't on it's initial rank, so it's not allowed to double-move
@@ -271,14 +262,35 @@ public class GameManager
 									i--;
 									continue;
 								}
+								else
+								{
+									// Setting the double pawn move mask
+									possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+								}
 							}
-							else
+							else if (color == PieceData.BLACK_BYTE)
 							{
-								// Setting the double pawn move mask
-								possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+								if (this.cb.get(dst - 0x10) != PieceData.EMPTY_BYTE)
+								{
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+
+								if ((src >> 4) != 6)
+								{
+									// Pawn isn't on it's initial rank, so it's not allowed to double-move
+									possibleMoves.remove(i);
+									i--;
+									continue;
+								}
+								else
+								{
+									// Setting the double pawn move mask
+									possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+								}
 							}
 						}
-
 
 						if (color == PieceData.WHITE_BYTE)
 						{
@@ -293,6 +305,7 @@ public class GameManager
 
 							if ((indexL & 0x88) == 0)
 							{
+								System.out.println("Checking up-left capture");
 								// Moves up and left (from white's POV)
 								Move capL = new Move(src, indexL, Move.CAPTURE_MASK);
 
@@ -307,6 +320,7 @@ public class GameManager
 
 							if ((indexR & 0x88) == 0)
 							{
+								System.out.println("Checking up-right capture");
 								// Moves up and right (from white's POV)
 								Move capR = new Move(src, indexR, Move.CAPTURE_MASK);
 								if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
