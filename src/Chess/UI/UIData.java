@@ -36,16 +36,16 @@ public final class UIData
 	//COLORS
 	public static final Color BROWN = new Color(140,70,20); 	//Saddlebrown (RGB 139,69,19)
 	public static final Color LIGHT_BROWN = new Color(210,180,140); 	//Tan (RGB 210,180,140)
-	public static final Color FRAMES = new Color (140,70,20);
 	public static final Color BACKGROUND = Color.WHITE;
-	public static final Color TEXT_BACKGROUND = Color.WHITE;
 	public static final Color FRAME_COLOR = new Color (145,75,25);
 	public static final Color BACKGROUND_COLOR = Color.WHITE;
 	public static final Color TEXT_BACKGROUND_COLOR = Color.WHITE;
 	public static final Color BORDER_COLOR = Color.BLACK;
 	public static final Color HIGHLIGHT = Color.GREEN;
+	//public static final Color HIGHLIGHT = new Color (0,255,0,128);
 	public static final Color ACTIVE_PIECE = Color.YELLOW;
 	public static final Color CAPTURE = Color.RED;
+	public static final Color PROMOTION = Color.BLUE;
 
 	//FONTS
 	public static final float FONT_SIZE = 25.0f;

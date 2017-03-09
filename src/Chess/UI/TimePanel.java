@@ -1,5 +1,6 @@
 package Chess.UI;
 
+import Chess.Game.GameManager;
 import Chess.Time.Chronometer;
 
 import javax.swing.*;
@@ -24,11 +25,11 @@ public class TimePanel extends JPanel
 	private JPanel panelBlack;
 
 
-	public TimePanel(Chronometer chronometerBlack, Chronometer chronometerWhite)
+	public TimePanel()
 	{
 
-		this.chronometerWhite = chronometerWhite;
-		this.chronometerBlack = chronometerBlack;
+		this.chronometerWhite = GameManager.chronometerWhite;
+		this.chronometerBlack = GameManager.chronometerBlack;
 
 		this.labelWhite = new JLabel("");
 		this.labelBlack = new JLabel("");
@@ -37,10 +38,10 @@ public class TimePanel extends JPanel
 		this.labelBlack.setIcon(UIData.BK);
 
 		this.timeWhite = this.chronometerWhite.getDisplayTime();
-		this.timeBlack = this.chronometerWhite.getDisplayTime();
+		this.timeBlack = this.chronometerBlack.getDisplayTime();
 
-		this.add(labelWhite);
 		this.add(timeWhite);
+		this.add(labelWhite);
 
 		this.add(labelBlack);
 		this.add(timeBlack);
