@@ -122,13 +122,13 @@ public class GameManager
 	{
 		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
 
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			for (int j = 1; j <= 8; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				if ((this.cb.get(i,j) & colorByte) != 0)
 				{
-					pieces.add(new Piece (this.cb.get(i,j), i, j));
+					pieces.add(new Piece (this.cb.get(i, j), i, j));
 				}
 			}
 		}
@@ -147,13 +147,13 @@ public class GameManager
 	{
 		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
 
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			for (int j = 1; j <= 8; j++)
+			for (int j = 0; j < 8; j++)
 			{
-				if ((this.cb.get(i,j) & PieceData.WHITE_BYTE) != 0)
+				if ((this.cb.get(i, j) & PieceData.WHITE_BYTE) != 0)
 				{
-					pieces.add(new Piece (this.cb.get(i,j), i, j));
+					pieces.add(new Piece (this.cb.get(i, j), i, j));
 				}
 			}
 		}
@@ -171,9 +171,9 @@ public class GameManager
 	{
 		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
 
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			for (int j = 1; j <= 8; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				if ((this.cb.get(i,j) & PieceData.BLACK_BYTE) != 0)
 				{
@@ -188,7 +188,7 @@ public class GameManager
 	/**
 	 * Checks if the specified move is a valid bishop-type move. Does not verify if the given piece is actually a bishop
 	 * @param m The move to be checked
-	 * @return True if and only if the move is a valid bishop-type move
+	 * @return True if and only if the move is a valid bishop-type move, otherwise false
 	 */
 	private boolean isValidBishopMove (Move m)
 	{
@@ -227,7 +227,7 @@ public class GameManager
 	/**
 	 * Checks if the move is a valid Rook-type move
 	 * @param m The move to be checked
-	 * @return	True if and only if the move is a valid Rook-type move.
+	 * @return	True if and only if the move is a valid Rook-type move, otherwise false
 	 */
 	private boolean isValidRookTypeMove (Move m)
 	{
@@ -276,6 +276,35 @@ public class GameManager
 	}
 
 	/**
+	 * Checks wheter the specified move is a valid pawn-type move
+	 * @param color	The color of the pawn that's moving
+	 * @param m The move a pawn wishes to make
+	 * @return True if and oly if the move is a valid pawn-type move, otherwise false
+	 */
+	private boolean isValidPawnTypeMove (int color, Move m)
+	{
+		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
+		int deltaFile = abs((m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK));
+		int colorMod = 1;
+
+		if (color == PieceData.BLACK_BYTE)
+		{
+			colorMod = -1;
+		}
+
+		if (deltaRank == 2)
+		{
+			// It's a double move
+			if (((m.getSrc() >> 4) == 1) || ((m.getSrc() >> 4) == 6))
+			{
+
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks wheter or not a move is a valid king-type move. This entails checking if the move will check the king.
 	 * @param color
 	 * @param m
@@ -289,7 +318,7 @@ public class GameManager
 
 		for (Piece p : opponentPieces)
 		{
-			if (p.getPieceWithoutColorByte() != PieceData.KING_BYTE)
+			if ((p.getPieceWithoutColorByte() != PieceData.KING_BYTE) && (p.getPieceWithoutColorByte() != PieceData.PAWN_BYTE))
 			{
 				ArrayList<Move> opponentMoves = this.getAllValidMoves(p);
 
@@ -297,9 +326,21 @@ public class GameManager
 				{
 					if (m.getDst() == om.getDst())
 					{
-						System.out.println("Enemy stepped on dst");
 						return false;
 					}
+				}
+			}
+			else if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+			{
+				int colorMod = 1;
+				if (opponentColor == PieceData.BLACK_BYTE)
+				{
+					colorMod = -1;
+				}
+
+				if ((m.getDst() == (p.getPositionByte() + (colorMod * 0x0F))) || (m.getDst() == (p.getPositionByte() + (colorMod * 0x11))))
+				{
+					return false;
 				}
 			}
 			else
@@ -311,7 +352,6 @@ public class GameManager
 
 				if ((abs(ownFile - opponentFile) <= 1) && (abs(ownRank - opponentRank) <= 1))
 				{
-					System.out.println("In proximity to enemy king.");
 					return false;
 				}
 			}

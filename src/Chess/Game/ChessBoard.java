@@ -39,44 +39,44 @@ public class ChessBoard
 	public ChessBoard init()
 	{
 		// Putting down pawns and empty spaces
-		for (int i = 1; i <= 8; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			this.set(i,2, PieceData.PAWN_BYTE | PieceData.WHITE_BYTE);
+			this.set(i,1, PieceData.PAWN_BYTE | PieceData.WHITE_BYTE);
+			this.set(i,2, PieceData.EMPTY_BYTE);
 			this.set(i,3, PieceData.EMPTY_BYTE);
 			this.set(i,4, PieceData.EMPTY_BYTE);
 			this.set(i,5, PieceData.EMPTY_BYTE);
-			this.set(i,6, PieceData.EMPTY_BYTE);
-			this.set(i,7, PieceData.PAWN_BYTE | PieceData.BLACK_BYTE);
+			this.set(i,6, PieceData.PAWN_BYTE | PieceData.BLACK_BYTE);
 		}
 
 		// Putting down Rooks
-		this.set(1, 1, PieceData.ROOK_BYTE | PieceData.WHITE_BYTE);
-		this.set(8, 1, PieceData.ROOK_BYTE | PieceData.WHITE_BYTE);
+		this.set(0, 0, PieceData.ROOK_BYTE | PieceData.WHITE_BYTE);
+		this.set(7, 0, PieceData.ROOK_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(1, 8, PieceData.ROOK_BYTE | PieceData.BLACK_BYTE);
-		this.set(8, 8, PieceData.ROOK_BYTE | PieceData.BLACK_BYTE);
+		this.set(0, 7, PieceData.ROOK_BYTE | PieceData.BLACK_BYTE);
+		this.set(7, 7, PieceData.ROOK_BYTE | PieceData.BLACK_BYTE);
 
 		// Knights
-		this.set(2, 1, PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE);
-		this.set(7, 1, PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE);
+		this.set(1, 0, PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE);
+		this.set(6, 0, PieceData.KNIGHT_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(2, 8, PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE);
-		this.set(7, 8, PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE);
+		this.set(1, 7, PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE);
+		this.set(6, 7, PieceData.KNIGHT_BYTE | PieceData.BLACK_BYTE);
 
 		// Bishops
-		this.set(3, 1, PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE);
-		this.set(6, 1, PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE);
+		this.set(2, 0, PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE);
+		this.set(5, 0, PieceData.BISHOP_BYTE | PieceData.WHITE_BYTE);
 
-		this.set(3, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
-		this.set(6, 8, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
+		this.set(2, 7, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
+		this.set(5, 7, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
 
 		// Queens
-		this.set(5, 1, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
-		this.set(5, 8, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
+		this.set(4, 0, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
+		this.set(4, 7, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
 
 		// Kings
-		this.set(4, 1, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
-		this.set(4, 8, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
+		this.set(3, 0, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
+		this.set(3, 7, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
 
 		return this;
 	}
@@ -116,11 +116,11 @@ public class ChessBoard
 	 */
 	public void set (int file, int rank, int piece) throws IllegalSquareException, IllegalPieceException
 	{
-		int bitMask = ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | 0x07); // First two disable color-bits, last one disables piece-bits
+		int bitMask = ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK); // First two disable color-bits, last one disables piece-bits
 
 		int index = get0x88Index(file, rank);
 
-		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
+		if (((piece & bitMask) != 0) || ((piece & PieceData.PIECE_MASK) == PieceData.PIECE_MASK))
 		{
 			throw new IllegalPieceException(Integer.toString(piece) + " (" + (piece & bitMask) + ") is not a valid piece.");
 		}
@@ -140,9 +140,9 @@ public class ChessBoard
 	 */
 	public void set (int index, int piece) throws IllegalSquareException, IllegalPieceException
 	{
-		byte bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | 0x07); // First two disable color-bits, last one disables piece-bits
+		byte bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK); // First two disable color-bits, last one disables piece-bits
 
-		if (((piece & bitMask) != 0) || ((piece & 0x07) == 0x07))
+		if (((piece & bitMask) != 0) || ((piece & PieceData.PIECE_MASK) == PieceData.PIECE_MASK))
 		{
 			throw new IllegalPieceException(Integer.toString(piece) + " (" + (piece & bitMask) + ") is not a valid piece.");
 		}
@@ -163,7 +163,7 @@ public class ChessBoard
 	 */
 	public static int get0x88Index (int file, int rank) throws IllegalSquareException
 	{
-		return  ((16 * (rank - 1)) + (file - 1));   // Calculating 0x88 index
+		return  ((16 * rank) + file);   // Calculating 0x88 index
 		// The -1's correct for arrays starting at 0
 		// But board-indexing starting at 1
 	}
@@ -180,8 +180,8 @@ public class ChessBoard
 	{
 		int[] res = new int [2];
 
-		res[0] =  ((index & 7) + 1);
-		res[1] =  ((index >> 4) + 1);
+		res[0] =  index & PieceData.PIECE_MASK;
+		res[1] =  index >> 4;
 
 		return res;
 	}
@@ -195,11 +195,11 @@ public class ChessBoard
 	{
 		String res = "";
 
-		for (byte i = 1; i <= 8; i++)
+		for (byte i = 0; i < 8; i++)
 		{
-			for (byte j = 1; j <= 8; j++)
+			for (byte j = 0; j < 8; j++)
 			{
-				res += PieceData.toShortFromNum( (this.get(j, i) & 0x0F), localeByte);
+				res += PieceData.toShortFromNum( (this.get(j, i) & PieceData.PIECE_MASK), localeByte);
 			}
 
 			res += "\n";

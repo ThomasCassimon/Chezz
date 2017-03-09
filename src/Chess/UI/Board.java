@@ -13,16 +13,12 @@ public class Board extends JPanel
 {
 	private Tile tiles[] = new Tile[64];
 
-
-
-
-
 	public Board(MainWindow mainWindow)
 	{
 		super();
 
 		this.setPreferredSize(new Dimension(800,800));
-		this.setLayout(new GridLayout(UIData.NUMBER_TILES +2, UIData.NUMBER_TILES +2));
+		this.setLayout(new GridLayout(UIData.NUMBER_TILES +2, UIData.NUMBER_TILES + 2));
 		this.setBorder(BorderFactory.createLineBorder(UIData.BORDER_COLOR));
 		initBoard(mainWindow);
 
@@ -84,8 +80,8 @@ public class Board extends JPanel
 
 
 				tiles[arrayIndex] = new Tile(file,rank);
-				indexArr[0] = file +1;
-				indexArr[1] = rank +1;
+				indexArr[0] = file;
+				indexArr[1] = rank;
 
 				System.out.println("1st index " + arrayIndex);
 				setNormalTileColor(indexArr);
@@ -98,7 +94,7 @@ public class Board extends JPanel
 			}
 
 			//RIGHT of frame
-			label = new JLabel(" " + Integer.toString(rank+1));
+			label = new JLabel(" " + Integer.toString(rank));
 			label.setBackground(UIData.FRAME_COLOR);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			label.setVerticalAlignment(SwingConstants.CENTER);
@@ -217,7 +213,7 @@ public class Board extends JPanel
 		int index;
 		indexArr = piece.get2DCoord();
 		//System.out.println("File: " + indexArr[0] + "	Rank: " + indexArr[1]);
-		index = ((indexArr[1]-1) * 8) + (indexArr[0]-1);
+		index = ((indexArr[1]) * 8) + (indexArr[0]);
 		//index = ((rank-1)*8 + file+1);
 		//System.out.println("Index: " + index);
 		return index;
@@ -227,7 +223,7 @@ public class Board extends JPanel
 	{
 		int index;
 
-		index = ((indexArr[1]-1)*8 + indexArr[0]-1);
+		index = ((indexArr[1])*8 + indexArr[0]);
 
 		return index;
 
@@ -242,9 +238,9 @@ public class Board extends JPanel
 	{
 		int index[] = new int[2];
 
-		index[0] =i%8 + 1;
+		index[0] = i % 8;
 		//System.out.println("File: " + index[0]);
-		index[1] = (int) (i/8 + 1);
+		index[1] = i / 8;
 		//System.out.println("Rank: " + index[1]);
 
 		return index;
