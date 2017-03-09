@@ -174,6 +174,39 @@ public class Move
 	}
 
 	/**
+	 * Sets the capture flag to 1
+	 */
+	public void setCapture ()
+	{
+		this.special = this.special | CAPTURE_MASK;
+	}
+
+
+	/**
+	 * Resets the capture flag to 0
+	 */
+	public void resetCapture ()
+	{
+		this.special = this.special & ~CAPTURE_MASK;
+	}
+
+	/**
+	 * Sets the promo flag to 1
+	 */
+	public void setPromo()
+	{
+		this.special = this.special | PROMO_MASK;
+	}
+
+	/**
+	 * Resets the capture flag to 0
+	 */
+	public void resetPromo()
+	{
+		this.special = this.special & ~PROMO_MASK;
+	}
+
+	/**
 	 *
 	 * @return true if the move is a promotion
 	 */
@@ -205,19 +238,19 @@ public class Move
 	@Override
 	public String toString ()
 	{
-		return this.getPrettySrcCoords() + "-" + this.getPrettyDstCoords() + " Special: " + Integer.toString(this.special);
+		return this.getPrettySrcCoords() + "-" + this.getPrettyDstCoords() + " Special: " + Integer.toBinaryString(this.special);
 	}
 
 	public String getPrettySrcCoords ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.src);
-		return ((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
+		return ((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1);
 	}
 
 	public String getPrettyDstCoords ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.dst);
-		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
+		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1);
 	}
 
 	public boolean equals (Object o)

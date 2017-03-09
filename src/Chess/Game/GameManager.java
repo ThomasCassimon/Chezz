@@ -1,6 +1,7 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
+import Chess.Exceptions.Unchecked.IllegalSideException;
 
 import java.util.ArrayList;
 
@@ -111,6 +112,16 @@ public class GameManager
 	public Piece get (int file, int rank)
 	{
 		return new Piece(this.cb.get(file, rank), ChessBoard.get0x88Index(file, rank));
+	}
+
+	/**
+	 * Returns the piece at the specified file and rank
+	 * @param coord a 2-element array, indexed file-first
+	 * @return	The piece at coordinate file-rank
+	 */
+	public Piece get (int[] coord)
+	{
+		return new Piece(this.cb.get(coord[0], coord[1]), ChessBoard.get0x88Index(coord[0], coord[1]));
 	}
 
 	/**
@@ -283,21 +294,47 @@ public class GameManager
 	 */
 	private boolean isValidPawnTypeMove (int color, Move m)
 	{
+		int initRank = 1;
 		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
 		int deltaFile = abs((m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK));
-		int colorMod = 1;
 
 		if (color == PieceData.BLACK_BYTE)
 		{
-			colorMod = -1;
+			initRank = 6;
+		}
+
+		if (m.isCapture())
+		{
+			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
+			{
+				System.out.println(m.toString() + " does not end on opponent's square");
+				return false;
+			}
+		}
+
+		if ((!this.get(m.get2DDst()).isEmpty()) && (!m.isCapture()))
+		{
+			System.out.println("Destination isn't empty");
+			return false;
 		}
 
 		if (deltaRank == 2)
 		{
-			// It's a double move
-			if (((m.getSrc() >> 4) == 1) || ((m.getSrc() >> 4) == 6))
+			// It's a double move and the pawn is still on it's initial rank
+			if ((m.getSrc() >> 4) != initRank)
 			{
+				System.out.println(m.toString() + " is double moving outside first rank.");
+				return false;
+			}
+		}
 
+		// moving across files => capture
+		if (deltaFile > 0)
+		{
+			if (this.get(m.get2DDst()).getColor() == color)
+			{
+				System.out.println(m.toString() + " is trying to capture own color");
+				return false;
 			}
 		}
 
@@ -306,13 +343,13 @@ public class GameManager
 
 	/**
 	 * Checks wheter or not a move is a valid king-type move. This entails checking if the move will check the king.
-	 * @param color
-	 * @param m
-	 * @return
+	 * @param color	The color of the king who's moving
+	 * @param m	The move to be analyzed
+	 * @return True of and only if the specified move is a valid king-type move, otherwise false.
 	 */
 	private boolean isValidKingTypeMove (int color, Move m)
 	{
-		int opponentColor = PieceData.getOpponentColorNum(color);
+		int opponentColor = PieceData.getOpponentColor(color);
 
 		ArrayList<Piece> opponentPieces = this.getAllPieces(opponentColor);
 
@@ -361,12 +398,60 @@ public class GameManager
 	}
 
 	/**
+	 * Returns true if the move captures a piece
+	 * @param m the move we're trying to make
+	 * @return True if the destination square is inhabited by an enemy piece
+	 */
+	private boolean isCapture (int color, Move m)
+	{
+		if (this.get(m.get2DSrc()).getPieceWithoutColorByte() != PieceData.PAWN_BYTE)
+		{
+			return this.get(m.get2DDst()).getColor() == PieceData.getOpponentColor(color);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns true if the move involves a pawn moving to the back rank
+	 * @param m The move to be analyzed
+	 * @return true if the pawn reaches the back rank
+	 */
+	private boolean isPromo (int color, Move m)
+	{
+		if (color == PieceData.WHITE_BYTE)
+		{
+			return m.get2DDst()[1] == 7;
+		}
+		else if (color == PieceData.BLACK_BYTE)
+		{
+			return m.get2DDst()[1] == 0;
+		}
+		else
+		{
+			throw new IllegalSideException(Integer.toString(color) + " is not a valid color");
+		}
+	}
+
+	/**
+	 * Returns true if the move steps on a piece of it's own side
+	 * @param color the color of the moving piece
+	 * @param m The move to be analyzed
+	 * @return true if the destination square is owned by color
+	 */
+	private boolean isCollision (int color, Move m)
+	{
+		return this.get(m.get2DDst()).getColor() == color;
+	}
+
+	/**
 	 * Returns all valid moves for a specified piece
 	 * @param p The piece whose moves are being requested
 	 * @return an ArrayList with all valid & legal moves
 	 */
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
+		System.out.println("GET ALL VALID MOVES");
 		if (p.getPieceWithoutColorByte() != 0)
 		{
 			int piece = p.getPieceWithoutColorByte();
@@ -378,37 +463,31 @@ public class GameManager
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
 				Move m = possibleMoves.get(i);
-				int src = m.getSrc();
-				int dst = m.getDst();
-				int deltaRank = (dst >> 4) - (src >> 4);
-				int deltaFile = (dst & 7) - (src & 7);
+
+				if (this.isCapture(color, m))
+				{
+					System.out.println(m.toString() + " set capture flag");
+					m.setCapture();
+				}
+
+				if (this.isPromo(color, m))
+				{
+					System.out.println(m.toString() + " set promo flag");
+					m.setPromo();
+				}
 
 				// You can't end on one of your own pieces
-				if ((this.cb.get(dst) & PieceData.COLOR_MASK) == color)
+				if (this.isCollision(color, m))
 				{
+					System.out.println(m.toString() + " collided");
 					possibleMoves.remove(i);
 					i--;
 					continue;
 				}
-				// If you end on an opponent's piece it's a capture
-				else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece != PieceData.PAWN_BYTE))
+
+				if ((m.isCapture()) && (this.get(m.get2DDst()).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 				{
-					if ((this.cb.get(dst) & PieceData.PIECE_MASK) == PieceData.KING_BYTE)
-					{
-						// Moves that actually capture the king are removed
-						possibleMoves.remove(i);
-						i--;
-						continue;
-					}
-					else
-					{
-						// Pawns don't capture on their moves so they aren't included in this check
-						possibleMoves.set(i, m.setSpecial((m.getSpecial() | Move.CAPTURE_MASK)));
-					}
-				}
-				// If you're a pawn and you're moving forward and you're ending on an opponent's piece you can't move there
-				else if (((this.cb.get(dst) & (PieceData.BLACK_BYTE | PieceData.WHITE_BYTE)) == (PieceData.getOpponentColorNum(color))) && (piece == PieceData.PAWN_BYTE) && (deltaRank == 0))
-				{
+					System.out.println(m.toString() + " captures king");
 					possibleMoves.remove(i);
 					i--;
 					continue;
@@ -417,134 +496,13 @@ public class GameManager
 				switch (piece)
 				{
 					case PieceData.PAWN_BYTE:
-						// If you're a pawn and you're moving 2 steps at a time
-						if (abs(deltaRank) == 2)
+
+						if (!this.isValidPawnTypeMove(color, m))
 						{
-							// If there's a piece in the middle of your 2 steps
-							if (color == PieceData.WHITE_BYTE)
-							{
-								if (this.cb.get(dst + 0x10) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									continue;
-								}
-
-								if ((src >> 4) != 1)
-								{
-									// Pawn isn't on it's initial rank, so it's not allowed to double-move
-									possibleMoves.remove(i);
-									i--;
-									continue;
-								}
-								else
-								{
-									// Setting the double pawn move mask
-									possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
-								}
-							}
-							else if (color == PieceData.BLACK_BYTE)
-							{
-								if (this.cb.get(dst - 0x10) != PieceData.EMPTY_BYTE)
-								{
-									possibleMoves.remove(i);
-									i--;
-									continue;
-								}
-
-								if ((src >> 4) != 6)
-								{
-									// Pawn isn't on it's initial rank, so it's not allowed to double-move
-									possibleMoves.remove(i);
-									i--;
-									continue;
-								}
-								else
-								{
-									// Setting the double pawn move mask
-									possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
-								}
-							}
-						}
-
-						if (color == PieceData.WHITE_BYTE)
-						{
-							// If a pawn reaches the back rank it's move should be marked as a promotion
-							if ((dst & 0x70) == 0x70)
-							{
-								possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.PROMO_MASK);
-							}
-
-							int indexL = src + 0x0F;
-							int indexR = dst + 0x11;
-
-							if ((indexL & 0x88) == 0)
-							{
-								System.out.println("Checking up-left capture");
-								// Moves up and left (from white's POV)
-								Move capL = new Move(src, indexL, Move.CAPTURE_MASK);
-
-								if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
-								{
-									// Up/Left capture is possible
-									//todo: check indices for captures etc.
-									possibleMoves.add(capL);
-									i += 2;
-								}
-							}
-
-							if ((indexR & 0x88) == 0)
-							{
-								System.out.println("Checking up-right capture");
-								// Moves up and right (from white's POV)
-								Move capR = new Move(src, indexR, Move.CAPTURE_MASK);
-								if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
-								{
-									// Up/Right capture is possible
-									//todo: check indices for captures etc.
-									possibleMoves.add(capR);
-									i += 2;
-								}
-							}
-						}
-						else if (color == PieceData.BLACK_BYTE)
-						{
-							// If a pawn reaches the back rank it's move should be marked as a promotion
-							if ((dst & 0x70) == 0x00)
-							{
-								possibleMoves.get(i).setSpecial(possibleMoves.get(i).getSpecial() | Move.PROMO_MASK);
-							}
-
-							int indexL = src - 0x0F;
-							int indexR = src - 0x11;
-
-							if ((indexL & 0x88) == 0)
-							{
-								// Moves down and left (from white's POV)
-								Move capL = new Move(src, src - 0x0F, Move.CAPTURE_MASK);
-								if (((this.cb.get(capL.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capL)))
-								{
-									// Down/Left capture is possible
-									//todo: check indices for captures etc.
-									possibleMoves.add(capL);
-									i += 2;
-								}
-							}
-
-							if ((indexR & 0x88) == 0)
-							{
-								// Moves down and right (from white's POV)
-								Move capR = new Move(src, src - 0x11, Move.CAPTURE_MASK);
-
-
-								if (((this.cb.get(capR.getDst()) & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.getOpponentColorNum(color)) && (!possibleMoves.contains(capR)))
-								{
-									// Down/Right capture is possible
-									//todo: check indices for captures etc.
-									possibleMoves.add(capR);
-									i += 2;
-								}
-							}
+							System.out.println("Removing " + m.toString());
+							possibleMoves.remove(i);
+							i--;
+							continue;
 						}
 
 						break;
@@ -714,7 +672,7 @@ public class GameManager
 	{
 		Piece king = this.getKing(color);
 
-		for (Move m : this.getAllMoves(PieceData.getOpponentColorNum(color)))
+		for (Move m : this.getAllMoves(PieceData.getOpponentColor(color)))
 		{
 			if (m.getDst() == king.getPositionByte())
 			{
