@@ -23,7 +23,7 @@ public class TimerTick extends TimerTask
 	{
 		time--;
 		timeDisplay.setText(getPrettyTime());
-		System.out.println("Timer: " + getPrettyTime());
+		//System.out.println("Timer: " + getPrettyTime());
 
 	}
 

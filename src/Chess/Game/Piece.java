@@ -124,12 +124,12 @@ public class Piece
 		int j;
 		ArrayList<Move> moves;
 
-		switch (this.pieceByte & (0x07))
+		switch (this.pieceByte & PieceData.PIECE_MASK)
 		{
 			case PieceData.PAWN_BYTE:
-				if ((this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.WHITE_BYTE)
+				if ((this.pieceByte & PieceData.COLOR_MASK) == PieceData.WHITE_BYTE)
 				{
-					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_WHITE.length);
+					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_WHITE.length + Movesets.PAWN_CAPTURE_WHITE.length);
 
 					for (int i = 0; i < Movesets.PAWN_MOVE_WHITE.length; i++)
 					{
@@ -138,16 +138,32 @@ public class Piece
 							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_MOVE_WHITE[i]),  0x0));
 						}
 					}
+
+					for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
+					{
+						if (((this.positionByte + Movesets.PAWN_MOVE_WHITE[i]) & 0x88) == 0)
+						{
+							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_WHITE[i]),  Move.CAPTURE_MASK));
+						}
+					}
 				}
-				else if ((this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE)) == PieceData.BLACK_BYTE)
+				else if ((this.pieceByte & PieceData.COLOR_MASK) == PieceData.BLACK_BYTE)
 				{
-					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_BLACK.length);
+					moves = new ArrayList <Move> (Movesets.PAWN_MOVE_BLACK.length + Movesets.PAWN_CAPTURE_BLACK.length);
 
 					for (int i = 0; i < Movesets.PAWN_MOVE_BLACK.length; i++)
 					{
 						if (((this.positionByte + Movesets.PAWN_MOVE_BLACK[i]) & 0x88) == 0)
 						{
 							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_MOVE_BLACK[i]),  0x0));
+						}
+					}
+
+					for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
+					{
+						if (((this.positionByte + Movesets.PAWN_MOVE_BLACK[i]) & 0x88) == 0)
+						{
+							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_BLACK[i]),  Move.CAPTURE_MASK));
 						}
 					}
 				}

@@ -83,7 +83,7 @@ public class Board extends JPanel
 				indexArr[0] = file;
 				indexArr[1] = rank;
 
-				System.out.println("1st index " + arrayIndex);
+				//System.out.println("1st index " + arrayIndex);
 				setNormalTileColor(indexArr);
 
 				tiles[arrayIndex].setOpaque(true);
@@ -94,7 +94,7 @@ public class Board extends JPanel
 			}
 
 			//RIGHT of frame
-			label = new JLabel(" " + Integer.toString(rank));
+			label = new JLabel(" " + Integer.toString(rank+1));
 			label.setBackground(UIData.FRAME_COLOR);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			label.setVerticalAlignment(SwingConstants.CENTER);

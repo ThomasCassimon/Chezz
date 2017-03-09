@@ -349,7 +349,7 @@ public final class PieceData
 	 * @return The opponent's color
 	 * @throws IllegalSideException
 	 */
-	public static int getOpponentColorNum (int color) throws IllegalSideException
+	public static int getOpponentColor(int color) throws IllegalSideException
 	{
 		if (color == PieceData.WHITE_BYTE)
 		{

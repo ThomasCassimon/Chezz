@@ -106,7 +106,7 @@ public class AIPlayer extends Player
 
 	private int negaScout(GameManager gm, int depth, int alpha, int beta, int colorOnTurn)
 	{
-		if ((gm.isCheckMate(PieceData.getOpponentColorNum(colorOnTurn))) || (depth == 0))
+		if ((gm.isCheckMate(PieceData.getOpponentColor(colorOnTurn))) || (depth == 0))
 		{
 			return this.scoreGame(gm);
 		}
@@ -122,15 +122,15 @@ public class AIPlayer extends Player
 					GameManager possibility = gm;
 					possibility.makeMove(moves.get(i));
 
-					score = -this.negaScout(possibility, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
+					score = -this.negaScout(possibility, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColor(colorOnTurn));
 
 					if ((alpha < score) && (score < beta))
 					{
-						score = -this.negaScout(possibility, depth -1, -beta, -score, PieceData.getOpponentColorNum(colorOnTurn));
+						score = -this.negaScout(possibility, depth -1, -beta, -score, PieceData.getOpponentColor(colorOnTurn));
 					}
 					else
 					{
-						score = -this.negaScout(possibility, depth - 1, -beta, -alpha, PieceData.getOpponentColorNum(colorOnTurn));
+						score = -this.negaScout(possibility, depth - 1, -beta, -alpha, PieceData.getOpponentColor(colorOnTurn));
 					}
 
 					alpha = max(alpha, score);
