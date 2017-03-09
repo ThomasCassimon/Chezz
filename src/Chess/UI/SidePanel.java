@@ -8,14 +8,16 @@ import java.awt.*;
  */
 public class SidePanel extends JPanel
 {
-
+	private JPanel leftPanel;
 	private JButton pause;
 	private JButton undo;
+	private TimePanel timePanel;
 
-	private JPanel textPanel;
-
+	private JPanel rightPanel;
 	private JTextField textField;
 	private JTextArea history;
+
+
 
 	public SidePanel()
 	{
@@ -24,27 +26,42 @@ public class SidePanel extends JPanel
 		this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
 		this.setBackground(UIData.TEXT_BACKGROUND_COLOR);
 
-		textPanel = new JPanel();
+
 		pause = new JButton("Pause");
 		undo = new JButton(("Undo"));
-		textField = new JTextField("<Insert your move here>");
+
+		timePanel = new TimePanel();
+		timePanel.setBackground(UIData.BACKGROUND);
+
+		leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		leftPanel.setBackground(UIData.BACKGROUND);
+		leftPanel.add(pause);
+		leftPanel.add(undo);
+		leftPanel.add(timePanel);
+
 		history = new JTextArea("History:");
 		history.setEditable(false);
-
 		history.setPreferredSize(new Dimension(100,750));
-
-		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-		textPanel.setBackground(Color.WHITE);
 		history.setBackground(Color.WHITE);
+
+		textField = new JTextField("<Insert your move here>");
 		textField.setBackground(Color.WHITE);
-		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		textPanel.add(history);
-		textPanel.add(textField);
+
+		rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+		rightPanel.setBackground(UIData.BACKGROUND);
+		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		rightPanel.add(history);
+		rightPanel.add(textField);
+
+
 
 
 		this.add(pause);
 		this.add(undo);
-		this.add(textPanel);
+		this.add(timePanel);
+		this.add(rightPanel);
 
 		this.setBackground(UIData.BACKGROUND_COLOR);
 		//this.add(history);

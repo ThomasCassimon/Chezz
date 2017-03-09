@@ -20,14 +20,13 @@ public class Main
 {
 
 	public static final int searchDepth = 2;
-	public static Chronometer chronometerWhite;
-	public static Chronometer chronometerBlack;
+
+
 
 
 	public static void main (String[] args)
 	{
-		chronometerWhite = new Chronometer(100000);
-		chronometerBlack = new Chronometer(100000);
+
 
 
 		MainWindow mw = new MainWindow();

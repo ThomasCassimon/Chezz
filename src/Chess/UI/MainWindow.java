@@ -21,7 +21,7 @@ public class MainWindow extends JFrame implements ActionListener
 	private JPanel panel;
 	private Board board;
 	private SidePanel sidePanel;
-	private TimePanel timePanel;
+	//private TimePanel timePanel;
 
 
 
@@ -33,7 +33,7 @@ public class MainWindow extends JFrame implements ActionListener
 		 panel = new JPanel();
 		 board = new Board(this);
 		 sidePanel = new SidePanel();
-		 timePanel = new TimePanel(Main.chronometerWhite, Main.chronometerBlack);
+		 //timePanel = new TimePanel(Main.chronometerWhite, Main.chronometerBlack);
 
 		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
@@ -44,7 +44,7 @@ public class MainWindow extends JFrame implements ActionListener
 
 		panel.add(board);
 		panel.add(sidePanel);
-		panel.add(timePanel);
+		//panel.add(timePanel);
 
 		this.add(panel);
 		this.initBoard();
@@ -105,7 +105,7 @@ public class MainWindow extends JFrame implements ActionListener
 						gameManager.setCachedMoves(moves);
 						for (Move move : moves)
 						{
-							board.highlightPiece(move);
+							board.highlightMove(move);
 						}
 
 					}

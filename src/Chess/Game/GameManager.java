@@ -2,6 +2,7 @@ package Chess.Game;
 
 import Chess.Athena.AIPlayer;
 import Chess.Exceptions.Unchecked.IllegalSideException;
+import Chess.Time.Chronometer;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,9 @@ public class GameManager
 	private ArrayList <Move> cachedMoves;
 	private int activeColor;
 	private ChessBoard cb;
+
+	public static Chronometer chronometerBlack = new Chronometer(1000000);
+	public static Chronometer chronometerWhite = new Chronometer(1000000);
 
 	public GameManager ()
 	{

@@ -252,12 +252,16 @@ public class Board extends JPanel
 		return tiles[index];
 	}
 
-	public void highlightPiece(Move move)
+	public void highlightMove(Move move)
 	{
 		int i = this.getIndex(move.get2DDst());
 		if (move.isCapture())
 		{
 			tiles[i].setBackground(UIData.CAPTURE);
+		}
+		else if (move.isPromotion())
+		{
+			tiles[i].setBackground(UIData.PROMOTION);
 		}
 		else
 		{
