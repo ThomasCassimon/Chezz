@@ -14,10 +14,10 @@ public final class Movesets
 	/**
 	 * Move-offsets for a Pawn
 	 */
-	public static final int[] PAWN_MOVE_WHITE = {0x10,	0x20};
-	public static final int[] PAWN_MOVE_BLACK =	{-0x10, -0x20};
-	public static final int[] PAWN_CAPTURE_WHITE = {0x0F, 0x11};
-	public static final int[] PAWN_CAPTURE_BLACK = {-0x0F, -0x11};
+	public static final int[] PAWN_MOVE_WHITE =		{0x10,	0x20};
+	public static final int[] PAWN_MOVE_BLACK =		{-0x10,	-0x20};
+	public static final int[] PAWN_CAPTURE_WHITE =	{0x0F,	0x11};
+	public static final int[] PAWN_CAPTURE_BLACK =	{-0x0F,	-0x11};
 
 	/*
 	 * Rook

@@ -141,7 +141,7 @@ public class Piece
 
 					for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
 					{
-						if (((this.positionByte + Movesets.PAWN_MOVE_WHITE[i]) & 0x88) == 0)
+						if (((this.positionByte + Movesets.PAWN_CAPTURE_WHITE[i]) & 0x88) == 0)
 						{
 							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_WHITE[i]),  Move.CAPTURE_MASK));
 						}
@@ -161,7 +161,7 @@ public class Piece
 
 					for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
 					{
-						if (((this.positionByte + Movesets.PAWN_MOVE_BLACK[i]) & 0x88) == 0)
+						if (((this.positionByte + Movesets.PAWN_CAPTURE_BLACK[i]) & 0x88) == 0)
 						{
 							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_BLACK[i]),  Move.CAPTURE_MASK));
 						}

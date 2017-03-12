@@ -47,6 +47,7 @@ public final class UIData
 	public static final Color CAPTURE = Color.RED;
 	public static final Color PROMOTION = Color.BLUE;
 
+
 	//FONTS
 	public static final float FONT_SIZE = 25.0f;
 

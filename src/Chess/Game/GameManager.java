@@ -207,7 +207,7 @@ public class GameManager
 	 */
 	private boolean isValidBishopMove (Move m)
 	{
-		System.out.println("Move: " + m.toString());
+		//System.out.println("Move: " + m.toString());
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
 
@@ -311,14 +311,14 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
 			{
-				System.out.println(m.toString() + " does not end on opponent's square");
+				//System.out.println(m.toString() + " does not end on opponent's square");
 				return false;
 			}
 		}
 
 		if ((!this.get(m.get2DDst()).isEmpty()) && (!m.isCapture()))
 		{
-			System.out.println("Destination isn't empty");
+			//System.out.println("Destination isn't empty");
 			return false;
 		}
 
@@ -327,7 +327,13 @@ public class GameManager
 			// It's a double move and the pawn is still on it's initial rank
 			if ((m.getSrc() >> 4) != initRank)
 			{
-				System.out.println(m.toString() + " is double moving outside first rank.");
+				//System.out.println(m.toString() + " is double moving outside first rank.");
+				return false;
+			}
+
+			if ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
+			{
+				//System.out.println("Piece in the way of double move");
 				return false;
 			}
 		}
@@ -337,7 +343,7 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() == color)
 			{
-				System.out.println(m.toString() + " is trying to capture own color");
+				//System.out.println(m.toString() + " is trying to capture own color");
 				return false;
 			}
 		}
@@ -425,11 +431,11 @@ public class GameManager
 	{
 		if (color == PieceData.WHITE_BYTE)
 		{
-			return m.get2DDst()[1] == 7;
+			return (m.get2DDst()[1] == 7)  && (this.get(m.get2DSrc()).getPieceWithoutColorByte() == PieceData.PAWN_BYTE);
 		}
 		else if (color == PieceData.BLACK_BYTE)
 		{
-			return m.get2DDst()[1] == 0;
+			return (m.get2DDst()[1] == 0)  && (this.get(m.get2DSrc()).getPieceWithoutColorByte() == PieceData.PAWN_BYTE);
 		}
 		else
 		{
@@ -455,7 +461,6 @@ public class GameManager
 	 */
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
-		System.out.println("GET ALL VALID MOVES");
 		if (p.getPieceWithoutColorByte() != 0)
 		{
 			int piece = p.getPieceWithoutColorByte();
@@ -470,20 +475,20 @@ public class GameManager
 
 				if (this.isCapture(color, m))
 				{
-					System.out.println(m.toString() + " set capture flag");
+					//System.out.println(m.toString() + " set capture flag");
 					m.setCapture();
 				}
 
 				if (this.isPromo(color, m))
 				{
-					System.out.println(m.toString() + " set promo flag");
+					//System.out.println(m.toString() + " set promo flag");
 					m.setPromo();
 				}
 
 				// You can't end on one of your own pieces
 				if (this.isCollision(color, m))
 				{
-					System.out.println(m.toString() + " collided");
+					//System.out.println(m.toString() + " collided");
 					possibleMoves.remove(i);
 					i--;
 					continue;
@@ -491,7 +496,7 @@ public class GameManager
 
 				if ((m.isCapture()) && (this.get(m.get2DDst()).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 				{
-					System.out.println(m.toString() + " captures king");
+					//System.out.println(m.toString() + " captures king");
 					possibleMoves.remove(i);
 					i--;
 					continue;
@@ -503,7 +508,7 @@ public class GameManager
 
 						if (!this.isValidPawnTypeMove(color, m))
 						{
-							System.out.println("Removing " + m.toString());
+							//System.out.println("Removing " + m.toString());
 							possibleMoves.remove(i);
 							i--;
 							continue;
