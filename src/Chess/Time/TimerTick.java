@@ -14,11 +14,19 @@ public class TimerTick extends TimerTask
 	public TimerTick(int initialCounter)
 	{
 		time = initialCounter;
-		timeDisplay = new JLabel();
+		timeDisplay = new JLabel(getPrettyTime());
 	}
 
+	public TimerTick(int initialCounter, JLabel label)
+	{
+		time = initialCounter;
+		timeDisplay = label;
+	}
 
 	@Override
+	/**
+	 * increases time and updates JLabel for time
+	 */
 	public void run()
 	{
 		time--;
@@ -27,8 +35,13 @@ public class TimerTick extends TimerTask
 
 	}
 
+	/**
+	 * get JLabel for time
+	 * @return JLabel time
+	 */
 	public JLabel getTimeDisplay()
 	{
+		timeDisplay.setText((getPrettyTime()));
 		return timeDisplay;
 	}
 

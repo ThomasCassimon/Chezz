@@ -1,13 +1,6 @@
 package Chess;
 
-import Chess.Athena.AIPlayer;
-import Chess.Game.*;
-import Chess.Time.Chronometer;
 import Chess.UI.*;
-
-import java.util.ArrayList;
-
-import static java.lang.System.nanoTime;
 
 /**
  * @author Thomas
@@ -29,6 +22,6 @@ public class Main
 
 
 
-		MainWindow mw = new MainWindow();
+		GamePanel mw = new GamePanel();
 	}
 }

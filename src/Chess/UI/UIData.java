@@ -15,23 +15,23 @@ public final class UIData
 
 	//CHESS PIECES
 	//Pawns
-	public static final ImageIcon WP = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/PW.png"));
-	public static final ImageIcon BP = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/PB.png"));
+	public static final ImageIcon WP = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/PW.png"));
+	public static final ImageIcon BP = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/PB.png"));
 	//Kings
-	public static final ImageIcon WK = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/KW.png"));
-	public static final ImageIcon BK = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/KB.png"));
+	public static final ImageIcon WK = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/KW.png"));
+	public static final ImageIcon BK = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/KB.png"));
 	//Queens
-	public static final ImageIcon WQ = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/QW.png"));
-	public static final ImageIcon BQ = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/QB.png"));
+	public static final ImageIcon WQ = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/QW.png"));
+	public static final ImageIcon BQ = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/QB.png"));
 	//Knights
-	public static final ImageIcon WN = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/NW.png"));
-	public static final ImageIcon BN = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/NB.png"));
+	public static final ImageIcon WN = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/NW.png"));
+	public static final ImageIcon BN = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/NB.png"));
 	//Bishops
-	public static final ImageIcon WB = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/BW.png"));
-	public static final ImageIcon BB = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/BB.png"));
+	public static final ImageIcon WB = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/BW.png"));
+	public static final ImageIcon BB = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/BB.png"));
 	//Rooks
-	public static final ImageIcon WR = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/RW.png"));
-	public static final ImageIcon BR = new ImageIcon(MainWindow.class.getResource("Chess_Pieces/Default/RB.png"));
+	public static final ImageIcon WR = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/RW.png"));
+	public static final ImageIcon BR = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/RB.png"));
 
 	//COLORS
 	public static final Color BROWN = new Color(140,70,20); 	//Saddlebrown (RGB 139,69,19)
@@ -42,10 +42,12 @@ public final class UIData
 	public static final Color TEXT_BACKGROUND_COLOR = Color.WHITE;
 	public static final Color BORDER_COLOR = Color.BLACK;
 	public static final Color HIGHLIGHT = Color.GREEN;
-	//public static final Color HIGHLIGHT = new Color (0,255,0,128);
+	//public static final Color HIGHLIGHT = new Color (0,255,0,127);
 	public static final Color ACTIVE_PIECE = Color.YELLOW;
+	//public static final Color ACTIVE_PIECE = new Color(255,255,0,127);
 	public static final Color CAPTURE = Color.RED;
 	public static final Color PROMOTION = Color.BLUE;
+	public static final Color CAPTURE_AND_PROMOTION = new Color(138,43,226);
 
 
 	//FONTS
