@@ -3,6 +3,7 @@ package Chess.UI;
 import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.Piece;
+import Chess.Game.PieceData;
 import Chess.Main;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 
 //Created by Astrid on 22/02/2017.
 
-public class MainWindow extends JFrame implements ActionListener
+public class GamePanel extends JFrame implements ActionListener
 {
 	private static int WINDOW_WIDTH = 1400;
 	private static int WINDOW_HEIGHT = 850;
@@ -21,19 +22,17 @@ public class MainWindow extends JFrame implements ActionListener
 	private JPanel panel;
 	private Board board;
 	private SidePanel sidePanel;
-	//private TimePanel timePanel;
 
 
 
-	public MainWindow()
+	public GamePanel()
 	{
 		 super("Chezz!");
 		 this.gameManager = new GameManager();
 		 this.gameManager.init();
 		 panel = new JPanel();
 		 board = new Board(this);
-		 sidePanel = new SidePanel();
-		 //timePanel = new TimePanel(Main.chronometerWhite, Main.chronometerBlack);
+		 sidePanel = new SidePanel(this);
 
 		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
@@ -44,13 +43,12 @@ public class MainWindow extends JFrame implements ActionListener
 
 		panel.add(board);
 		panel.add(sidePanel);
-		//panel.add(timePanel);
 
 		this.add(panel);
 		this.initBoard();
 
-
-		 this.setVisible(true);
+		//this.setResizable(true);
+		this.setVisible(true);
 
 	}
 
@@ -60,14 +58,14 @@ public class MainWindow extends JFrame implements ActionListener
 	private void initBoard()
 	{
 		ArrayList<Piece> pieces;
-		pieces = gameManager.getAllWhitePieces();
+		pieces = gameManager.getAllPieces(PieceData.WHITE_BYTE);
 
 		for (Piece piece: pieces)
 		{
 			board.setPiece(piece);
 		}
 
-		pieces = gameManager.getAllBlackPieces();
+		pieces = gameManager.getAllPieces(PieceData.BLACK_BYTE);
 		for (Piece piece: pieces)
 		{
 			board.setPiece(piece);
@@ -84,6 +82,12 @@ public class MainWindow extends JFrame implements ActionListener
 		int[] indexArr;
 		ArrayList<Move> moves;
 		Piece piece;
+
+		if (e.getSource() == sidePanel.getPause())
+		{
+			GameManager.chronometer.pause();
+			System.out.println("Pause");
+		}
 
 			if (gameManager.getCachedMoves().isEmpty())
 			{
@@ -132,7 +136,6 @@ public class MainWindow extends JFrame implements ActionListener
 						}
 					}
 				}
-
 
 				gameManager.resetCachedMoves();
 			}
