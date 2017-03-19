@@ -242,7 +242,6 @@ public class Board extends JPanel
 		//System.out.println("File: " + index[0]);
 		index[1] = i / 8;
 		//System.out.println("Rank: " + index[1]);
-
 		return index;
 
 	}

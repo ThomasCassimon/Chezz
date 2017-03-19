@@ -21,14 +21,8 @@ public class Main
 
 	public static final int searchDepth = 2;
 
-
-
-
 	public static void main (String[] args)
 	{
-
-
-
 		MainWindow mw = new MainWindow();
 	}
 }

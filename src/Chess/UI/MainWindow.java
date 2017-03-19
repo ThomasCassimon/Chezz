@@ -1,9 +1,7 @@
 package Chess.UI;
 
-import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.Piece;
-import Chess.Main;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
