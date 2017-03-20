@@ -13,21 +13,21 @@ public class Board extends JPanel
 {
 	private Tile tiles[] = new Tile[64];
 
-	public Board(MainWindow mainWindow)
+	public Board(GamePanel gamePanel)
 	{
 		super();
 
 		this.setPreferredSize(new Dimension(800,800));
 		this.setLayout(new GridLayout(UIData.NUMBER_TILES +2, UIData.NUMBER_TILES + 2));
 		this.setBorder(BorderFactory.createLineBorder(UIData.BORDER_COLOR));
-		initBoard(mainWindow);
+		initBoard(gamePanel);
 
 	}
 
 	/**
 	 * Sets the layout of the board
 	 */
-	private void initBoard(MainWindow mainWindow)
+	private void initBoard(GamePanel gamePanel)
 	{
 		//Forming the chess board
 		char letter='A';
@@ -88,7 +88,7 @@ public class Board extends JPanel
 
 				tiles[arrayIndex].setOpaque(true);
 				tiles[arrayIndex].setBorderPainted(false);
-				tiles[arrayIndex].addActionListener(mainWindow);
+				tiles[arrayIndex].addActionListener(gamePanel);
 
 				this.add(tiles[arrayIndex]);
 			}
@@ -212,10 +212,7 @@ public class Board extends JPanel
 		int indexArr[];
 		int index;
 		indexArr = piece.get2DCoord();
-		//System.out.println("File: " + indexArr[0] + "	Rank: " + indexArr[1]);
 		index = ((indexArr[1]) * 8) + (indexArr[0]);
-		//index = ((rank-1)*8 + file+1);
-		//System.out.println("Index: " + index);
 		return index;
 	}
 
@@ -239,9 +236,8 @@ public class Board extends JPanel
 		int index[] = new int[2];
 
 		index[0] = i % 8;
-		//System.out.println("File: " + index[0]);
 		index[1] = i / 8;
-		//System.out.println("Rank: " + index[1]);
+
 		return index;
 
 	}
@@ -254,9 +250,17 @@ public class Board extends JPanel
 	public void highlightMove(Move move)
 	{
 		int i = this.getIndex(move.get2DDst());
+
 		if (move.isCapture())
 		{
-			tiles[i].setBackground(UIData.CAPTURE);
+			if(move.isPromotion())
+			{
+				tiles[i].setBackground(UIData.CAPTURE_AND_PROMOTION);
+			}
+			else
+			{
+				tiles[i].setBackground(UIData.CAPTURE);
+			}
 		}
 		else if (move.isPromotion())
 		{

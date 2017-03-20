@@ -3,8 +3,10 @@ package Chess.Game;
 import Chess.Athena.AIPlayer;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Time.Chronometer;
+import Chess.Time.TimerTick;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 import static java.lang.Math.abs;
 
@@ -26,8 +28,9 @@ public class GameManager
 	private int activeColor;
 	private ChessBoard cb;
 
-	public static Chronometer chronometerBlack = new Chronometer(1000000);
-	public static Chronometer chronometerWhite = new Chronometer(1000000);
+
+	public static Chronometer chronometer = new Chronometer(1000000, 1000000);
+
 
 	public GameManager ()
 	{
@@ -36,6 +39,9 @@ public class GameManager
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
+
+		this.chronometer.start();
+
 	}
 
 	/**
