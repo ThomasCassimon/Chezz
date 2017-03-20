@@ -601,6 +601,7 @@ public class GameManager
 		moveString += m.getPrettyDstCoords();
 
 		this.toggleActivePlayer();
+		GameManager.chronometer.toggle();
 
 		return moveString;
 	}
