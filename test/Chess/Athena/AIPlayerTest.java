@@ -1,7 +1,5 @@
 package Chess.Athena;
 
-import Chess.Game.ChessBoard;
-import Chess.Game.GameManager;
 import Chess.Game.PieceData;
 import org.junit.Test;
 

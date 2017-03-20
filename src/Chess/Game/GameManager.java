@@ -41,7 +41,6 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 
 		this.chronometer.start();
-
 	}
 
 	/**
@@ -467,7 +466,7 @@ public class GameManager
 	 */
 	public ArrayList<Move> getAllValidMoves (Piece p)
 	{
-		if (p.getPieceWithoutColorByte() != 0)
+		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
 		{
 			int piece = p.getPieceWithoutColorByte();
 
@@ -600,6 +599,8 @@ public class GameManager
 		}
 
 		moveString += m.getPrettyDstCoords();
+
+		this.toggleActivePlayer();
 
 		return moveString;
 	}
