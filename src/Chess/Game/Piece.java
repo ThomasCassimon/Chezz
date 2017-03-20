@@ -278,7 +278,7 @@ public class Piece
 	public String toString ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.positionByte);
-		return PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + 'a')) + Integer.toString(coords[1]);
+		return PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1);
 	}
 
 	public String toLongString ()
