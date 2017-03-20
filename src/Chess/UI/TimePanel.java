@@ -1,5 +1,6 @@
 package Chess.UI;
 
+import Chess.Game.GameManager;
 import Chess.Time.Chronometer;
 import Chess.Time.TimerTick;
 
