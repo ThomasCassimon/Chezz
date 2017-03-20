@@ -619,7 +619,6 @@ public class GameManager
 	public Move getLastMove ()
 	{
 		return this.moveHistory.get(this.moveHistory.size() - 1);
-
 	}
 
 	/**
