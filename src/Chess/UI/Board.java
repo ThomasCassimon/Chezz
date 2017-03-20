@@ -29,106 +29,18 @@ public class Board extends JPanel
 	 */
 	private void initBoard(GamePanel gamePanel)
 	{
-		//Forming the chess board
-		char letter='A';
-		int rank, file, arrayIndex;
-		int indexArr[] = new int[2];
-
-
-		//TOP of frame
-
-		JLabel label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-
-		for (file=0;file<8;file++)
+		for (int i = 0; i<UIData.TOTAL_TILES;i++)
 		{
-			label = new JLabel (Character.toString(letter));
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			label.setVerticalAlignment(SwingConstants.BOTTOM);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-			letter++;
-			this.add(label );
+			tiles[i] = new JButton();
+
+			setNormalTileColor(get2DCoord(i));
+
+			tiles[i].setOpaque(true);
+			tiles[i].setBorderPainted(false);
+			tiles[i].addActionListener(gamePanel);
 		}
 
-		label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-
-		for (rank = UIData.NUMBER_TILES-1; rank >=0; rank--)
-		{
-			//LEFT of frame
-			label = new JLabel(Integer.toString(rank+1)+" ");
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.RIGHT);
-			label.setVerticalAlignment(SwingConstants.CENTER);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-
-			this.add(label);
-
-			//TILES
-			for (file = 0; file < UIData.NUMBER_TILES; file++)
-			{
-				arrayIndex = (rank * 8) + file;
-
-
-				tiles[arrayIndex] = new Tile(file,rank);
-				indexArr[0] = file;
-				indexArr[1] = rank;
-
-				//System.out.println("1st index " + arrayIndex);
-				setNormalTileColor(indexArr);
-
-				tiles[arrayIndex].setOpaque(true);
-				tiles[arrayIndex].setBorderPainted(false);
-				tiles[arrayIndex].addActionListener(gamePanel);
-
-				this.add(tiles[arrayIndex]);
-			}
-
-			//RIGHT of frame
-			label = new JLabel(" " + Integer.toString(rank+1));
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.LEFT);
-			label.setVerticalAlignment(SwingConstants.CENTER);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-
-			this.add(label);
-
-		}
-
-
-		//BOTTOM of frame
-		label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-		letter = 'A';
-		for (file=0;file<8;file++)
-		{
-			label = new JLabel (Character.toString(letter));
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			label.setVerticalAlignment(SwingConstants.TOP);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-			letter++;
-			this.add(label );
-		}
-
-		label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
+		this.setBoardWhite();
 	}
 
 	/**
@@ -242,11 +154,21 @@ public class Board extends JPanel
 
 	}
 
+	/**
+	 * Returns tile from given index
+	 * @param index index for array of JButtons
+	 * @return corresponding JButton from index
+	 */
 	public JButton getTile(int index)
 	{
 		return tiles[index];
 	}
 
+
+	/**
+	 * Highlights a move
+	 * @param move move to be highlighted
+	 */
 	public void highlightMove(Move move)
 	{
 		int i = this.getIndex(move.get2DDst());
@@ -273,11 +195,20 @@ public class Board extends JPanel
 
 	}
 
+
+	/**
+	 * Gives gives tile tile from given index the active color
+	 * @param index
+	 */
 	public void setActive(int index)
 	{
 		tiles[index].setBackground(UIData.ACTIVE_PIECE);
 	}
 
+	/**
+	 * sets tile with given file and rank the correct color (normal board color)
+	 * @param indexArr array with file and rank (file first)
+	 */
 	public void setNormalTileColor(int[] indexArr)
 	{
 		int index = getIndex(indexArr);
@@ -292,6 +223,11 @@ public class Board extends JPanel
 		}
 	}
 
+	/**
+	 * makes a move. moves the icons from src to dst. Board gets switched according to given active color
+	 * @param move move that needs to be made
+	 * @param color active color after move has been made
+	 */
 	public void makeMove(Move move, int color)
 	{
 		tiles[getIndex(move.get2DDst())].setIcon(tiles[getIndex(move.get2DSrc())].getIcon());
@@ -311,108 +247,9 @@ public class Board extends JPanel
 	}
 
 
-	public void setBoardBlack()
-	{
-		this.removeAll();
-
-
-		//Forming the chess board
-		char letter='H';
-		int rank, file, arrayIndex;
-		int indexArr[] = new int[2];
-
-
-		//TOP of frame
-
-		JLabel label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-
-		for (file=0;file<8;file++)
-		{
-			label = new JLabel (Character.toString(letter));
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			label.setVerticalAlignment(SwingConstants.BOTTOM);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-			letter--;
-			this.add(label );
-		}
-
-		label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-
-		for (rank = 0; rank <UIData.NUMBER_TILES; rank++)
-		{
-			//LEFT of frame
-			label = new JLabel(Integer.toString(rank + 1)+" ");
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.RIGHT);
-			label.setVerticalAlignment(SwingConstants.CENTER);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-
-			this.add(label);
-
-			//TILES
-			for (file = UIData.NUMBER_TILES-1; file >=0; file--)
-			{
-				indexArr[0] = file;
-				indexArr[1] = rank;
-
-				arrayIndex = getIndex(indexArr);
-				this.add(tiles[arrayIndex]);
-			}
-
-			//RIGHT of frame
-			label = new JLabel(" " + Integer.toString(rank+1));
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.LEFT);
-			label.setVerticalAlignment(SwingConstants.CENTER);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-
-			this.add(label);
-
-		}
-
-
-		//BOTTOM of frame
-		label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-		letter = 'H';
-		for (file=0;file<8;file++)
-		{
-			label = new JLabel (Character.toString(letter));
-			label.setBackground(UIData.FRAME_COLOR);
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			label.setVerticalAlignment(SwingConstants.TOP);
-			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
-			label.setOpaque(true);
-			letter--;
-			this.add(label );
-		}
-
-		label = new JLabel("");
-		label.setBackground(UIData.FRAME_COLOR);
-		label.setOpaque(true);
-		this.add(label);
-
-		this.revalidate();
-		this.repaint();
-
-
-	}
-
+	/**
+	 * sets up the board for when player white is active
+	 */
 	public void setBoardWhite()
 	{
 		this.removeAll();
@@ -511,5 +348,112 @@ public class Board extends JPanel
 
 		this.revalidate();
 		this.repaint();
+	}
+
+	/**
+	 * sets up the board for when player black is active
+	 */
+	public void setBoardBlack()
+	{
+		this.removeAll();
+
+
+
+
+		//Forming the chess board
+		char letter='H';
+		int rank, file, arrayIndex;
+		int indexArr[] = new int[2];
+
+
+		//TOP of frame
+
+		JLabel label = new JLabel("");
+		label.setBackground(UIData.FRAME_COLOR);
+		label.setOpaque(true);
+		this.add(label);
+
+
+		for (file=0;file<8;file++)
+		{
+			label = new JLabel (Character.toString(letter));
+			label.setBackground(UIData.FRAME_COLOR);
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			label.setVerticalAlignment(SwingConstants.BOTTOM);
+			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
+			label.setOpaque(true);
+			letter--;
+			this.add(label );
+		}
+
+		label = new JLabel("");
+		label.setBackground(UIData.FRAME_COLOR);
+		label.setOpaque(true);
+		this.add(label);
+
+
+		for (rank = 0; rank <UIData.NUMBER_TILES; rank++)
+		{
+			//LEFT of frame
+			label = new JLabel(Integer.toString(rank + 1)+" ");
+			label.setBackground(UIData.FRAME_COLOR);
+			label.setHorizontalAlignment(SwingConstants.RIGHT);
+			label.setVerticalAlignment(SwingConstants.CENTER);
+			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
+			label.setOpaque(true);
+
+			this.add(label);
+
+			//TILES
+			for (file = UIData.NUMBER_TILES-1; file >=0; file--)
+			{
+				indexArr[0] = file;
+				indexArr[1] = rank;
+
+				arrayIndex = getIndex(indexArr);
+				this.add(tiles[arrayIndex]);
+			}
+
+			//RIGHT of frame
+			label = new JLabel(" " + Integer.toString(rank+1));
+			label.setBackground(UIData.FRAME_COLOR);
+			label.setHorizontalAlignment(SwingConstants.LEFT);
+			label.setVerticalAlignment(SwingConstants.CENTER);
+			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
+			label.setOpaque(true);
+
+			this.add(label);
+
+		}
+
+
+		//BOTTOM of frame
+		label = new JLabel("");
+		label.setBackground(UIData.FRAME_COLOR);
+		label.setOpaque(true);
+		this.add(label);
+
+		letter = 'H';
+		for (file=0;file<8;file++)
+		{
+			label = new JLabel (Character.toString(letter));
+			label.setBackground(UIData.FRAME_COLOR);
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			label.setVerticalAlignment(SwingConstants.TOP);
+			label.setFont(label.getFont().deriveFont(UIData.FONT_SIZE));
+			label.setOpaque(true);
+			letter--;
+			this.add(label );
+		}
+
+		label = new JLabel("");
+		label.setBackground(UIData.FRAME_COLOR);
+		label.setOpaque(true);
+		this.add(label);
+
+		this.revalidate();
+		this.repaint();
+
+
 	}
 }

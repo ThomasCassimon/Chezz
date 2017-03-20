@@ -5,6 +5,7 @@ import Chess.Time.Chronometer;
 import Chess.Time.TimerTick;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Astrid on 08/03/2017.
@@ -20,10 +21,6 @@ public class TimePanel extends JPanel
 
 	private JLabel timeWhite;
 	private JLabel timeBlack;
-
-	private JPanel panelWhite;
-	private JPanel panelBlack;
-
 
 	public TimePanel()
 	{
@@ -49,7 +46,8 @@ public class TimePanel extends JPanel
 		this.add(labelBlack);
 		this.add(timeBlack);
 
-		this.setBorder(UIData.BORDER_BLACK);
+
+		//this.setBorder(UIData.BORDER_BLACK);
 
 	}
 }

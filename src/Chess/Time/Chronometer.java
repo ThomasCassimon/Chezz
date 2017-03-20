@@ -41,6 +41,17 @@ public class Chronometer
 		activeWhite = true;
 	}
 
+	public Chronometer()
+	{
+		timer= new Timer();
+
+		timeWhite = 300000;
+		timeBlack = 300000;
+
+		timerTickWhite = new TimerTick(timeWhite);
+		timerTickBlack = new TimerTick(timeBlack);
+	}
+
 	/**
 	 * start chronometer (white starts)
 	 */
@@ -80,6 +91,8 @@ public class Chronometer
 		}
 
 		activeWhite = !activeWhite;
+
+		System.out.println("Chronometer toggled!");
 	}
 
 	/**
