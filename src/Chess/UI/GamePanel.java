@@ -15,8 +15,6 @@ import java.util.ArrayList;
 
 public class GamePanel extends JFrame implements ActionListener
 {
-	private static int WINDOW_WIDTH = 1400;
-	private static int WINDOW_HEIGHT = 850;
 	private GameManager gameManager;
 
 	private JPanel panel;
@@ -36,7 +34,7 @@ public class GamePanel extends JFrame implements ActionListener
 
 		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
-		 this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		 this.setSize(UIData.WINDOW_WIDTH, UIData.WINDOW_HEIGHT);
 		 this.setResizable(false);
 		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,9 +45,8 @@ public class GamePanel extends JFrame implements ActionListener
 		this.add(panel);
 		this.initBoard();
 
-		//this.setResizable(true);
+		this.setResizable(true);
 		this.setVisible(true);
-
 	}
 
 	/**
@@ -89,59 +86,64 @@ public class GamePanel extends JFrame implements ActionListener
 			System.out.println("Pause");
 		}
 
-			if (gameManager.getCachedMoves().isEmpty())
+		else if (e.getSource() == sidePanel.getUndo())
+		{
+			Move move = gameManager.getLastMove();
+			move = new Move(move.getDst(), move.getSrc(), 0);
+			board.makeMove(move, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+
+			gameManager.undo();
+
+		}
+		else if (gameManager.getCachedMoves().isEmpty())
+		{
+			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
 			{
-				for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
+				if (e.getSource() == board.getTile(i))
 				{
-					if (e.getSource() == board.getTile(i))
+					indexArr = board.get2DCoord(i);
+					piece = gameManager.get(indexArr[0], indexArr[1]);
+					moves = gameManager.getAllValidMoves(piece);
+
+					if (!moves.isEmpty())
 					{
+						board.setActive(i);
+					}
 
-						indexArr = board.get2DCoord(i);
-						piece = gameManager.get(indexArr[0], indexArr[1]);
-						moves = gameManager.getAllValidMoves(piece);
 
-						if (!moves.isEmpty())
+					gameManager.setCachedMoves(moves);
+					for (Move move : moves)
+					{
+						board.highlightMove(move);
+					}
+
+				}
+			}
+		}
+		else
+		{
+			moves = gameManager.getCachedMoves();
+
+			board.setNormalTileColor(moves.get(0).get2DSrc());
+
+			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
+			{
+				if (e.getSource() == board.getTile(i))
+				{
+					for (Move move : moves)
+					{
+						board.setNormalTileColor(move.get2DDst());
+						if (i == board.getIndex(move.get2DDst()))
 						{
-							board.setActive(i);
+							gameManager.makeMove(move);
+							board.makeMove(move, gameManager.getActiveColorByte());
 						}
-
-
-						gameManager.setCachedMoves(moves);
-						for (Move move : moves)
-						{
-							board.highlightMove(move);
-						}
-
 					}
 				}
 			}
-			else
-			{
-				moves = gameManager.getCachedMoves();
-
-				board.setNormalTileColor(moves.get(0).get2DSrc());
-
-				for (i=0;i<UIData.NUMBER_TILES*UIData.NUMBER_TILES;i++)
-				{
-					if(e.getSource() == board.getTile(i))
-					{
-						for(Move move: moves)
-						{
-							board.setNormalTileColor(move.get2DDst());
-							if (i == board.getIndex(move.get2DDst()))
-							{
-								gameManager.makeMove(move);
-								board.makeMove(move);
-							}
-						}
-					}
-				}
-
-				gameManager.resetCachedMoves();
-			}
-
-
+			gameManager.resetCachedMoves();
 		}
 
 
+	}
 }

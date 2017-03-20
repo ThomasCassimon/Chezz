@@ -56,6 +56,20 @@ public class Chronometer
 	 */
 	public void toggle()
 	{
+		timeWhite = timerTickWhite.getTime();
+		timeBlack = timerTickBlack.getTime();
+
+		labelWhite = timerTickWhite.getTimeDisplay();
+		labelBlack = timerTickBlack.getTimeDisplay();
+
+		timer.cancel();
+		timer = new Timer();
+
+		timerTickWhite = new TimerTick(timeWhite,labelWhite);
+		timerTickBlack = new TimerTick(timeBlack,labelBlack);
+
+
+
 		if(activeWhite)
 		{
 			timer.scheduleAtFixedRate(timerTickBlack,0, NANOSECOND);
@@ -64,6 +78,8 @@ public class Chronometer
 		{
 			timer.scheduleAtFixedRate(timerTickWhite,0, NANOSECOND);
 		}
+
+		activeWhite = !activeWhite;
 	}
 
 	/**

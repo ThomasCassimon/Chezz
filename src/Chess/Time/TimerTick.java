@@ -1,6 +1,7 @@
 package Chess.Time;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.TimerTask;
 
 /**
@@ -29,8 +30,17 @@ public class TimerTick extends TimerTask
 	 */
 	public void run()
 	{
-		time--;
-		timeDisplay.setText(getPrettyTime());
+		if (time != 0)
+		{
+			time--;
+			timeDisplay.setText(getPrettyTime());
+		}
+		else
+		{
+			timeDisplay.setText("00:00");
+			timeDisplay.setForeground(Color.RED);
+		}
+
 		//System.out.println("Timer: " + getPrettyTime());
 
 	}
@@ -69,7 +79,30 @@ public class TimerTick extends TimerTask
 		minutes = seconds/60;
 		seconds = seconds%60;
 
-		prettyTime = Integer.toString(minutes) + ":" + Integer.toString(seconds);
+		if(seconds<10)
+		{
+			if (minutes<10)
+			{
+				prettyTime = "0" + Integer.toString(minutes) + ":0" + Integer.toString(seconds);
+			}
+			else
+			{
+				prettyTime = Integer.toString(minutes) + ":0" + Integer.toString(seconds);
+			}
+		}
+		else
+		{
+			if (minutes<10)
+			{
+				prettyTime = "0" + Integer.toString(minutes) + ":" + Integer.toString(seconds);
+			}
+			else
+			{
+				prettyTime = Integer.toString(minutes) + ":" + Integer.toString(seconds);
+			}
+		}
+
+
 
 		return prettyTime;
 	}

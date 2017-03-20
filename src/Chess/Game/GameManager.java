@@ -29,7 +29,7 @@ public class GameManager
 	private ChessBoard cb;
 
 
-	public static Chronometer chronometer = new Chronometer(1000000, 1000000);
+	public static Chronometer chronometer = new Chronometer(10000, 10000);
 
 
 	public GameManager ()

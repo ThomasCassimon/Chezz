@@ -58,7 +58,7 @@ public class SidePanel extends JPanel
 		rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setBackground(UIData.BACKGROUND);
-		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		rightPanel.setBorder(UIData.BORDER_BLACK);
 		rightPanel.add(history);
 		rightPanel.add(textField);
 
