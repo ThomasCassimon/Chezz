@@ -41,7 +41,6 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 
 		this.chronometer.start();
-
 	}
 
 	/**
