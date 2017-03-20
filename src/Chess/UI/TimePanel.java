@@ -49,5 +49,7 @@ public class TimePanel extends JPanel
 		this.add(labelBlack);
 		this.add(timeBlack);
 
+		this.setBorder(UIData.BORDER_BLACK);
+
 	}
 }

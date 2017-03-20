@@ -11,6 +11,10 @@ public final class UIData
 {
 	//CONSTANTS
 	public static final int NUMBER_TILES = 8;
+	public static final int TOTAL_TILES = UIData.NUMBER_TILES * UIData.NUMBER_TILES;
+	public static final int BOARD_DIMENSION = 800;
+	public static int WINDOW_WIDTH = 1400;
+	public static int WINDOW_HEIGHT = 850;
 
 
 	//CHESS PIECES
@@ -58,4 +62,6 @@ public final class UIData
 	public static final Border BOTTOM_BORDER = BorderFactory.createMatteBorder(0,0,1,0, BORDER_COLOR);
 	public static final Border LEFT_BORDER = BorderFactory.createMatteBorder(0,1,0,0,BORDER_COLOR);
 	public static final Border RIGHT_BORDER = BorderFactory.createMatteBorder(0,0,0,0,BORDER_COLOR);
+
+	public static final Border BORDER_BLACK = BorderFactory.createLineBorder(Color.BLACK);
 }
