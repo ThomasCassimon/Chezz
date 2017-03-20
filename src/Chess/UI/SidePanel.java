@@ -78,11 +78,19 @@ public class SidePanel extends JPanel
 		//this.add(textField);
 	}
 
+	/**
+	 *  returns JButton pause
+	 * @return pause
+	 */
 	public JButton getPause()
 	{
 		return pause;
 	}
 
+	/**
+	 * returns JButton undo
+	 * @return unod
+	 */
 	public JButton getUndo()
 	{
 		return undo;

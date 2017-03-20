@@ -21,10 +21,6 @@ public class TimePanel extends JPanel
 	private JLabel timeWhite;
 	private JLabel timeBlack;
 
-	private JPanel panelWhite;
-	private JPanel panelBlack;
-
-
 	public TimePanel()
 	{
 

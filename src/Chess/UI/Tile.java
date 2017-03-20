@@ -5,6 +5,7 @@ import javax.swing.*;
 /**
  * Created by Astrid on 01/03/2017.
  */
+@Deprecated
 public class Tile extends JButton
 {
 	private int file;
