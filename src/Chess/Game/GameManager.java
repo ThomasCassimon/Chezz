@@ -370,21 +370,10 @@ public class GameManager
 
 		for (Piece p : opponentPieces)
 		{
-			if ((p.getPieceWithoutColorByte() != PieceData.KING_BYTE) && (p.getPieceWithoutColorByte() != PieceData.PAWN_BYTE))
-			{
-				ArrayList<Move> opponentMoves = this.getAllValidMoves(p);
-
-				for (Move om : opponentMoves)
-				{
-					if (m.getDst() == om.getDst())
-					{
-						return false;
-					}
-				}
-			}
-			else if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+			if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
 			{
 				int colorMod = 1;
+
 				if (opponentColor == PieceData.BLACK_BYTE)
 				{
 					colorMod = -1;
@@ -395,16 +384,32 @@ public class GameManager
 					return false;
 				}
 			}
+			else if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			{
+				Move opponentKingMoves [] = new Move [Movesets.KING_MOVE.length];
+
+				for (int i = 0; i < opponentKingMoves.length; i++)
+				{
+					opponentKingMoves[i] = new Move(p.getPositionByte(), p.getPositionByte() + Movesets.KING_MOVE[i], 0x0);
+
+					if (m.getDst() == opponentKingMoves[i].getDst())
+					{
+						return false;
+					}
+				}
+			}
 			else
 			{
-				int ownFile = m.get2DSrc()[0];
-				int ownRank = m.get2DSrc()[1];
-				int opponentFile = p.get2DCoord()[0];
-				int opponentRank = p.get2DCoord()[1];
+				this.toggleActivePlayer();
+				ArrayList<Move> opponentMoves = this.getAllValidMoves(p);
+				this.toggleActivePlayer();
 
-				if ((abs(ownFile - opponentFile) <= 1) && (abs(ownRank - opponentRank) <= 1))
+				for (Move om : opponentMoves)
 				{
-					return false;
+					if (m.getDst() == om.getDst())
+					{
+						return false;
+					}
 				}
 			}
 		}
@@ -601,7 +606,7 @@ public class GameManager
 		moveString += m.getPrettyDstCoords();
 
 		this.toggleActivePlayer();
-		GameManager.chronometer.toggle();
+		//GameManager.chronometer.toggle();
 
 		return moveString;
 	}
@@ -614,6 +619,7 @@ public class GameManager
 	public Move getLastMove ()
 	{
 		return this.moveHistory.get(this.moveHistory.size() - 1);
+
 	}
 
 	/**
