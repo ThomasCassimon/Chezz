@@ -3,6 +3,7 @@ package Chess.Game;
 import Chess.Athena.AIPlayer;
 import Chess.Athena.TranspositionTable;
 import Chess.Exceptions.Unchecked.IllegalSideException;
+import Chess.Time.Chronometer;
 
 import java.util.ArrayList;
 import java.util.Collections;
