@@ -25,7 +25,7 @@ public class Piece
 	private int positionByte;
 
 	/**
-	 * Default Constructor, only used to resolve "... Might not be initialzed" errors
+	 * Default Constructor, only used to resolve "... Might not be initialized" errors
 	 */
 	@Deprecated
 	public Piece ()
@@ -104,6 +104,7 @@ public class Piece
 		this.positionByte = ChessBoard.get0x88Index(file,rank);
 	}
 
+	@Deprecated
 	public int getPieceByte ()
 	{
 		return this.pieceByte;

@@ -358,14 +358,14 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
 			{
-				//System.out.println(m.toString() + " does not end on opponent's square");
+				System.out.println(m.toString() + " does not end on opponent's square");
 				return false;
 			}
 		}
 
 		if ((!this.get(m.get2DDst()).isEmpty()) && (!m.isCapture()))
 		{
-			//System.out.println("Destination isn't empty");
+			System.out.println("Destination isn't empty");
 			return false;
 		}
 
@@ -374,13 +374,13 @@ public class GameManager
 			// It's a double move and the pawn is still on it's initial rank
 			if ((m.getSrc() >> 4) != initRank)
 			{
-				//System.out.println(m.toString() + " is double moving outside first rank.");
+				System.out.println(m.toString() + " is double moving outside first rank.");
 				return false;
 			}
 
 			if ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
 			{
-				//System.out.println("Piece in the way of double move");
+				System.out.println("Piece in the way of double move");
 				return false;
 			}
 		}
@@ -390,7 +390,7 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() == color)
 			{
-				//System.out.println(m.toString() + " is trying to capture own color");
+				System.out.println(m.toString() + " is trying to capture own color");
 				return false;
 			}
 		}
@@ -399,7 +399,7 @@ public class GameManager
 	}
 
 	/**
-	 * Checks wheter or not a move is a valid king-type move. This entails checking if the move will check the king.
+	 * Checks whether or not a move is a valid king-type move. This entails checking if the move will check the king.
 	 * @param color	The color of the king who's moving
 	 * @param m	The move to be analyzed
 	 * @return True of and only if the specified move is a valid king-type move, otherwise false.
@@ -407,50 +407,121 @@ public class GameManager
 	public boolean isValidKingTypeMove (int color, Move m)
 	{
 		int opponentColor = PieceData.getOpponentColor(color);
+		int from = m.getSrc();
+		int to = m.getDst();
+		int tmp = 0;
+		Piece p;
 
-		ArrayList<Piece> opponentPieces = this.getAllPieces(opponentColor);
-
-		for (Piece p : opponentPieces)
+		if (color == PieceData.WHITE_BYTE)
 		{
-			int piece = p.getPieceWithoutColorByte();
-			switch(piece)
+			for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
 			{
-				case PieceData.PAWN_BYTE:
-					int colorMod = 1;
-
-					if (opponentColor == PieceData.BLACK_BYTE)
+				if ((p = this.get((tmp = to + Movesets.PAWN_CAPTURE_WHITE[i]))).getColor() == opponentColor)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
 					{
-						colorMod = -1;
-					}
-
-					if ((m.getDst() == (p.getPositionByte() + (colorMod * 0x0F))) || (m.getDst() == (p.getPositionByte() + (colorMod * 0x11))))
-					{
+						System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by black pawn");
 						return false;
 					}
-				case PieceData.KING_BYTE:
-					Move opponentKingMoves [] = new Move [Movesets.KING_MOVE.length];
-
-					for (int i = 0; i < opponentKingMoves.length; i++)
+				}
+			}
+		}
+		else if (color == PieceData.BLACK_BYTE)
+		{
+			for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
+			{
+				if ((p = this.get((tmp = to + Movesets.PAWN_CAPTURE_BLACK[i]))).getColor() == opponentColor)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
 					{
-						opponentKingMoves[i] = new Move(p.getPositionByte(), p.getPositionByte() + Movesets.KING_MOVE[i], 0x0);
+						System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by white pawn");
+						return false;
+					}
+				}
+			}
+		}
 
-						if (m.getDst() == opponentKingMoves[i].getDst())
+		for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
+		{
+			if (((tmp = to + Movesets.ROOK_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					{
+						if(this.isValidRookTypeMove(new Move (tmp, to, 0x0)))
 						{
+							System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by rook");
 							return false;
 						}
 					}
-				default:
-					this.toggleActivePlayer();
-					ArrayList<Move> opponentMoves = this.getLegalMoves(p);
-					this.toggleActivePlayer();
+				}
+			}
+		}
 
-					for (Move om : opponentMoves)
+		for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
+		{
+			if (((tmp = to + Movesets.KNIGHT_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KNIGHT_BYTE)
 					{
-						if (m.getDst() == om.getDst())
+						System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by knight");
+						return false;
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
+		{
+			if (((tmp = to + Movesets.BISHOP_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.BISHOP_BYTE)
+					{
+						if(this.isValidBishopMove(new Move (tmp, to, 0x0)))
 						{
+							System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by bishop");
 							return false;
 						}
 					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
+		{
+			if (((tmp = to + Movesets.QUEEN_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.QUEEN_BYTE)
+					{
+						if ((this.isValidRookTypeMove(new Move (tmp, to, 0x0)) || this.isValidBishopMove(new Move (tmp, to, 0x0))))
+						{
+							System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by queen");
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.KING_MOVE.length; i++)
+		{
+			if (((tmp = to + Movesets.KING_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KING_BYTE)
+					{
+						System.out.println("[isValidKingTypeMove] " + m.toString() + " capturable by king");
+						return false;
+					}
+				}
 			}
 		}
 
@@ -504,6 +575,12 @@ public class GameManager
 		return this.get(m.get2DDst()).getColor() == color;
 	}
 
+	/**
+	 * Sets the capture and promo flags for a given move.
+	 * @param color The color that whishes to make the move
+	 * @param m the move to be checked
+	 * @return the move given, but with appropriate flags set
+	 */
 	public Move setFlags (int color, Move m)
 	{
 		if (this.isCapture(color, m))
@@ -540,6 +617,7 @@ public class GameManager
 
 	public boolean isValidMove (Piece p, Move m)
 	{
+		System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceWithoutColorByte()));
 		//int src = m.getSrc();
 		//int srcFile = m.get2DSrc()[0];
 		//int srcRank = m.get2DSrc()[1];
@@ -549,59 +627,63 @@ public class GameManager
 		int color = p.getColor();
 		int piece = p.getPieceWithoutColorByte();
 
-		this.setFlags(color, m);
-
 		// You can't end on one of your own pieces
 		if (this.isCollision(color, m))
 		{
+			System.out.println("[isValidMove] " + m.toString() + " collided");
 			return false;
 		}
 
 		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 		{
-			//System.out.println(m.toString() + " captures king");
+			System.out.println("[isValidMove] " + m.toString() + " captures king");
 			return false;
 		}
 
 		switch (piece)
 		{
 			case PieceData.PAWN_BYTE:
-
 				if (!this.isValidPawnTypeMove(color, m))
 				{
-					//System.out.println("Removing " + m.toString());
+					System.out.println("[isValidMove] Pawn Removing " + m.toString());
 					return false;
 				}
+				break;
 			case PieceData.ROOK_BYTE:
-
 				if (!this.isValidRookTypeMove(m))
 				{
+					System.out.println("[isValidMove] Rook: Removing " + m.toString());
 					return false;
 				}
-
+				break;
 			case PieceData.KNIGHT_BYTE:
 				// There are no special rules for knights besides the ones that are handled outside of this switch
 				break;
 			case PieceData.BISHOP_BYTE:
-
 				if (!this.isValidBishopMove(m))
 				{
+					System.out.println("[isValidMove] Bishop Removing " + m.toString());
 					return false;
 				}
-
+				break;
 			case PieceData.QUEEN_BYTE:
 				if ((!this.isValidBishopMove(m)) && (!this.isValidRookTypeMove(m)))
 				{
+					System.out.println("[isValidMove] Queen Removing " + m.toString());
 					return false;
 				}
-
+				break;
 			case PieceData.KING_BYTE:
 				if (!this.isValidKingTypeMove(color, m))
 				{
+					System.out.println("[isValidMove] King Removing " + m.toString());
 					return false;
 				}
-
+				break;
+			case PieceData.EMPTY_BYTE:
+				return true;
 			default:
+				System.out.println("[isValidMove] default: Removing " + m.toString());
 				return false;
 		}
 
@@ -617,108 +699,37 @@ public class GameManager
 	{
 		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
 		{
+			System.out.println("NEW");
 			int color = p.getColor();
 			//int piece = p.getPieceWithoutColorByte();
 
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
+			System.out.println("Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
+
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
 				Move m = possibleMoves.get(i);
 
-				this.setFlags(color, m);
+				m = this.setFlags(color, m);
 
 				if (!this.isValidMove(p, m))
 				{
+					System.out.println("[getLegalMoves] removing: " + m.toString());
 					possibleMoves.remove(i);
 					i--;
-					continue;
 				}
-				/*
-				// You can't end on one of your own pieces
-				if (this.isCollision(color, m))
-				{
-					//System.out.println(m.toString() + " collided");
-					possibleMoves.remove(i);
-					i--;
-					continue;
-				}
-
-				if ((m.isCapture()) && (this.get(m.get2DDst()).getPieceWithoutColorByte() == PieceData.KING_BYTE))
-				{
-					//System.out.println(m.toString() + " captures king");
-					possibleMoves.remove(i);
-					i--;
-					continue;
-				}
-
-				switch (piece)
-				{
-					case PieceData.PAWN_BYTE:
-
-						if (!this.isValidPawnTypeMove(color, m))
-						{
-							//System.out.println("Removing " + m.toString());
-							possibleMoves.remove(i);
-							i--;
-							continue;
-						}
-
-						break;
-					case PieceData.ROOK_BYTE:
-
-						if (!this.isValidRookTypeMove(m))
-						{
-							possibleMoves.remove(i);
-							i--;
-							continue;
-						}
-
-						break;
-
-					case PieceData.KNIGHT_BYTE:
-						// There are no special rules for knights besides the ones that are handled outside of this switch
-						break;
-					case PieceData.BISHOP_BYTE:
-
-						if (!this.isValidBishopMove(m))
-						{
-							possibleMoves.remove(i);
-							i--;
-							continue;
-						}
-
-						break;
-
-					case PieceData.QUEEN_BYTE:
-						if ((!this.isValidBishopMove(m)) && (!this.isValidRookTypeMove(m)))
-						{
-							possibleMoves.remove(i);
-							i--;
-							continue;
-						}
-
-						break;
-
-					case PieceData.KING_BYTE:
-
-						if (!this.isValidKingTypeMove(color, m))
-						{
-							possibleMoves.remove(i);
-							i--;
-							continue;
-						}
-
-						break;
-
-					default:
-						break;
-				}
-				*/
 			}
 
-
 			Collections.sort(possibleMoves);
+
+			System.out.println("Generated:");
+
+			for(Move m : possibleMoves)
+			{
+				System.out.println(m.toString());
+			}
+
 			return possibleMoves;
 		}
 		else
