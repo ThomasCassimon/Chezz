@@ -14,11 +14,12 @@ import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 
 // TODO: add to algebraic string method
-public class Move
+public class Move implements Comparable<Move>
 {
 	public static final int CAPTURE_MASK = 0x04;
 	public static final int PROMO_MASK = 0x08;
 	public static final int DOUBLE_PAWN_PUSH_MASK = 0x01;
+	public static final int HASH_OFFSET = 97;
 	/**
 	 * Both src and dst are stored as 0x88 squares
 	 */
@@ -253,15 +254,68 @@ public class Move
 		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1);
 	}
 
+	@Override
 	public boolean equals (Object o)
 	{
-		if (o instanceof Move)
+		if (this == o)
 		{
-			return ((this.getSrc() == ((Move) o).getSrc()) && (this.getDst() == ((Move) o).getDst())  && (this.getSpecial() == ((Move) o).getSpecial()));
+			return true;
+		}
+		else if (!(o instanceof Move))
+		{
+			return false;
+		}
+		else if ((this.src == ((Move) o).src) && (this.dst == ((Move) o).dst) && (this.special == ((Move) o).special))
+		{
+			return true;
 		}
 		else
 		{
 			return false;
+		}
+	}
+
+	@Override
+	public int hashCode ()
+	{
+		return HASH_OFFSET + this.src + this.dst + this.special;
+	}
+
+	// Promo > Capture
+	// Capture > Normal
+	// So: Normal < Capture < Promo
+	@Override
+	public int compareTo(Move move)
+	{
+		if ((this.src == move.src) && (this.dst == move.dst) && (this.special == move.special))
+		{
+			return 0;
+		}
+		else
+		{
+			if (this.isPromotion() && !move.isPromotion())
+			{
+				return 1;
+			}
+			else if (!this.isPromotion() && move.isPromotion())
+			{
+				return -1;
+			}
+			else
+			{
+				if (this.isCapture() && !move.isCapture())
+				{
+					return 1;
+				}
+				else if (!this.isCapture() && move.isCapture())
+				{
+					return -1;
+				}
+				else
+				{
+					return 0;
+				}
+			}
 		}
 	}
 }

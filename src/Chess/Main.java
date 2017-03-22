@@ -1,5 +1,6 @@
 package Chess;
 
+import Chess.Athena.AIPlayer;
 import Chess.UI.*;
 
 /**
@@ -11,17 +12,8 @@ import Chess.UI.*;
  */
 public class Main
 {
-
-	public static final int searchDepth = 2;
-
-
-
-
 	public static void main (String[] args)
 	{
-
-
-
-		GamePanel mw = new GamePanel();
+		GamePanel gp = new GamePanel();
 	}
 }

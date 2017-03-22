@@ -23,8 +23,8 @@ public class AIPlayerTest
 		AIPlayer aiWhite = new AIPlayer(PieceData.WHITE_BYTE);
 		AIPlayer aiBlack = new AIPlayer(PieceData.BLACK_BYTE);
 
-		assertEquals(0, aiWhite.scoreGame(gm));
-		assertEquals(0, aiBlack.scoreGame(gm));
+		assertEquals(0, aiWhite.scoreGame(gm, PieceData.WHITE_BYTE));
+		assertEquals(0, aiBlack.scoreGame(gm, PieceData.BLACK_BYTE));
 	}
 
 	@Test
@@ -37,8 +37,8 @@ public class AIPlayerTest
 		AIPlayer aiBlack = new AIPlayer (PieceData.BLACK_BYTE);
 
 		// Expected values calculated using excel sheet
-		assertEquals(36827, aiWhite.scoreGame(gm));
-		assertEquals(36827, aiBlack.scoreGame(gm));
+		assertEquals(36827, aiWhite.scoreGame(gm, PieceData.WHITE_BYTE));
+		assertEquals(36827, aiBlack.scoreGame(gm, PieceData.BLACK_BYTE));
 	}
 	
 }

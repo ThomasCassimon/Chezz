@@ -18,6 +18,7 @@ import static java.lang.Integer.max;
  */
 public class AIPlayer extends Player
 {
+	public static TranspositionTable transpositionTable = TranspositionTable.getInstance();
 	private static final int inf = Integer.MAX_VALUE;
 
 	public AIPlayer(int colorByte)
@@ -34,16 +35,16 @@ public class AIPlayer extends Player
 	 * @param gm The GameManager that contains the game that needs to be scored
 	 * * @return an int, the score
 	 */
-	public int scoreGame (GameManager gm)
+	public static int scoreGame (GameManager gm, int color)
 	{
 		int score = 0;
-		ArrayList<Piece> pieces = new ArrayList<Piece> (8);
+		ArrayList<Piece> pieces = new ArrayList<> (16);
 
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				if (gm.get(i,j).getColor() == colorByte)  // True if the piece's colorByte is identical to the player's
+				if (gm.get(i,j).getColor() == color)  // True if the piece's colorByte is identical to the player's
 				{
 					score += PieceData.getPieceScore(gm.get(i,j).getPieceWithoutColorByte());
 					pieces.add(gm.get(i,j));
@@ -57,17 +58,17 @@ public class AIPlayer extends Player
 
 		for (Piece p : pieces)
 		{
-			if (p.getPieceByte() == (PieceData.BISHOP_BYTE | this.colorByte))
+			if (p.getPieceByte() == (PieceData.BISHOP_BYTE | color))
 			{
 				bishopCount++;
 			}
 
-			if (p.getPieceByte() == (PieceData.ROOK_BYTE | this.colorByte))
+			if (p.getPieceByte() == (PieceData.ROOK_BYTE | color))
 			{
 				rookCount++;
 			}
 
-			if (p.getPieceByte() == (PieceData.KNIGHT_BYTE | this.colorByte))
+			if (p.getPieceByte() == (PieceData.KNIGHT_BYTE | color))
 			{
 				knightCount++;
 			}
@@ -88,6 +89,8 @@ public class AIPlayer extends Player
 			score += BOTH_KNIGHTS_PENALTY;
 		}
 
+		AIPlayer.transpositionTable.put(gm.getZobristHash(), score);
+
 		return score;
 	}
 
@@ -97,11 +100,91 @@ public class AIPlayer extends Player
 	 */
 	public Move playTurn(GameManager gm, int searchDepth)
 	{
-		return new Move();
+		int score = 0;
+		int maxScore = -inf;
+		int maxIndex = -1;
+
+		ArrayList<Move> moves = new ArrayList<>();
+
+		for (Piece p : gm.getAllPieces(this.colorByte))
+		{
+			moves.addAll(gm.getLegalMoves(p));
+		}
+
+		for (int i = 0; i < moves.size(); i++)
+		{
+			Move m = moves.get(i);
+
+			GameManager gm_alt = new GameManager(gm);
+			gm_alt.makeMove(m);
+
+			score = negaScout(gm_alt, searchDepth, -inf, inf, this.colorByte);
+
+			if (score > maxScore)
+			{
+				maxScore = score;
+				maxIndex = i;
+			}
+		}
+
+		if (maxIndex >= 0)
+		{
+			return moves.get(maxIndex);
+		}
+		else
+		{
+			return new Move();
+		}
 	}
 
-	private int negaScout(GameManager gm, int depth, int alpha, int beta, int colorOnTurn)
+	private static int negaScout(GameManager gm, int depth, int alpha, int beta, int color)
 	{
-		return 0;
+		if (gm.isCheckMate(color) || depth == 0)
+		{
+			Integer score = AIPlayer.transpositionTable.get(gm.getZobristHash());
+
+			if (score == null)
+			{
+				score = scoreGame(gm, color);
+			}
+
+			return score;
+		}
+		else
+		{
+			int score = 0;
+			ArrayList <Move> opponentMoves = gm.getAllLegalMoves(PieceData.getOpponentColor(color));
+
+			for (int i = 0; i < opponentMoves.size(); i++)
+			{
+				Move m = opponentMoves.get(i);
+
+				GameManager gm_alt = new GameManager(gm);
+				gm_alt.makeMove(m);
+
+				if (i != 0)
+				{
+					score = -negaScout(gm_alt, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColor(color));
+
+					if ((alpha < score) && (score < beta))
+					{
+						score = -negaScout(gm_alt, depth - 1, -beta, -score, PieceData.getOpponentColor(color));
+					}
+				}
+				else
+				{
+					score = -negaScout(gm_alt, depth-1, -beta, -alpha, PieceData.getOpponentColor(color));
+				}
+
+				alpha = max(alpha, score);
+
+				if (alpha >= beta)
+				{
+					break;
+				}
+			}
+
+			return alpha;
+		}
 	}
 }

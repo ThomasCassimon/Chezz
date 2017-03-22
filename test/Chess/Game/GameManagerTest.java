@@ -3,7 +3,6 @@ package Chess.Game;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 //import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -177,7 +176,7 @@ public class GameManagerTest
 		expectedMoves.add(new Move(3, 1, 3, 2, 0x0));
 		expectedMoves.add(new Move(3, 1, 3, 3, Move.DOUBLE_PAWN_PUSH_MASK));
 
-		assertThat("comparing movelists for white pawn", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+		assertThat("comparing movelists for white pawn", gm.getLegalMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 
 		pawn = gm.get(4,6);
 		expectedMoves = new ArrayList<Move>();
@@ -186,7 +185,7 @@ public class GameManagerTest
 		expectedMoves.add(new Move(4, 6, 4, 5, 0x0));
 		expectedMoves.add(new Move(4, 6, 4, 4, Move.DOUBLE_PAWN_PUSH_MASK));
 
-		assertThat("comparing movelists for black pawn", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+		assertThat("comparing movelists for black pawn", gm.getLegalMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 
 		// Moved pawns in opposing, capturable positions
 		gm.makeMove(new Move (4, 6, 4, 4, Move.DOUBLE_PAWN_PUSH_MASK));
@@ -204,7 +203,7 @@ public class GameManagerTest
 		expectedMoves.add(new Move(3, 3, 3, 4, 0x0));
 		expectedMoves.add(new Move(3, 3, 4, 4, Move.CAPTURE_MASK));
 
-		assertThat("comparing movelists for white pawn, capture possible", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+		assertThat("comparing movelists for white pawn, capture possible", gm.getLegalMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 
 		pawn = gm.get(4,4);
 		expectedMoves = new ArrayList<Move>();
@@ -215,8 +214,8 @@ public class GameManagerTest
 		expectedMoves.add(new Move(4, 4, 4, 3, 0x0));
 		expectedMoves.add(new Move(4, 4, 3, 3, Move.CAPTURE_MASK));
 
-		assertThat("comparing movelists for black pawn, capture possible", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
-//		assertThat("comparing movelists", gm.getAllValidMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+		assertThat("comparing movelists for black pawn, capture possible", gm.getLegalMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
+//		assertThat("comparing movelists", gm.getLegalMoves(pawn), containsInAnyOrder(expectedMoves.toArray()));
 	}
 
 	@Test
@@ -248,7 +247,7 @@ public class GameManagerTest
 
 	/*
 	@Test
-	public void getAllMoves() throws Exception
+	public void getAllLegalMoves() throws Exception
 	{
 		ArrayList <Move> moves = new ArrayList<Move> ();
 	}

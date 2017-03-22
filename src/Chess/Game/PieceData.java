@@ -2,6 +2,9 @@ package Chess.Game;
 
 import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
+import Chess.UI.UIData;
+
+import java.rmi.server.UID;
 
 /**
  * @author Thomas
@@ -37,6 +40,9 @@ public final class PieceData
 	public static final int BOTH_BISHOPS_BONUS = 75;
 	public static final int BOTH_ROOKS_PENALTY = -50;
 	public static final int BOTH_KNIGHTS_PENALTY = -30;
+
+	public static final int NUM_SQUARES = UIData.NUMBER_TILES * UIData.NUMBER_TILES;
+	public static final int NUM_PIECES = 12;
 
 	/**
 	 * Every Locale gets their own inner class, these inner classes
@@ -351,17 +357,6 @@ public final class PieceData
 	 */
 	public static int getOpponentColor(int color) throws IllegalSideException
 	{
-		if (color == PieceData.WHITE_BYTE)
-		{
-			return PieceData.BLACK_BYTE;
-		}
-		else if (color == PieceData.BLACK_BYTE)
-		{
-			return PieceData.WHITE_BYTE;
-		}
-		else
-		{
-			throw new IllegalSideException(Integer.toString(color) + " is not a valid color.");
-		}
+		return color ^ PieceData.COLOR_MASK;
 	}
 }
