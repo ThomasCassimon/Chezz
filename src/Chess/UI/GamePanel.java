@@ -67,10 +67,11 @@ public class GamePanel extends JFrame implements ActionListener
 		//this.testAI();
 	}
 
-	@Override
+
 	/**
 	 * Called when a button is pressed.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		int i;
@@ -80,7 +81,7 @@ public class GamePanel extends JFrame implements ActionListener
 
 		if (e.getSource() == sidePanel.getPause())													//PAUSE
 		{
-			GameManager.chronometer.pause();
+			//GameManager.chronometer.pause();
 			System.out.println("Pause");
 		}
 

@@ -135,4 +135,9 @@ public class TranspositionTable
 	{
 		return this.hits;
 	}
+
+	public int getTableSize ()
+	{
+		return this.hashTable.size();
+	}
 }
