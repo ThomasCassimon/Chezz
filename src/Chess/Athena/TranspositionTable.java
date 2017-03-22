@@ -64,7 +64,14 @@ public class TranspositionTable
 
 	public Integer get (long hash)
 	{
-		return this.hashTable.get(hash);
+		Integer res = this.hashTable.get(hash);
+
+		if (res != null)
+		{
+			this.hits++;
+		}
+
+		return res;
 	}
 
 	public long getHash (int pieceIndex, int index0x88)
