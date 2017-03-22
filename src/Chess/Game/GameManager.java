@@ -3,11 +3,9 @@ package Chess.Game;
 import Chess.Athena.AIPlayer;
 import Chess.Athena.TranspositionTable;
 import Chess.Exceptions.Unchecked.IllegalSideException;
-import Chess.Time.Chronometer;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 
 import static java.lang.Math.abs;
 
@@ -30,7 +28,7 @@ public class GameManager
 	private long zobristHash;
 	private ChessBoard cb;
 
-	public static Chronometer chronometer = new Chronometer(1000000, 1000000);
+	//public static Chronometer chronometer = new Chronometer(1000000, 1000000);
 
 	public GameManager ()
 	{
@@ -41,13 +39,14 @@ public class GameManager
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
 
-		GameManager.chronometer.start();
+		//GameManager.chronometer.start();
 	}
 
 	public GameManager (GameManager gm)
 	{
 		this.cb = new ChessBoard();
 		this.activeColor = gm.activeColor;
+		this.zobristHash = gm.zobristHash;
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
@@ -291,7 +290,7 @@ public class GameManager
 	 * @param m The move to be checked
 	 * @return	True if and only if the move is a valid Rook-type move, otherwise false
 	 */
-	public boolean isValidRookTypeMove (Move m)
+	public boolean isValidRookMove(Move m)
 	{
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
@@ -343,7 +342,7 @@ public class GameManager
 	 * @param m The move a pawn wishes to make
 	 * @return True if and oly if the move is a valid pawn-type move, otherwise false
 	 */
-	public boolean isValidPawnTypeMove (int color, Move m)
+	public boolean isValidPawnMove(int color, Move m)
 	{
 		int initRank = 1;
 		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
@@ -358,14 +357,14 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
 			{
-		//		System.out.println(m.toString() + " does not end on opponent's square");
+				//System.out.println(m.toString() + " does not end on opponent's square");
 				return false;
 			}
 		}
 
 		if ((!this.get(m.get2DDst()).isEmpty()) && (!m.isCapture()))
 		{
-		//	System.out.println("Destination isn't empty");
+			//System.out.println("Destination isn't empty");
 			return false;
 		}
 
@@ -380,7 +379,7 @@ public class GameManager
 
 			if ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
 			{
-		//		System.out.println("Piece in the way of double move");
+				//System.out.println("Piece in the way of double move");
 				return false;
 			}
 		}
@@ -390,7 +389,7 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() == color)
 			{
-		//		System.out.println(m.toString() + " is trying to capture own color");
+				//System.out.println(m.toString() + " is trying to capture own color");
 				return false;
 			}
 		}
@@ -447,7 +446,7 @@ public class GameManager
 				{
 					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
 					{
-						if(this.isValidRookTypeMove(new Move (tmp, to, 0x0)))
+						if(this.isValidRookMove(new Move (tmp, to, 0x0)))
 						{
 							return false;
 						}
@@ -495,7 +494,7 @@ public class GameManager
 				{
 					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.QUEEN_BYTE)
 					{
-						if ((this.isValidRookTypeMove(new Move (tmp, to, 0x0)) || this.isValidBishopMove(new Move (tmp, to, 0x0))))
+						if ((this.isValidRookMove(new Move (tmp, to, 0x0)) || this.isValidBishopMove(new Move (tmp, to, 0x0))))
 						{
 							return false;
 						}
@@ -576,6 +575,14 @@ public class GameManager
 	 */
 	public Move setFlags (int color, Move m)
 	{
+		int initRank = 1;
+		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
+
+		if (color == PieceData.BLACK_BYTE)
+		{
+			initRank = 6;
+		}
+
 		if (this.isCapture(color, m))
 		{
 			//System.out.println(m.toString() + " set capture flag");
@@ -586,6 +593,11 @@ public class GameManager
 		{
 			//System.out.println(m.toString() + " set promo flag");
 			m.setPromo();
+		}
+
+		if ((deltaRank == 2) && ((m.getSrc() >> 4) == initRank) && ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() == PieceData.EMPTY_BYTE))
+		{
+			m.setSpecial(m.getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
 		}
 
 		return m;
@@ -623,29 +635,29 @@ public class GameManager
 		// You can't end on one of your own pieces
 		if (this.isCollision(color, m))
 		{
-		//	System.out.println("[isValidMove] " + m.toString() + " collided");
+			//System.out.println("[isValidMove] " + m.toString() + " collided");
 			return false;
 		}
 
 		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 		{
-		//	System.out.println("[isValidMove] " + m.toString() + " captures king");
+			//System.out.println("[isValidMove] " + m.toString() + " captures king");
 			return false;
 		}
 
 		switch (piece)
 		{
 			case PieceData.PAWN_BYTE:
-				if (!this.isValidPawnTypeMove(color, m))
+				if (!this.isValidPawnMove(color, m))
 				{
-		//			System.out.println("[isValidMove] Pawn Removing " + m.toString());
+					//System.out.println("[isValidMove] Pawn Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.ROOK_BYTE:
-				if (!this.isValidRookTypeMove(m))
+				if (!this.isValidRookMove(m))
 				{
-		//			System.out.println("[isValidMove] Rook: Removing " + m.toString());
+					//System.out.println("[isValidMove] Rook: Removing " + m.toString());
 					return false;
 				}
 				break;
@@ -655,28 +667,28 @@ public class GameManager
 			case PieceData.BISHOP_BYTE:
 				if (!this.isValidBishopMove(m))
 				{
-		//			System.out.println("[isValidMove] Bishop Removing " + m.toString());
+					//System.out.println("[isValidMove] Bishop Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.QUEEN_BYTE:
-				if ((!this.isValidBishopMove(m)) && (!this.isValidRookTypeMove(m)))
+				if ((!this.isValidBishopMove(m)) && (!this.isValidRookMove(m)))
 				{
-		//			System.out.println("[isValidMove] Queen Removing " + m.toString());
+					//System.out.println("[isValidMove] Queen Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.KING_BYTE:
 				if (!this.isValidKingTypeMove(color, m))
 				{
-		//			System.out.println("[isValidMove] King Removing " + m.toString());
+					//System.out.println("[isValidMove] King Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.EMPTY_BYTE:
 				return true;
 			default:
-		//		System.out.println("[isValidMove] default: Removing " + m.toString());
+				//System.out.println("[isValidMove] default: Removing " + m.toString());
 				return false;
 		}
 
@@ -692,13 +704,13 @@ public class GameManager
 	{
 		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
 		{
-		//	System.out.println("NEW");
+			//System.out.println("NEW");
 			int color = p.getColor();
 			//int piece = p.getPieceWithoutColorByte();
 
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
-		//	System.out.println("Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
+			//System.out.println("Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
@@ -708,20 +720,19 @@ public class GameManager
 
 				if (!this.isValidMove(p, m))
 				{
-		//			System.out.println("[getLegalMoves] removing: " + m.toString());
+					//System.out.println("[getLegalMoves] removing: " + m.toString());
 					possibleMoves.remove(i);
 					i--;
 				}
 			}
 
 			Collections.sort(possibleMoves);
-//
-		//	System.out.println("Generated:");
-//
-		//	for(Move m : possibleMoves)
-		//	{
-		//		System.out.println(m.toString());
-		//	}
+
+			//System.out.println("Generated:");
+			//for(Move m : possibleMoves)
+			//{
+				//System.out.println(m.toString());
+			//}
 
 			return possibleMoves;
 		}
@@ -738,16 +749,18 @@ public class GameManager
 	 */
 	public String makeMove (Move m)
 	{
-
+		//System.out.println("START\nHash: "  + Long.toBinaryString(this.zobristHash));
 		this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getSrc())), m.getSrc());	// First, remove the old piece from the table
+		//System.out.println("Hashing away piece at old location\nHash: "  + Long.toBinaryString(this.zobristHash));
 		this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getSrc())), m.getDst());	// Then, add the new piece to the table
+		//System.out.println("Hashing in piece at new location\nHash: "  + Long.toBinaryString(this.zobristHash));
 
-		/*
 		if (m.isCapture())
 		{
 			this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getDst())), m.getDst());	// If the move was a capture, remove the captured piece
+			//System.out.println("Removing previously captured piece\nHash: "  + Long.toBinaryString(this.zobristHash));
 		}
-		*/
+
 		this.zobristHash ^= AIPlayer.transpositionTable.getBlackTurnHash();
 
 
@@ -809,7 +822,7 @@ public class GameManager
 	 */
 	public void resetCachedMoves()
 	{
-		this.cachedMoves = new ArrayList<Move>();
+		this.cachedMoves.clear();
 	}
 
 	/**
@@ -828,7 +841,7 @@ public class GameManager
 	{
 		Move m = this.getLastMove();
 		this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));	// Making a dummy move which is just the inverse of the last move
-		this.moveHistory.remove(this.moveHistory.size() - 1);	// Always remove the dummy-move from the move history
+		this.moveHistory.remove(this.moveHistory.size() - 1);		// Always remove the dummy-move from the move history
 	}
 
 	/**

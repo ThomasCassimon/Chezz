@@ -40,5 +40,20 @@ public class AIPlayerTest
 		assertEquals(36827, aiWhite.scoreGame(gm, PieceData.WHITE_BYTE));
 		assertEquals(36827, aiBlack.scoreGame(gm, PieceData.BLACK_BYTE));
 	}
-	
+
+	@Test
+	public void testHashing () throws Exception
+	{
+		GameManager gm1 = new GameManager();
+		gm1.init();
+
+		GameManager gm2 = new GameManager();
+		gm2.init();
+
+		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
+		aip.playTurn(gm1, 1);
+		assertTrue("Table size is not > 0", AIPlayer.transpositionTable.getTableSize() > 0);
+		aip.playTurn(gm2, 1);
+		assertTrue("No hits were made", AIPlayer.transpositionTable.getHits() > 0);
+	}
 }

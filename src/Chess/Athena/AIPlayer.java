@@ -58,17 +58,17 @@ public class AIPlayer extends Player
 
 		for (Piece p : pieces)
 		{
-			if (p.getPieceByte() == (PieceData.BISHOP_BYTE | color))
+			if (p.getPieceWithoutColorByte() == (PieceData.BISHOP_BYTE | color))
 			{
 				bishopCount++;
 			}
 
-			if (p.getPieceByte() == (PieceData.ROOK_BYTE | color))
+			if (p.getPieceWithoutColorByte() == (PieceData.ROOK_BYTE | color))
 			{
 				rookCount++;
 			}
 
-			if (p.getPieceByte() == (PieceData.KNIGHT_BYTE | color))
+			if (p.getPieceWithoutColorByte() == (PieceData.KNIGHT_BYTE | color))
 			{
 				knightCount++;
 			}
