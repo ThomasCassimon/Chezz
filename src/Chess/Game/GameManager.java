@@ -1,12 +1,12 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
+import Chess.Athena.TranspositionTable;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Time.Chronometer;
-import Chess.Time.TimerTick;
 
 import java.util.ArrayList;
-import java.util.Timer;
+import java.util.Collections;
 
 import static java.lang.Math.abs;
 
@@ -26,21 +26,53 @@ public class GameManager
 	private ArrayList <Move> moveHistory;
 	private ArrayList <Move> cachedMoves;
 	private int activeColor;
+	private long zobristHash;
 	private ChessBoard cb;
 
-
-	public static Chronometer chronometer = new Chronometer();
-
+	public static Chronometer chronometer = new Chronometer(1000000, 1000000);
 
 	public GameManager ()
 	{
 		this.cb = new ChessBoard();
 		this.activeColor = PieceData.WHITE_BYTE;
+		this.zobristHash = 0;
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
 
-		this.chronometer.start();
+		GameManager.chronometer.start();
+	}
+
+	public GameManager (GameManager gm)
+	{
+		this.cb = new ChessBoard();
+		this.activeColor = gm.activeColor;
+		this.players = new Player [2];
+		this.moveHistory = new ArrayList <Move> ();
+		this.cachedMoves = new ArrayList <Move> ();
+
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				this.cb.set(i,j,gm.get(i,j).getPieceByte());
+			}
+		}
+
+		for (int i = 0; i < gm.players.length; i++)
+		{
+			this.players[i] = gm.players[i];
+		}
+
+		for (int i = 0; i < gm.moveHistory.size(); i++)
+		{
+			this.moveHistory.add(gm.moveHistory.get(i));
+		}
+
+		for (int i = 0; i < gm.cachedMoves.size(); i++)
+		{
+			this.cachedMoves.add(gm.cachedMoves.get(i));
+		}
 	}
 
 	/**
@@ -113,6 +145,16 @@ public class GameManager
 	}
 
 	/**
+	 * Returns the piece at the specified 0x88 position
+	 * @param index0x88 The desired index in 0x88 notation.
+	 * @return The piece at the specified 0x88 index
+	 */
+	public Piece get (int index0x88)
+	{
+		return new Piece (this.cb.get(index0x88), index0x88);
+	}
+
+	/**
 	 * Returns the piece at the specified file and rank
 	 * @param file	The file of the piece
 	 * @param rank	The rank of the piece
@@ -154,6 +196,82 @@ public class GameManager
 		}
 
 		return pieces;
+	}
+
+	public ArrayList<Piece> getAllPiecesForSquare (int file, int rank)
+	{
+		int index0x88 = ChessBoard.get0x88Index(file, rank);
+		ArrayList<Piece> pieces = new ArrayList<Piece>(8);
+
+		if (this.activeColor == PieceData.WHITE_BYTE)
+		{
+			Piece p;
+
+			for (int i = 0; i < Movesets.PAWN_MOVE_WHITE.length; i++)
+			{
+				if (!(p = this.get(index0x88+Movesets.PAWN_MOVE_WHITE[i])).isEmpty())
+				{
+					pieces.add(p);
+				}
+			}
+
+			for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
+			{
+				if (!(p = this.get(index0x88+Movesets.PAWN_CAPTURE_WHITE[i])).isEmpty())
+				{
+					pieces.add(p);
+				}
+			}
+		}
+		else if (this.activeColor == PieceData.BLACK_BYTE)
+		{
+			for (int i = 0; i < Movesets.PAWN_MOVE_BLACK.length; i++)
+			{
+
+			}
+
+			for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
+			{
+
+			}
+		}
+
+		for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
+		{
+
+		}
+
+		for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
+		{
+
+		}
+
+		for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
+		{
+
+		}
+
+		for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
+		{
+
+		}
+
+		for (int i = 0; i < Movesets.KING_MOVE.length; i++)
+		{
+
+		}
+	}
+
+	/**
+	 * This method is used for getting all pieces that can move to a given square. Will probably be used for
+	 * parsing algebraic notation and for checking if the king is in check.
+	 * @param file
+	 * @param rank
+	 * @return
+	 */
+	public ArrayList<Piece> getAllLegalPiecesForSquare (int file, int rank)
+	{
+
 	}
 
 
@@ -210,7 +328,7 @@ public class GameManager
 	 * @param m The move to be checked
 	 * @return True if and only if the move is a valid bishop-type move, otherwise false
 	 */
-	private boolean isValidBishopMove (Move m)
+	public boolean isValidBishopMove (Move m)
 	{
 		//System.out.println("Move: " + m.toString());
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
@@ -249,7 +367,7 @@ public class GameManager
 	 * @param m The move to be checked
 	 * @return	True if and only if the move is a valid Rook-type move, otherwise false
 	 */
-	private boolean isValidRookTypeMove (Move m)
+	public boolean isValidRookTypeMove (Move m)
 	{
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
@@ -301,7 +419,7 @@ public class GameManager
 	 * @param m The move a pawn wishes to make
 	 * @return True if and oly if the move is a valid pawn-type move, otherwise false
 	 */
-	private boolean isValidPawnTypeMove (int color, Move m)
+	public boolean isValidPawnTypeMove (int color, Move m)
 	{
 		int initRank = 1;
 		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
@@ -362,7 +480,7 @@ public class GameManager
 	 * @param m	The move to be analyzed
 	 * @return True of and only if the specified move is a valid king-type move, otherwise false.
 	 */
-	private boolean isValidKingTypeMove (int color, Move m)
+	public boolean isValidKingTypeMove (int color, Move m)
 	{
 		int opponentColor = PieceData.getOpponentColor(color);
 
@@ -370,47 +488,45 @@ public class GameManager
 
 		for (Piece p : opponentPieces)
 		{
-			if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+			int piece = p.getPieceWithoutColorByte();
+			switch(piece)
 			{
-				int colorMod = 1;
+				case PieceData.PAWN_BYTE:
+					int colorMod = 1;
 
-				if (opponentColor == PieceData.BLACK_BYTE)
-				{
-					colorMod = -1;
-				}
+					if (opponentColor == PieceData.BLACK_BYTE)
+					{
+						colorMod = -1;
+					}
 
-				if ((m.getDst() == (p.getPositionByte() + (colorMod * 0x0F))) || (m.getDst() == (p.getPositionByte() + (colorMod * 0x11))))
-				{
-					return false;
-				}
-			}
-			else if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
-			{
-				Move opponentKingMoves [] = new Move [Movesets.KING_MOVE.length];
-
-				for (int i = 0; i < opponentKingMoves.length; i++)
-				{
-					opponentKingMoves[i] = new Move(p.getPositionByte(), p.getPositionByte() + Movesets.KING_MOVE[i], 0x0);
-
-					if (m.getDst() == opponentKingMoves[i].getDst())
+					if ((m.getDst() == (p.getPositionByte() + (colorMod * 0x0F))) || (m.getDst() == (p.getPositionByte() + (colorMod * 0x11))))
 					{
 						return false;
 					}
-				}
-			}
-			else
-			{
-				this.toggleActivePlayer();
-				ArrayList<Move> opponentMoves = this.getAllValidMoves(p);
-				this.toggleActivePlayer();
+				case PieceData.KING_BYTE:
+					Move opponentKingMoves [] = new Move [Movesets.KING_MOVE.length];
 
-				for (Move om : opponentMoves)
-				{
-					if (m.getDst() == om.getDst())
+					for (int i = 0; i < opponentKingMoves.length; i++)
 					{
-						return false;
+						opponentKingMoves[i] = new Move(p.getPositionByte(), p.getPositionByte() + Movesets.KING_MOVE[i], 0x0);
+
+						if (m.getDst() == opponentKingMoves[i].getDst())
+						{
+							return false;
+						}
 					}
-				}
+				default:
+					this.toggleActivePlayer();
+					ArrayList<Move> opponentMoves = this.getLegalMoves(p);
+					this.toggleActivePlayer();
+
+					for (Move om : opponentMoves)
+					{
+						if (m.getDst() == om.getDst())
+						{
+							return false;
+						}
+					}
 			}
 		}
 
@@ -422,7 +538,7 @@ public class GameManager
 	 * @param m the move we're trying to make
 	 * @return True if the destination square is inhabited by an enemy piece
 	 */
-	private boolean isCapture (int color, Move m)
+	public boolean isCapture (int color, Move m)
 	{
 		if (this.get(m.get2DSrc()).getPieceWithoutColorByte() != PieceData.PAWN_BYTE)
 		{
@@ -437,7 +553,7 @@ public class GameManager
 	 * @param m The move to be analyzed
 	 * @return true if the pawn reaches the back rank
 	 */
-	private boolean isPromo (int color, Move m)
+	public boolean isPromo (int color, Move m)
 	{
 		if (color == PieceData.WHITE_BYTE)
 		{
@@ -459,9 +575,113 @@ public class GameManager
 	 * @param m The move to be analyzed
 	 * @return true if the destination square is owned by color
 	 */
-	private boolean isCollision (int color, Move m)
+	public boolean isCollision (int color, Move m)
 	{
 		return this.get(m.get2DDst()).getColor() == color;
+	}
+
+	public Move setFlags (int color, Move m)
+	{
+		if (this.isCapture(color, m))
+		{
+			//System.out.println(m.toString() + " set capture flag");
+			m.setCapture();
+		}
+
+		if (this.isPromo(color, m))
+		{
+			//System.out.println(m.toString() + " set promo flag");
+			m.setPromo();
+		}
+
+		return m;
+	}
+
+	/**
+	 * Returns all possible (non-legal) moves
+	 * @param p The piece for which we wish to generate all possible moves
+	 * @return An ArrayList containing all moves the piece can make (legal or illegal)
+	 */
+	public ArrayList <Move> getMoves (Piece p)
+	{
+		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
+		{
+			return p.getAllPossibleMoves();
+		}
+		else
+		{
+			return new ArrayList<>();
+		}
+	}
+
+	public boolean isValidMove (Piece p, Move m)
+	{
+		//int src = m.getSrc();
+		//int srcFile = m.get2DSrc()[0];
+		//int srcRank = m.get2DSrc()[1];
+		int dst = m.getDst();
+		//int dstFile = m.get2DSrc()[0];
+		//int dstRank = m.get2DSrc()[1];
+		int color = p.getColor();
+		int piece = p.getPieceWithoutColorByte();
+
+		this.setFlags(color, m);
+
+		// You can't end on one of your own pieces
+		if (this.isCollision(color, m))
+		{
+			return false;
+		}
+
+		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
+		{
+			//System.out.println(m.toString() + " captures king");
+			return false;
+		}
+
+		switch (piece)
+		{
+			case PieceData.PAWN_BYTE:
+
+				if (!this.isValidPawnTypeMove(color, m))
+				{
+					//System.out.println("Removing " + m.toString());
+					return false;
+				}
+			case PieceData.ROOK_BYTE:
+
+				if (!this.isValidRookTypeMove(m))
+				{
+					return false;
+				}
+
+			case PieceData.KNIGHT_BYTE:
+				// There are no special rules for knights besides the ones that are handled outside of this switch
+				break;
+			case PieceData.BISHOP_BYTE:
+
+				if (!this.isValidBishopMove(m))
+				{
+					return false;
+				}
+
+			case PieceData.QUEEN_BYTE:
+				if ((!this.isValidBishopMove(m)) && (!this.isValidRookTypeMove(m)))
+				{
+					return false;
+				}
+
+			case PieceData.KING_BYTE:
+				if (!this.isValidKingTypeMove(color, m))
+				{
+					return false;
+				}
+
+			default:
+				return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -469,13 +689,12 @@ public class GameManager
 	 * @param p The piece whose moves are being requested
 	 * @return an ArrayList with all valid & legal moves
 	 */
-	public ArrayList<Move> getAllValidMoves (Piece p)
+	public ArrayList<Move> getLegalMoves(Piece p)
 	{
 		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
 		{
-			int piece = p.getPieceWithoutColorByte();
-
 			int color = p.getColor();
+			//int piece = p.getPieceWithoutColorByte();
 
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
@@ -483,18 +702,15 @@ public class GameManager
 			{
 				Move m = possibleMoves.get(i);
 
-				if (this.isCapture(color, m))
-				{
-					//System.out.println(m.toString() + " set capture flag");
-					m.setCapture();
-				}
+				this.setFlags(color, m);
 
-				if (this.isPromo(color, m))
+				if (!this.isValidMove(p, m))
 				{
-					//System.out.println(m.toString() + " set promo flag");
-					m.setPromo();
+					possibleMoves.remove(i);
+					i--;
+					continue;
 				}
-
+				/*
 				// You can't end on one of your own pieces
 				if (this.isCollision(color, m))
 				{
@@ -574,8 +790,11 @@ public class GameManager
 					default:
 						break;
 				}
+				*/
 			}
 
+
+			Collections.sort(possibleMoves);
 			return possibleMoves;
 		}
 		else
@@ -591,6 +810,19 @@ public class GameManager
 	 */
 	public String makeMove (Move m)
 	{
+
+		this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getSrc())), m.getSrc());	// First, remove the old piece from the table
+		this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getSrc())), m.getDst());	// Then, add the new piece to the table
+
+		/*
+		if (m.isCapture())
+		{
+			this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getDst())), m.getDst());	// If the move was a capture, remove the captured piece
+		}
+		*/
+		this.zobristHash ^= AIPlayer.transpositionTable.getBlackTurnHash();
+
+
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
 		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);	// Empty the source square
 
@@ -680,7 +912,7 @@ public class GameManager
 	{
 		Piece king = this.getKing(color);
 
-		ArrayList <Move> kingMoves = this.getAllValidMoves(king);
+		ArrayList <Move> kingMoves = this.getLegalMoves(king);
 
 		return (kingMoves.size() == 0) && this.isCheck(color);
 	}
@@ -694,7 +926,7 @@ public class GameManager
 	{
 		Piece king = this.getKing(color);
 
-		for (Move m : this.getAllMoves(PieceData.getOpponentColor(color)))
+		for (Move m : this.getAllLegalMoves(PieceData.getOpponentColor(color)))
 		{
 			if (m.getDst() == king.getPositionByte())
 			{
@@ -727,7 +959,7 @@ public class GameManager
 	 * @param color The color who's moves are to be acquired
 	 * @return All possible moves for the specified color
 	 */
-	public ArrayList <Move> getAllMoves (int color)
+	public ArrayList <Move> getAllLegalMoves(int color)
 	{
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 		ArrayList <Move> pieceMoves;
@@ -735,7 +967,7 @@ public class GameManager
 
 		for (Piece p : pieces)
 		{
-			pieceMoves = this.getAllValidMoves(p);
+			pieceMoves = this.getLegalMoves(p);
 
 			for (Move m : pieceMoves)
 			{
@@ -744,5 +976,10 @@ public class GameManager
 		}
 
 		return moves;
+	}
+
+	public long getZobristHash ()
+	{
+		return this.zobristHash;
 	}
 }

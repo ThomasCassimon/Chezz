@@ -4,7 +4,6 @@ import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.Piece;
 import Chess.Game.PieceData;
-import Chess.Main;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,8 +19,6 @@ public class GamePanel extends JFrame implements ActionListener
 	private JPanel panel;
 	private Board board;
 	private SidePanel sidePanel;
-
-
 
 	public GamePanel()
 	{
@@ -46,7 +43,7 @@ public class GamePanel extends JFrame implements ActionListener
 		this.initBoard();
 
 		this.setResizable(true);
-		this.setVisible(true);
+		//this.setVisible(true);
 	}
 
 	/**
@@ -103,7 +100,7 @@ public class GamePanel extends JFrame implements ActionListener
 				{
 					indexArr = board.get2DCoord(i);
 					piece = gameManager.get(indexArr[0], indexArr[1]);
-					moves = gameManager.getAllValidMoves(piece);
+					moves = gameManager.getLegalMoves(piece);
 
 					if (!moves.isEmpty())
 					{
