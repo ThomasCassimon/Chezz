@@ -17,7 +17,7 @@ public class Board extends JPanel
 	{
 		super();
 
-		this.setPreferredSize(new Dimension(UIData.BOARD_DIMENSION,UIData.BOARD_DIMENSION));
+		this.setPreferredSize(UIData.BOARD_DIMENSION);
 		this.setLayout(new GridLayout(UIData.NUMBER_TILES +2, UIData.NUMBER_TILES + 2));
 		this.setBorder(BorderFactory.createLineBorder(UIData.BORDER_COLOR));
 		initBoard(gamePanel);

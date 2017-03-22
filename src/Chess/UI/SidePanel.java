@@ -18,7 +18,7 @@ public class SidePanel extends JPanel
 	private JPanel buttonPanel;
 
 	private JPanel rightPanel;
-	private JTextField textField;
+	private JTextField moveInput;
 	private JTextArea history;
 
 
@@ -32,9 +32,13 @@ public class SidePanel extends JPanel
 
 
 		pause = new JButton("Pause");
+		pause.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		undo = new JButton(("Undo"));
+		undo.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		save = new JButton("Save");
+		save.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		exit = new JButton("Exit");
+		exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
 
 		timePanel = new TimePanel();
 		timePanel.setBackground(UIData.BACKGROUND);
@@ -56,20 +60,22 @@ public class SidePanel extends JPanel
 		history.setPreferredSize(new Dimension(100,750));
 		history.setBackground(Color.WHITE);
 
-		textField = new JTextField("<Insert your move here>");
-		textField.setBackground(Color.WHITE);
+		moveInput = new JTextField("<Insert your move here>");
+		moveInput.setBackground(Color.WHITE);
 
 		rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setBackground(UIData.BACKGROUND);
 		rightPanel.setBorder(UIData.BORDER_BLACK);
 		rightPanel.add(history);
-		rightPanel.add(textField);
+		rightPanel.add(moveInput);
 
 		pause.addActionListener(gamePanel);
 		undo.addActionListener(gamePanel);
 		exit.addActionListener(gamePanel);
 		save.addActionListener(gamePanel);
+		moveInput.addActionListener(gamePanel);
+
 
 
 		this.add(leftPanel);
@@ -77,8 +83,6 @@ public class SidePanel extends JPanel
 
 
 		this.setBackground(UIData.BACKGROUND_COLOR);
-		//this.add(history);
-		//this.add(textField);
 	}
 
 	/**
@@ -98,4 +102,10 @@ public class SidePanel extends JPanel
 	{
 		return undo;
 	}
+
+	public JTextField getMoveInput()
+	{
+		return moveInput;
+	}
+
 }

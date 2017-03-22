@@ -927,6 +927,9 @@ public class GameManager
 
 	public void handlePromotion(int[] position, int piece)
 	{
+		System.out.println("PROMOTION");
+		//System.out.println("Promotion from pawn to " + PieceData.toStringFromNum(piece,PieceData.EN_UK.LOCALE_BYTE));
 		cb.set(position[0],position[1],piece);
+
 	}
 }

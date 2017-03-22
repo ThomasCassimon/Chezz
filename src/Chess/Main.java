@@ -2,6 +2,7 @@ package Chess;
 
 import Chess.Athena.AIPlayer;
 import Chess.UI.*;
+import Chess.Utils.Parser;
 
 /**
  * @author Thomas
