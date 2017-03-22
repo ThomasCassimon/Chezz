@@ -1,5 +1,6 @@
 package Chess.UI;
 
+import Chess.Athena.AIPlayer;
 import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.Piece;
@@ -8,6 +9,7 @@ import Chess.Game.PieceData;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 //Created by Astrid on 22/02/2017.
@@ -52,18 +54,20 @@ public class GamePanel extends JFrame implements ActionListener
 	private void initBoard()
 	{
 		ArrayList<Piece> pieces;
-		pieces = gameManager.getAllPieces(PieceData.WHITE_BYTE);
+		pieces = this.gameManager.getAllPieces(PieceData.WHITE_BYTE);
 
 		for (Piece piece: pieces)
 		{
 			board.setPiece(piece);
 		}
 
-		pieces = gameManager.getAllPieces(PieceData.BLACK_BYTE);
+		pieces = this.gameManager.getAllPieces(PieceData.BLACK_BYTE);
 		for (Piece piece: pieces)
 		{
 			board.setPiece(piece);
 		}
+
+		this.testAI();
 	}
 
 	@Override
@@ -140,7 +144,11 @@ public class GamePanel extends JFrame implements ActionListener
 			}
 			gameManager.resetCachedMoves();
 		}
+	}
 
-
+	public void testAI ()
+	{
+		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
+		System.out.println("Generated: " + aip.playTurn(this.gameManager, 7).toString());
 	}
 }

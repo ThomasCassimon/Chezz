@@ -7,6 +7,7 @@ import Chess.Time.Chronometer;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
 import static java.lang.Math.abs;
 
@@ -197,83 +198,6 @@ public class GameManager
 
 		return pieces;
 	}
-
-	public ArrayList<Piece> getAllPiecesForSquare (int file, int rank)
-	{
-		int index0x88 = ChessBoard.get0x88Index(file, rank);
-		ArrayList<Piece> pieces = new ArrayList<Piece>(8);
-
-		if (this.activeColor == PieceData.WHITE_BYTE)
-		{
-			Piece p;
-
-			for (int i = 0; i < Movesets.PAWN_MOVE_WHITE.length; i++)
-			{
-				if (!(p = this.get(index0x88+Movesets.PAWN_MOVE_WHITE[i])).isEmpty())
-				{
-					pieces.add(p);
-				}
-			}
-
-			for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
-			{
-				if (!(p = this.get(index0x88+Movesets.PAWN_CAPTURE_WHITE[i])).isEmpty())
-				{
-					pieces.add(p);
-				}
-			}
-		}
-		else if (this.activeColor == PieceData.BLACK_BYTE)
-		{
-			for (int i = 0; i < Movesets.PAWN_MOVE_BLACK.length; i++)
-			{
-
-			}
-
-			for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
-			{
-
-			}
-		}
-
-		for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
-		{
-
-		}
-
-		for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
-		{
-
-		}
-
-		for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
-		{
-
-		}
-
-		for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
-		{
-
-		}
-
-		for (int i = 0; i < Movesets.KING_MOVE.length; i++)
-		{
-
-		}
-	}
-
-	/**
-	 * This method is used for getting all pieces that can move to a given square. Will probably be used for
-	 * parsing algebraic notation and for checking if the king is in check.
-	 * @param file
-	 * @param rank
-	 * @return
-	 */
-	public ArrayList<Piece> getAllLegalPiecesForSquare (int file, int rank)
-	{
-
-	}
-
 
 	/**
 	 * Returns an array of all pieces belonging to the white player

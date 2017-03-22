@@ -1,6 +1,5 @@
 package Chess.Athena;
 
-import Chess.Exceptions.Checked.InvalidHashException;
 import Chess.Game.ChessBoard;
 import Chess.Game.Piece;
 import Chess.Game.PieceData;
