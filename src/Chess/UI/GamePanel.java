@@ -151,7 +151,7 @@ public class GamePanel extends JFrame implements ActionListener
 	public void testAI ()
 	{
 		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
-		System.out.println("Generated: " + aip.playTurn(this.gameManager, 7).toString());
+		System.out.println("Transposition table hits: " + Long.toString(AIPlayer.transpositionTable.getHits()) + "\nGenerated: " + aip.playTurn(this.gameManager, 7).toString());
 	}
 
 	public Icon handlePromotion(int[] position)

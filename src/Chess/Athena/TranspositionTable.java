@@ -26,9 +26,11 @@ public class TranspositionTable
 	private Hashtable <Long, Integer> hashTable;
 	private long [] pieceSquareRandomTable;
 	private long blackTurnHash;
+	private long hits;
 
 	private TranspositionTable ()
 	{
+		this.hits = 0;
 		this.hashTable = new Hashtable<>(2048);
 		this.pieceSquareRandomTable = new long [PieceData.NUM_PIECES * PieceData.NUM_SQUARES];
 		Random r = new Random();
@@ -62,7 +64,14 @@ public class TranspositionTable
 
 	public Integer get (long hash)
 	{
-		return this.hashTable.get(hash);
+		Integer res = this.hashTable.get(hash);
+
+		if (res != null)
+		{
+			this.hits++;
+		}
+
+		return res;
 	}
 
 	public long getHash (int pieceIndex, int index0x88)
@@ -120,5 +129,10 @@ public class TranspositionTable
 			default:
 				return Integer.MAX_VALUE;
 		}
+	}
+
+	public long getHits ()
+	{
+		return this.hits;
 	}
 }
