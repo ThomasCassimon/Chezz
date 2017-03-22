@@ -91,8 +91,6 @@ public class Chronometer
 		}
 
 		activeWhite = !activeWhite;
-
-		System.out.println("Chronometer toggled!");
 	}
 
 	/**
