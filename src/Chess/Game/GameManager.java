@@ -41,7 +41,7 @@ public class GameManager
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
 
-		//GameManager.chronometer.start();
+		GameManager.chronometer.start();
 	}
 
 	public GameManager (GameManager gm)
