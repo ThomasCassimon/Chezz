@@ -30,7 +30,7 @@ public class GameManager
 	private long zobristHash;
 	private ChessBoard cb;
 
-	public static Chronometer chronometer = new Chronometer(1000000, 1000000);
+	public static Chronometer chronometer = new Chronometer();
 
 	public GameManager ()
 	{
@@ -762,7 +762,7 @@ public class GameManager
 		moveString += m.getPrettyDstCoords();
 
 		this.toggleActivePlayer();
-		//GameManager.chronometer.toggle();
+		GameManager.chronometer.toggle();
 
 		return moveString;
 	}
@@ -905,5 +905,10 @@ public class GameManager
 	public long getZobristHash ()
 	{
 		return this.zobristHash;
+	}
+
+	public void handlePromotion(int[] position, int piece)
+	{
+		cb.set(position[0],position[1],piece);
 	}
 }

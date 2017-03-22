@@ -1,10 +1,7 @@
 package Chess.UI;
 
 import Chess.Athena.AIPlayer;
-import Chess.Game.GameManager;
-import Chess.Game.Move;
-import Chess.Game.Piece;
-import Chess.Game.PieceData;
+import Chess.Game.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -45,7 +42,7 @@ public class GamePanel extends JFrame implements ActionListener
 		this.initBoard();
 
 		this.setResizable(true);
-		//this.setVisible(true);
+		this.setVisible(true);
 	}
 
 	/**
@@ -67,7 +64,7 @@ public class GamePanel extends JFrame implements ActionListener
 			board.setPiece(piece);
 		}
 
-		this.testAI();
+		//this.testAI();
 	}
 
 	@Override
@@ -81,13 +78,13 @@ public class GamePanel extends JFrame implements ActionListener
 		ArrayList<Move> moves;
 		Piece piece;
 
-		if (e.getSource() == sidePanel.getPause())
+		if (e.getSource() == sidePanel.getPause())													//PAUSE
 		{
 			GameManager.chronometer.pause();
 			System.out.println("Pause");
 		}
 
-		else if (e.getSource() == sidePanel.getUndo())
+		else if (e.getSource() == sidePanel.getUndo())												//UNDO
 		{
 			Move move = gameManager.getLastMove();
 			move = new Move(move.getDst(), move.getSrc(), 0);
@@ -96,7 +93,7 @@ public class GamePanel extends JFrame implements ActionListener
 			gameManager.undo();
 
 		}
-		else if (gameManager.getCachedMoves().isEmpty())
+		else if (gameManager.getCachedMoves().isEmpty())											//SELECT SOURCE
 		{
 			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
 			{
@@ -121,7 +118,7 @@ public class GamePanel extends JFrame implements ActionListener
 				}
 			}
 		}
-		else
+		else																						//SELECT DESTINATION
 		{
 			moves = gameManager.getCachedMoves();
 
@@ -138,6 +135,11 @@ public class GamePanel extends JFrame implements ActionListener
 						{
 							gameManager.makeMove(move);
 							board.makeMove(move, gameManager.getActiveColorByte());
+
+							if (move.isPromotion())
+							{
+								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
+							}
 						}
 					}
 				}
@@ -150,5 +152,70 @@ public class GamePanel extends JFrame implements ActionListener
 	{
 		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
 		System.out.println("Generated: " + aip.playTurn(this.gameManager, 7).toString());
+	}
+
+	public Icon handlePromotion(int[] position)
+	{
+		final int QUEEN = 0;
+		final int ROOK = 1;
+		final int BISHOP = 2;
+		final int KNIGHT = 3;
+		Object[] options = {"Queen","Rook","Bishop","Knight"};
+
+		int choice = JOptionPane.showOptionDialog(this, "Promotion", "Title", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,UIData.BK,options,null);
+
+		if (choice == 0)  //QUEEN
+		{
+			if (PieceData.getOpponentColor(gameManager.getActiveColorByte()) == PieceData.WHITE_BYTE)
+			{
+				return UIData.WQ;
+			}
+			else
+			{
+				return UIData.BQ;
+			}
+		}
+
+		if (PieceData.getOpponentColor(gameManager.getActiveColorByte()) == PieceData.WHITE_BYTE)
+		{
+			switch (choice)
+			{
+				case QUEEN :
+					gameManager.handlePromotion(position, PieceData.QUEEN_BYTE);
+					return UIData.WQ;
+				case ROOK :
+					gameManager.handlePromotion(position, PieceData.ROOK_BYTE);
+					return UIData.WR;
+				case BISHOP :
+					gameManager.handlePromotion(position, PieceData.BISHOP_BYTE);
+					return UIData.WB;
+				case KNIGHT :
+					gameManager.handlePromotion(position, PieceData.KNIGHT_BYTE);
+					return UIData.WN;
+				default: return UIData.WP;
+			}
+
+
+		}
+		else
+		{
+			switch (choice)
+			{
+				case QUEEN :
+					gameManager.handlePromotion(position, PieceData.QUEEN_BYTE);
+					return UIData.BQ;
+				case ROOK :
+					gameManager.handlePromotion(position, PieceData.ROOK_BYTE);
+					return UIData.BR;
+				case BISHOP :
+					gameManager.handlePromotion(position, PieceData.BISHOP_BYTE);
+					return UIData.BB;
+				case KNIGHT :
+					gameManager.handlePromotion(position, PieceData.KNIGHT_BYTE);
+					return UIData.BN;
+				default:
+					return UIData.BP;
+			}
+		}
 	}
 }
