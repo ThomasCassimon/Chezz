@@ -18,7 +18,7 @@ import static java.lang.Integer.max;
  */
 public class AIPlayer extends Player
 {
-	public static TranspositionTable transpositionTable = TranspositionTable.getInstance();
+	public static TranspositionTable transpositionTable = new TranspositionTable();
 	private static final int inf = Integer.MAX_VALUE;
 
 	public AIPlayer(int colorByte)
@@ -89,7 +89,7 @@ public class AIPlayer extends Player
 			score += BOTH_KNIGHTS_PENALTY;
 		}
 
-		AIPlayer.transpositionTable.put(gm.getZobristHash(), score);
+		AIPlayer.transpositionTable.put(gm.getZobristHash(), new TableRecord(score, 0,null));
 
 		return score;
 	}
@@ -141,14 +141,7 @@ public class AIPlayer extends Player
 	{
 		if (gm.isCheckMate(color) || depth == 0)
 		{
-			Integer score = AIPlayer.transpositionTable.get(gm.getZobristHash());
-
-			if (score == null)
-			{
-				score = scoreGame(gm, color);
-			}
-
-			return score;
+			return scoreGame(gm, color);
 		}
 		else
 		{

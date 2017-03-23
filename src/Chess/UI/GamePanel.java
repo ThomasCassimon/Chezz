@@ -85,7 +85,7 @@ public class GamePanel extends JFrame implements ActionListener
 
 		if (e.getSource() == sidePanel.getPause())													//PAUSE
 		{
-			//GameManager.chronometer.pause();
+			GameManager.chronometer.pause();
 			System.out.println("Pause");
 		}
 
@@ -119,7 +119,6 @@ public class GamePanel extends JFrame implements ActionListener
 					{
 						board.highlightMove(move);
 					}
-
 				}
 			}
 		}
@@ -138,7 +137,9 @@ public class GamePanel extends JFrame implements ActionListener
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
+							System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
 							gameManager.makeMove(move);
+							System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
 							board.makeMove(move, gameManager.getActiveColorByte());
 
 							if (move.isPromotion())
