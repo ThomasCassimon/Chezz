@@ -1,11 +1,8 @@
 package Chess.Athena;
 
-import Chess.Game.ChessBoard;
-import Chess.Game.Piece;
 import Chess.Game.PieceData;
-import Chess.UI.UIData;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -13,131 +10,66 @@ import java.util.Random;
  */
 public class TranspositionTable
 {
-	public static final int PAWN_INDEX = 0;
-	public static final int ROOK_INDEX = 1;
-	public static final int KNIGHT_INDEX = 2;
-	public static final int BISHOP_INDEX = 3;
-	public static final int QUEEN_INDEX = 4;
-	public static final int KING_INDEX = 5;
-	public static final int WHITE_SHIFT = 0;
-	public static final int BLACK_SHIFT = KING_INDEX + 1;
+	private static final int DB_ROWS = 12;
+	private static final int DB_COLS = 64;
+	private static long database[];
+	private HashMap <Long, TableRecord> table;
+	private int hits;
 
-	private static TranspositionTable table;
-	private Hashtable <Long, Integer> hashTable;
-	private long [] pieceSquareRandomTable;
-	private long blackTurnHash;
-	private long hits;
-
-	private TranspositionTable ()
+	public TranspositionTable ()
 	{
 		this.hits = 0;
-		this.hashTable = new Hashtable<>(2048);
-		this.pieceSquareRandomTable = new long [PieceData.NUM_PIECES * PieceData.NUM_SQUARES];
+		this.table = new HashMap<>();
+		TranspositionTable.database = new long [DB_ROWS * DB_COLS];
 		Random r = new Random();
 
-		for (int i = 0; i < PieceData.NUM_PIECES; i++)
+		for (int i = 0; i < DB_ROWS; i++)
 		{
-			for (int j = 0; j < PieceData.NUM_SQUARES; j++)
+			for (int j = 0; j < DB_COLS; j++)
 			{
-				this.pieceSquareRandomTable[(i * PieceData.NUM_PIECES) + j] = r.nextLong();
+				database[(i * DB_ROWS) + DB_COLS] = r.nextLong();
 			}
 		}
-
-		this.blackTurnHash = r.nextLong();
 	}
 
-	public static TranspositionTable getInstance ()
+	public void put (long key, TableRecord record)
 	{
-		if (TranspositionTable.table == null)
-		{
-			TranspositionTable.table = new TranspositionTable();
-		}
-
-		return TranspositionTable.table;
+		this.table.put(key,record);
 	}
 
-	public int put (long hash, int score)
+	public TableRecord get (long  key)
 	{
-			this.hashTable.put(hash, score);
-			return this.hashTable.size();
-	}
+		TableRecord t;
 
-	public Integer get (long hash)
-	{
-		Integer res = this.hashTable.get(hash);
-
-		if (res != null)
+		if ((t = this.get(key)) != null)
 		{
 			this.hits++;
 		}
 
-		return res;
+		return t;
 	}
 
-	public long getHash (int pieceIndex, int index0x88)
+	public int size ()
 	{
-		//System.out.println("pieceIndex " + Integer.toString(pieceIndex));
-		return this.pieceSquareRandomTable[(pieceIndex * PieceData.NUM_PIECES) + (ChessBoard.get2DCoord(index0x88)[0] * UIData.NUMBER_TILES) + ChessBoard.get2DCoord(index0x88)[1]];
+		return this.table.size();
 	}
 
-	public long getHash (int pieceIndex, int file, int rank)
-	{
-		return this.pieceSquareRandomTable[(pieceIndex * PieceData.NUM_PIECES) + (file * UIData.NUMBER_TILES) + rank];
-	}
-
-	public long getBlackTurnHash ()
-	{
-		return this.blackTurnHash;
-	}
-
-	public static int getShift (int color)
-	{
-		if (color == PieceData.WHITE_BYTE)
-		{
-			return TranspositionTable.WHITE_SHIFT;
-		}
-		else if (color == PieceData.BLACK_BYTE)
-		{
-			return TranspositionTable.BLACK_SHIFT;
-		}
-		else
-		{
-			return Integer.MAX_VALUE;
-		}
-	}
-
-	public static Integer getPieceIndex (Piece p)
-	{
-		int shift = TranspositionTable.getShift(p.getColor());
-
-		switch (p.getPieceWithoutColorByte())
-		{
-			case PieceData.PAWN_BYTE:
-				return TranspositionTable.PAWN_INDEX + shift;
-			case PieceData.ROOK_BYTE:
-				return TranspositionTable.ROOK_INDEX + shift;
-			case PieceData.KNIGHT_BYTE:
-				return TranspositionTable.KNIGHT_INDEX + shift;
-			case PieceData.BISHOP_BYTE:
-				return TranspositionTable.BISHOP_INDEX + shift;
-			case PieceData.QUEEN_BYTE:
-				return TranspositionTable.QUEEN_INDEX + shift;
-			case PieceData.KING_BYTE:
-				return TranspositionTable.KING_INDEX + shift;
-			case 0:
-				return null;
-			default:
-				return Integer.MAX_VALUE;
-		}
-	}
-
-	public long getHits ()
+	public int getHits ()
 	{
 		return this.hits;
 	}
 
-	public int getTableSize ()
+	public static long getHash (int piece, int position)
 	{
-		return this.hashTable.size();
+		if ((piece & PieceData.COLOR_MASK) == PieceData.WHITE_BYTE)
+		{
+			piece = piece & PieceData.PIECE_MASK;
+		}
+		else if ((piece & PieceData.COLOR_MASK) == PieceData.BLACK_BYTE)
+		{
+			piece = (piece & PieceData.PIECE_MASK) + 0x08;
+		}
+
+		return TranspositionTable.database[(piece * DB_ROWS) + DB_COLS];
 	}
 }

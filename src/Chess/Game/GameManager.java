@@ -751,21 +751,6 @@ public class GameManager
 	 */
 	public String makeMove (Move m)
 	{
-		//System.out.println("START\nHash: "  + Long.toBinaryString(this.zobristHash));
-		this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getSrc())), m.getSrc());	// First, remove the old piece from the table
-		//System.out.println("Hashing away piece at old location\nHash: "  + Long.toBinaryString(this.zobristHash));
-		this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getSrc())), m.getDst());	// Then, add the new piece to the table
-		//System.out.println("Hashing in piece at new location\nHash: "  + Long.toBinaryString(this.zobristHash));
-
-		if (m.isCapture())
-		{
-			this.zobristHash ^= AIPlayer.transpositionTable.getHash(TranspositionTable.getPieceIndex(this.get(m.getDst())), m.getDst());	// If the move was a capture, remove the captured piece
-			//System.out.println("Removing previously captured piece\nHash: "  + Long.toBinaryString(this.zobristHash));
-		}
-
-		this.zobristHash ^= AIPlayer.transpositionTable.getBlackTurnHash();
-
-
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
 		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);	// Empty the source square
 
@@ -928,9 +913,9 @@ public class GameManager
 
 	public void handlePromotion(int[] position, int piece)
 	{
-		System.out.println("PROMOTION");
-		//System.out.println("Promotion from pawn to " + PieceData.toStringFromNum(piece,PieceData.EN_UK.LOCALE_BYTE));
-		cb.set(position[0],position[1],piece);
+		System.out.println("Promo: (" + Integer.toString(position[0]) + Integer.toString(position[1]) + " piecebyte: " + Integer.toBinaryString(piece));
+
+		this.cb.set(position[0],position[1],piece);
 
 	}
 }

@@ -102,6 +102,7 @@ public final class PieceData
 	 */
 	public static String toStringFromNum(int pieceNum, int localeNum) throws IllegalArgumentException, IllegalPieceException
 	{
+		pieceNum = pieceNum & PieceData.PIECE_MASK;
 		switch (localeNum)
 		{
 			case EN_UK.LOCALE_BYTE:
@@ -269,6 +270,7 @@ public final class PieceData
 	 */
 	public static String toShortFromNum(int pieceNum) throws IllegalPieceException, IllegalArgumentException
 	{
+		pieceNum = pieceNum & PieceData.PIECE_MASK;
 		return toShortFromNum(pieceNum, EN_UK.LOCALE_BYTE);
 	}
 
@@ -328,6 +330,7 @@ public final class PieceData
 
 	public static int getPieceScore (int pieceNum)
 	{
+		pieceNum = pieceNum & PieceData.PIECE_MASK;
 		switch (pieceNum)
 		{
 			case PAWN_BYTE:
