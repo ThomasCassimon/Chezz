@@ -57,13 +57,14 @@ public class SidePanel extends JPanel
 
 		history = new JTextArea("History:");
 		history.setEditable(false);
-		history.setPreferredSize(new Dimension(100,750));
+		history.setPreferredSize(UIData.HISTORY_DIMENSION);
 		history.setBackground(Color.WHITE);
 
 		moveInput = new JTextField("<Insert your move here>");
 		moveInput.setBackground(Color.WHITE);
 
 		rightPanel = new JPanel();
+		rightPanel.setPreferredSize(UIData.HISTORY_DIMENSION);
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setBackground(UIData.BACKGROUND);
 		rightPanel.setBorder(UIData.BORDER_BLACK);
@@ -75,7 +76,7 @@ public class SidePanel extends JPanel
 		exit.addActionListener(gamePanel);
 		save.addActionListener(gamePanel);
 		moveInput.addActionListener(gamePanel);
-
+		moveInput.addMouseListener(gamePanel);
 
 
 		this.add(leftPanel);
@@ -106,6 +107,11 @@ public class SidePanel extends JPanel
 	public JTextField getMoveInput()
 	{
 		return moveInput;
+	}
+
+	public void setMoveInput(String text)
+	{
+		moveInput.setText(text);
 	}
 
 }

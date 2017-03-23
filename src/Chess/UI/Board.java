@@ -27,7 +27,7 @@ public class Board extends JPanel
 	/**
 	 * Sets the layout of the board
 	 */
-	private void initBoard(GamePanel gamePanel)
+	public void initBoard(GamePanel gamePanel)
 	{
 		for (int i = 0; i<UIData.TOTAL_TILES;i++)
 		{
@@ -42,6 +42,7 @@ public class Board extends JPanel
 
 		this.setBoardWhite();
 	}
+
 
 	/**
 	 * Sets icon on the right place on the board

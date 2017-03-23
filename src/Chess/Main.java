@@ -34,5 +34,7 @@ public class Main
 		t.put(key, tr);
 		System.out.println("new size of the table: " + Integer.toString(t.size()));
 		System.out.println("start\t\t\t" + String.format("%64s",Long.toBinaryString(start)) + "\nkey\t\t\t\t" + String.format("%64s",Long.toBinaryString(key)) + "\n--------------------------------------------------------------------------------\nstart ^ key:\t" + String.format("%64s",Long.toBinaryString(start ^ key)));
+
+		GamePanel gamePanel = new GamePanel();
 	}
 }

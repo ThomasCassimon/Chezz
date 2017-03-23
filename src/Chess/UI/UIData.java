@@ -19,6 +19,7 @@ public final class UIData
 	public static final Dimension BUTTONS_DIMENSION = new Dimension(250,20);
 	public static final Dimension BOARD_DIMENSION = new Dimension(800,800);
 	public static final Dimension WINDOW_DIMENSION = new Dimension(1400,850);
+	public static final Dimension HISTORY_DIMENSION = new Dimension(200,750);
 
 
 	//CHESS PIECES
