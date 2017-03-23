@@ -1,7 +1,6 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
-import Chess.Athena.TranspositionTable;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Time.Chronometer;
 
@@ -622,7 +621,7 @@ public class GameManager
 		}
 	}
 
-	public boolean isValidMove (Piece p, Move m)
+	public boolean isLegalMove(Piece p, Move m)
 	{
 		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceWithoutColorByte()));
 		//int src = m.getSrc();
@@ -637,13 +636,13 @@ public class GameManager
 		// You can't end on one of your own pieces
 		if (this.isCollision(color, m))
 		{
-			//System.out.println("[isValidMove] " + m.toString() + " collided");
+			//System.out.println("[isLegalMove] " + m.toString() + " collided");
 			return false;
 		}
 
 		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 		{
-			//System.out.println("[isValidMove] " + m.toString() + " captures king");
+			//System.out.println("[isLegalMove] " + m.toString() + " captures king");
 			return false;
 		}
 
@@ -652,14 +651,14 @@ public class GameManager
 			case PieceData.PAWN_BYTE:
 				if (!this.isValidPawnMove(color, m))
 				{
-					//System.out.println("[isValidMove] Pawn Removing " + m.toString());
+					//System.out.println("[isLegalMove] Pawn Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.ROOK_BYTE:
 				if (!this.isValidRookMove(m))
 				{
-					//System.out.println("[isValidMove] Rook: Removing " + m.toString());
+					//System.out.println("[isLegalMove] Rook: Removing " + m.toString());
 					return false;
 				}
 				break;
@@ -669,28 +668,28 @@ public class GameManager
 			case PieceData.BISHOP_BYTE:
 				if (!this.isValidBishopMove(m))
 				{
-					//System.out.println("[isValidMove] Bishop Removing " + m.toString());
+					//System.out.println("[isLegalMove] Bishop Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.QUEEN_BYTE:
 				if ((!this.isValidBishopMove(m)) && (!this.isValidRookMove(m)))
 				{
-					//System.out.println("[isValidMove] Queen Removing " + m.toString());
+					//System.out.println("[isLegalMove] Queen Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.KING_BYTE:
 				if (!this.isValidKingTypeMove(color, m))
 				{
-					//System.out.println("[isValidMove] King Removing " + m.toString());
+					//System.out.println("[isLegalMove] King Removing " + m.toString());
 					return false;
 				}
 				break;
 			case PieceData.EMPTY_BYTE:
 				return true;
 			default:
-				//System.out.println("[isValidMove] default: Removing " + m.toString());
+				//System.out.println("[isLegalMove] default: Removing " + m.toString());
 				return false;
 		}
 
@@ -704,10 +703,10 @@ public class GameManager
 	 */
 	public ArrayList<Move> getLegalMoves(Piece p)
 	{
-		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
+		int color = p.getColor();
+		if ((p.getPieceWithoutColorByte() != 0) && (color == this.activeColor))
 		{
 			//System.out.println("NEW");
-			int color = p.getColor();
 			//int piece = p.getPieceWithoutColorByte();
 
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
@@ -720,7 +719,7 @@ public class GameManager
 
 				m = this.setFlags(color, m);
 
-				if (!this.isValidMove(p, m))
+				if (!this.isLegalMove(p, m))
 				{
 					//System.out.println("[getLegalMoves] removing: " + m.toString());
 					possibleMoves.remove(i);

@@ -57,7 +57,7 @@ public class Parser
 
 			move = new Move(source, destination,0);
 			piece = gm.get(source);
-			if(gm.isValidMove(piece,move))
+			if(gm.isLegalMove(piece,move))
 			{
 				move = gm.setFlags(gm.getActiveColorByte(), move);
 				return move;
