@@ -4,8 +4,6 @@ import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.UI.UIData;
 
-import java.rmi.server.UID;
-
 /**
  * @author Thomas
  * @since 20/02/2017
@@ -90,6 +88,11 @@ public final class PieceData
 		public static final String BISHOP_SHORT =   "L";
 		public static final String QUEEN_SHORT =    "O";
 		public static final String KING_SHORT =     "K";
+	}
+
+	public static String toStringFromNum(int pieceNum) throws IllegalArgumentException, IllegalPieceException
+	{
+		return PieceData.toStringFromNum(pieceNum, EN_UK.LOCALE_BYTE);
 	}
 
 	/**

@@ -52,7 +52,7 @@ public class TranspositionTable
 	{
 		TableRecord t;
 
-		if ((t = this.get(key)) != null)
+		if ((t = this.table.get(key)) != null)
 		{
 			this.hits++;
 		}

@@ -106,6 +106,8 @@ public class AIPlayer extends Player
 			moves.addAll(gm.getLegalMoves(p));
 		}
 
+		//System.out.println("Found " + Integer.toString(moves.size()) + " pieces");
+
 		for (int i = 0; i < moves.size(); i++)
 		{
 			Move m = moves.get(i);
@@ -136,18 +138,21 @@ public class AIPlayer extends Player
 	{
 		if (gm.isCheckMate(color) || depth == 0)
 		{
+			//System.out.println("checkmate: " + gm.isCheckMate(color));
+			/*
 			TableRecord tr = null;
 			if ((tr = TranspositionTable.getInstance().get(gm.getHash())) != null)
 			{
+				System.out.println("Table hit");
 				return tr.getScore();
 			}
 			else
-			{
+			{*/
 				int score = AIPlayer.scoreGame(gm, color);
-				tr = new TableRecord(score, depth, gm.getAllLegalMoves(color));
-				TranspositionTable.getInstance().put(gm.getHash(), tr);
+				//tr = new TableRecord(score, depth, gm.getAllLegalMoves(color));
+				//TranspositionTable.getInstance().put(gm.getHash(), tr);
 				return score;
-			}
+			//}
 		}
 		else
 		{

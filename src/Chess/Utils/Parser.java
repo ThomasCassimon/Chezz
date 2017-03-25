@@ -18,7 +18,7 @@ public class Parser
 	 * @param gm gameManager that manages current game
 	 * @return move generated move
 	 */
-	public Move moveFromString(String string, GameManager gm)
+	public static Move moveFromString(String string, GameManager gm)
 	{
 		string = string.toLowerCase();
 		char[] chars = string.toCharArray();
@@ -39,7 +39,7 @@ public class Parser
 		}
 		else if(string.length() != 5)
 		{
-			System.out.println("invalid move (too long)");
+			System.out.println("invalid move (too long/short)");
 		}
 		else
 		{
@@ -56,10 +56,12 @@ public class Parser
 			System.out.println("Destination: File: " + file + " Rank: " + rank);
 
 			move = new Move(source, destination,0);
+			move = gm.setFlags(gm.getActiveColorByte(), move);
+
 			piece = gm.get(source);
-			if(gm.isLegalMove(piece,move))
+			System.out.println("Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+			if(gm.isLegalMove(piece,move) & piece.getAllPossibleMoves().contains(move))
 			{
-				move = gm.setFlags(gm.getActiveColorByte(), move);
 				return move;
 			}
 			else

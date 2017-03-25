@@ -139,12 +139,14 @@ public class GameManager
 	/**
 	 * Initializes the game to it's starting position/situation
 	 */
-	public void init ()
+	public GameManager init ()
 	{
 		this.cb.init();
 		this.activeColor = PieceData.WHITE_BYTE;
 		this.players[0] = new HumanPlayer(PieceData.WHITE_BYTE);
 		this.players[1] = new HumanPlayer(PieceData.BLACK_BYTE);
+
+		return this;
 	}
 
 	/**
@@ -440,6 +442,7 @@ public class GameManager
 		int to = m.getDst();
 		int tmp = 0;
 		Piece p;
+
 
 		if (color == PieceData.WHITE_BYTE)
 		{
@@ -886,11 +889,36 @@ public class GameManager
 	 */
 	public boolean isCheckMate (int color)
 	{
-		Piece king = this.getKing(color);
+		Piece king = null;
+		ArrayList <Piece> pieces = this.getAllPieces(color);
 
-		ArrayList <Move> kingMoves = this.getLegalMoves(king);
+		for (int i = 0; i < pieces.size(); i++)
+		{
+			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			{
+				king = pieces.get(i);
+				break;
+			}
+		}
 
-		return (kingMoves.size() == 0) && this.isCheck(color);
+		ArrayList <Move> moves = this.getLegalMoves(king);
+		//System.out.println("#Moves: " + moves.size());
+		boolean allAttacked = true;
+
+		for (int i = 0; i < moves.size(); i++)
+		{
+			if (this.isAttacked(color, moves.get(i).getDst()) == 0)
+			{
+				//System.out.println(moves.get(i).toString() + " setting all attacked to false");
+				allAttacked = false;
+				break;
+			}
+		}
+
+		boolean kingAttacked = this.isAttacked(color, king.getPositionByte()) > 0;
+		//System.out.println("King attacked: " + Boolean.toString(kingAttacked));
+
+		return allAttacked && kingAttacked;
 	}
 
 	/**
@@ -900,34 +928,19 @@ public class GameManager
 	 */
 	public boolean isCheck (int color )
 	{
-		Piece king = this.getKing(color);
-
-		for (Move m : this.getAllLegalMoves(PieceData.getOpponentColor(color)))
-		{
-			if (m.getDst() == king.getPositionByte())
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private Piece getKing (int color)
-	{
-		Piece king = new Piece();
+		Piece king = null;
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 
-		for (Piece p : this.getAllPieces(color))
+		for (int i = 0; i < pieces.size(); i++)
 		{
-			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
 			{
-				king = p;
+				king = pieces.get(i);
 				break;
 			}
 		}
 
-		return king;
+		return (this.isAttacked(color, king.getPositionByte()) >= 1);
 	}
 
 	/**
@@ -956,6 +969,7 @@ public class GameManager
 
 	public int isAttacked (int color, int index0x88)
 	{
+		//System.out.println("[isAttacked] color: " + Integer.toHexString(color));
 		int attacked = 0;
 		Piece p;
 

@@ -1,19 +1,19 @@
 package Chess.UI;
 
-import Chess.Game.GameManager;
-import Chess.Game.Move;
-import Chess.Game.Piece;
-import Chess.Game.PieceData;
+import Chess.Athena.AIPlayer;
+import Chess.Game.*;
 import Chess.Utils.Parser;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 //Created by Astrid on 22/02/2017.
 
-public class GamePanel extends JFrame implements ActionListener
+public class GamePanel extends JFrame implements ActionListener, MouseListener
 {
 	private GameManager gameManager;
 
@@ -43,12 +43,24 @@ public class GamePanel extends JFrame implements ActionListener
 		this.add(panel);
 		this.initBoard();
 
-		this.setResizable(true);
-		this.setVisible(true);
+		this.setResizable(false);
+		//this.setVisible(true);
 
 
 		Parser parser = new Parser();
-		parser.moveFromString("E2-E4", gameManager);
+
+		Piece piece = gameManager.get(4,1);
+		Move move = new Move(ChessBoard.get0x88Index(4,1),ChessBoard.get0x88Index(4,5),0);
+		System.out.println("MANUAL: Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+		if(gameManager.isLegalMove(piece ,move))
+		{
+			System.out.println("Valid");
+		}
+		else
+		{
+			System.out.println("Invalid");
+		}
+
 	}
 
 	/**
@@ -100,6 +112,24 @@ public class GamePanel extends JFrame implements ActionListener
 			gameManager.undo();
 
 		}
+		else if (e.getSource() == sidePanel.getMoveInput())
+		{
+			String input = sidePanel.getMoveInput().getText();
+			Move move = Parser.moveFromString(input, gameManager);
+			if (move != null)
+			{
+				gameManager.makeMove(move);
+				board.makeMove(move, gameManager.getActiveColorByte());
+				System.out.println("Move input: " + input);
+				sidePanel.setMoveInput("");
+			}
+			else
+			{
+				sidePanel.setMoveInput("Invalid Move");
+			}
+
+
+		}
 		else if (gameManager.getCachedMoves().isEmpty())											//SELECT SOURCE
 		{
 			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
@@ -148,19 +178,12 @@ public class GamePanel extends JFrame implements ActionListener
 							{
 								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
 							}
-
-							board.getTile(i).setIcon(handlePromotion(board.get2DCoord(i)));
 						}
 					}
 				}
 			}
 			gameManager.resetCachedMoves();
 		}
-	}
-
-	public void testAI ()
-	{
-
 	}
 
 	public Icon handlePromotion(int[] position)
@@ -215,5 +238,49 @@ public class GamePanel extends JFrame implements ActionListener
 					return UIData.BP;
 			}
 		}
+	}
+
+	public void testAI ()
+	{
+		//this.gameManager.isCheckMate(this.gameManager.getActiveColorByte());
+		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
+		long start = System.nanoTime();
+		Move m = aip.playTurn(this.gameManager, 5);
+		long end = System.nanoTime();
+		System.out.println("[AITest] Making move: " + m.toString());
+		System.out.println("Took " + Long.toString((end - start) / 1000000) + "ms");
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+		if (e.getSource()==sidePanel.getMoveInput())
+		{
+			sidePanel.setMoveInput("");
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+
 	}
 }

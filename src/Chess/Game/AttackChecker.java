@@ -36,14 +36,17 @@ public class AttackChecker extends Thread
 
 		for (int i = 0; i < this.offsetArray.length; i++)
 		{
-			if (((tmp = index0x88 + Movesets.ROOK_MOVE[i]) & 0x88) == 0)
+			if (((tmp = index0x88 + this.offsetArray[i]) & 0x88) == 0)
 			{
 				if (this.gm.get(tmp).getColor() == opponentColor)
 				{
 					if (this.gm.get(tmp).getPieceWithoutColorByte() == this.pieceByte)
 					{
-						if(this.gm.isValidMove(this.pieceByte, this.color, new Move (tmp, index0x88, 0x0)))
+						Move m;
+						if(this.gm.isValidMove(this.pieceByte, this.opponentColor, m = (new Move (tmp, index0x88, 0x0))))
 						{
+							//System.out.println("Color: " + Integer.toHexString(this.opponentColor));
+							//System.out.println(PieceData.toStringFromNum(this.pieceByte) + " attacks by " + m.toString());
 							this.isAttacked = true;
 							break;
 						}
