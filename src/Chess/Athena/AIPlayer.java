@@ -4,9 +4,7 @@ import Chess.Game.*;
 
 import java.util.ArrayList;
 
-import static Chess.Game.PieceData.BOTH_BISHOPS_BONUS;
-import static Chess.Game.PieceData.BOTH_KNIGHTS_PENALTY;
-import static Chess.Game.PieceData.BOTH_ROOKS_PENALTY;
+import static Chess.Game.PieceData.*;
 import static java.lang.Integer.max;
 
 /**
@@ -18,7 +16,6 @@ import static java.lang.Integer.max;
  */
 public class AIPlayer extends Player
 {
-	public static TranspositionTable transpositionTable = new TranspositionTable();
 	private static final int inf = Integer.MAX_VALUE;
 
 	public AIPlayer(int colorByte)
@@ -89,8 +86,6 @@ public class AIPlayer extends Player
 			score += BOTH_KNIGHTS_PENALTY;
 		}
 
-		AIPlayer.transpositionTable.put(gm.getZobristHash(), new TableRecord(score, 0,null));
-
 		return score;
 	}
 
@@ -141,7 +136,18 @@ public class AIPlayer extends Player
 	{
 		if (gm.isCheckMate(color) || depth == 0)
 		{
-			return scoreGame(gm, color);
+			TableRecord tr = null;
+			if ((tr = TranspositionTable.getInstance().get(gm.getHash())) != null)
+			{
+				return tr.getScore();
+			}
+			else
+			{
+				int score = AIPlayer.scoreGame(gm, color);
+				tr = new TableRecord(score, depth, gm.getAllLegalMoves(color));
+				TranspositionTable.getInstance().put(gm.getHash(), tr);
+				return score;
+			}
 		}
 		else
 		{

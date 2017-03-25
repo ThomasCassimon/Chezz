@@ -1,6 +1,8 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
+import Chess.Athena.TableRecord;
+import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Time.Chronometer;
 
@@ -25,7 +27,7 @@ public class GameManager
 	private ArrayList <Move> moveHistory;
 	private ArrayList <Move> cachedMoves;
 	private int activeColor;
-	private long zobristHash;
+	private long hash;
 	private ChessBoard cb;
 
 	public static Chronometer chronometer = new Chronometer();
@@ -35,7 +37,7 @@ public class GameManager
 	{
 		this.cb = new ChessBoard();
 		this.activeColor = PieceData.WHITE_BYTE;
-		this.zobristHash = 0;
+		this.hash = 0;
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
@@ -47,7 +49,7 @@ public class GameManager
 	{
 		this.cb = new ChessBoard();
 		this.activeColor = gm.activeColor;
-		this.zobristHash = gm.zobristHash;
+		this.hash = gm.hash;
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <Move> ();
 		this.cachedMoves = new ArrayList <Move> ();
@@ -247,6 +249,33 @@ public class GameManager
 		return pieces;
 	}
 
+	public boolean isValidMove (int pieceByte, int color, Move m)
+	{
+		switch(pieceByte & PieceData.PIECE_MASK)
+		{
+			case PieceData.PAWN_BYTE:
+				return this.isValidPawnMove(color, m);
+
+			case PieceData.ROOK_BYTE:
+				return this.isValidRookMove(m);
+
+			case PieceData.KNIGHT_BYTE:
+				return true;
+
+			case PieceData.BISHOP_BYTE:
+				return this.isValidBishopMove(m);
+
+			case PieceData.QUEEN_BYTE:
+				return this.isValidRookMove(m) || this.isValidBishopMove(m);
+
+			case PieceData.KING_BYTE:
+				return this.isValidKingMove(color, m);
+
+			default:
+				throw new IllegalPieceException(Integer.toString(pieceByte) + " is not a valid pieceByte");
+		}
+	}
+
 	/**
 	 * Checks if the specified move is a valid bishop-type move. Does not verify if the given piece is actually a bishop
 	 * @param m The move to be checked
@@ -404,7 +433,7 @@ public class GameManager
 	 * @param m	The move to be analyzed
 	 * @return True of and only if the specified move is a valid king-type move, otherwise false.
 	 */
-	public boolean isValidKingTypeMove (int color, Move m)
+	public boolean isValidKingMove(int color, Move m)
 	{
 		int opponentColor = PieceData.getOpponentColor(color);
 		int from = m.getSrc();
@@ -646,6 +675,8 @@ public class GameManager
 			return false;
 		}
 
+		return this.isValidMove(piece, color, m);
+		/*
 		switch (piece)
 		{
 			case PieceData.PAWN_BYTE:
@@ -680,7 +711,7 @@ public class GameManager
 				}
 				break;
 			case PieceData.KING_BYTE:
-				if (!this.isValidKingTypeMove(color, m))
+				if (!this.isValidKingMove(color, m))
 				{
 					//System.out.println("[isLegalMove] King Removing " + m.toString());
 					return false;
@@ -691,9 +722,11 @@ public class GameManager
 			default:
 				//System.out.println("[isLegalMove] default: Removing " + m.toString());
 				return false;
+
 		}
 
 		return true;
+		*/
 	}
 
 	/**
@@ -704,7 +737,14 @@ public class GameManager
 	public ArrayList<Move> getLegalMoves(Piece p)
 	{
 		int color = p.getColor();
-		if ((p.getPieceWithoutColorByte() != 0) && (color == this.activeColor))
+		TableRecord tr = null;
+
+		/*
+		if (TranspositionTable.getInstance().get(this.hash) != null)
+		{
+
+		}
+		else*/ if ((p.getPieceWithoutColorByte() != 0) && (color == this.activeColor))
 		{
 			//System.out.println("NEW");
 			//int piece = p.getPieceWithoutColorByte();
@@ -750,6 +790,15 @@ public class GameManager
 	 */
 	public String makeMove (Move m)
 	{
+		/*this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getSrc());		// Hash-out the old piece
+
+		if (m.isCapture())
+		{
+			this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getDst()).getPieceWithoutColorByte(), m.getDst());	// Hash-out captured piece
+		}
+
+		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getDst());		// Hash-in new piece
+		*/
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
 		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);	// Empty the source square
 
@@ -905,9 +954,164 @@ public class GameManager
 		return moves;
 	}
 
-	public long getZobristHash ()
+	public int isAttacked (int color, int index0x88)
 	{
-		return this.zobristHash;
+		int attacked = 0;
+		Piece p;
+
+		AttackChecker pawnCapture = null;
+		AttackChecker rook = new AttackChecker(Movesets.ROOK_MOVE, PieceData.ROOK_BYTE, color, index0x88, this);
+		AttackChecker knight = new AttackChecker(Movesets.KNIGHT_MOVE, PieceData.KNIGHT_BYTE, color, index0x88, this);
+		AttackChecker bishop = new AttackChecker(Movesets.BISHOP_MOVE, PieceData.BISHOP_BYTE, color, index0x88, this);
+		AttackChecker queen = new AttackChecker(Movesets.QUEEN_MOVE, PieceData.QUEEN_BYTE, color, index0x88, this);
+		AttackChecker king = new AttackChecker(Movesets.KING_MOVE, PieceData.KING_BYTE, color, index0x88, this);
+
+		if (color == PieceData.WHITE_BYTE)
+		{
+			pawnCapture = new AttackChecker(Movesets.PAWN_CAPTURE_WHITE, PieceData.PAWN_BYTE, color, index0x88, this);
+			/*
+			for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
+			{
+				if ((p = this.get((tmp = index0x88 + Movesets.PAWN_CAPTURE_WHITE[i]))).getColor() == opponentColor)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+					{
+						return false;
+					}
+				}
+			}
+			*/
+		}
+		else if (color == PieceData.BLACK_BYTE)
+		{
+			pawnCapture = new AttackChecker(Movesets.PAWN_CAPTURE_BLACK, PieceData.PAWN_BYTE, color, index0x88, this);
+			/*
+			for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
+			{
+				if ((p = this.get((tmp = index0x88 + Movesets.PAWN_CAPTURE_BLACK[i]))).getColor() == opponentColor)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+					{
+						return false;
+					}
+				}
+			}
+			*/
+		}
+
+		AttackChecker[] threadArray = new AttackChecker[6];
+
+		threadArray[0] = pawnCapture;
+		threadArray[1] = rook;
+		threadArray[2] = knight;
+		threadArray[3] = bishop;
+		threadArray[4] = queen;
+		threadArray[5] = king;
+
+		for (int i = 0; i < threadArray.length; i++)
+		{
+			threadArray[i].start();
+		}
+
+		try
+		{
+			for (int i = 0; i < threadArray.length; i++)
+			{
+				threadArray[i].join();
+
+				if (threadArray[i].getResult())
+				{
+					attacked++;
+				}
+			}
+		}
+		catch (InterruptedException ie)
+		{
+			ie.printStackTrace();
+		}
+
+		return attacked;
+
+		/*
+		for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
+		{
+			if (((tmp = index0x88 + Movesets.ROOK_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					{
+						if(this.isValidRookMove(new Move (tmp, index0x88, 0x0)))
+						{
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
+		{
+			if (((tmp = index0x88 + Movesets.KNIGHT_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KNIGHT_BYTE)
+					{
+						return false;
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
+		{
+			if (((tmp = index0x88 + Movesets.BISHOP_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.BISHOP_BYTE)
+					{
+						if(this.isValidBishopMove(new Move (tmp, to, 0x0)))
+						{
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
+		{
+			if (((tmp = index0x88 + Movesets.QUEEN_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.QUEEN_BYTE)
+					{
+						if ((this.isValidRookMove(new Move (tmp, index0x88, 0x0)) || this.isValidBishopMove(new Move (tmp, to, 0x0))))
+						{
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < Movesets.KING_MOVE.length; i++)
+		{
+			if (((tmp = index0x88 + Movesets.KING_MOVE[i]) & 0x88) == 0)
+			{
+				if (this.get(tmp).getColor() == opponentColor)
+				{
+					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KING_BYTE)
+					{
+						return false;
+					}
+				}
+			}
+		}
+		*/
 	}
 
 	public void handlePromotion(int[] position, int piece)
@@ -915,6 +1119,10 @@ public class GameManager
 		System.out.println("Promo: (" + Integer.toString(position[0]) + Integer.toString(position[1]) + " piecebyte: " + Integer.toBinaryString(piece));
 
 		this.cb.set(position[0],position[1],piece);
+	}
 
+	public long getHash ()
+	{
+		return this.hash;
 	}
 }

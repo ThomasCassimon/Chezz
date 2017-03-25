@@ -1,7 +1,9 @@
 package Chess.UI;
 
-import Chess.Athena.AIPlayer;
-import Chess.Game.*;
+import Chess.Game.GameManager;
+import Chess.Game.Move;
+import Chess.Game.Piece;
+import Chess.Game.PieceData;
 import Chess.Utils.Parser;
 
 import javax.swing.*;
@@ -68,7 +70,7 @@ public class GamePanel extends JFrame implements ActionListener
 			board.setPiece(piece);
 		}
 
-		//this.testAI();
+		this.testAI();
 	}
 
 
@@ -137,9 +139,9 @@ public class GamePanel extends JFrame implements ActionListener
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
-							System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
+							System.out.println("Hash before: " + Long.toBinaryString(gameManager.getHash()));
 							gameManager.makeMove(move);
-							System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
+							System.out.println("Hash after: " + Long.toBinaryString(gameManager.getHash()));
 							board.makeMove(move, gameManager.getActiveColorByte());
 
 							if (move.isPromotion())
@@ -158,8 +160,7 @@ public class GamePanel extends JFrame implements ActionListener
 
 	public void testAI ()
 	{
-		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
-		System.out.println("Transposition table hits: " + Long.toString(AIPlayer.transpositionTable.getHits()) + "\nGenerated: " + aip.playTurn(this.gameManager, 7).toString());
+
 	}
 
 	public Icon handlePromotion(int[] position)
