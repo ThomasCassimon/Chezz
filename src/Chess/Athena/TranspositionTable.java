@@ -10,13 +10,14 @@ import java.util.Random;
  */
 public class TranspositionTable
 {
+	private static TranspositionTable singleton;
 	private static final int DB_ROWS = 12;
 	private static final int DB_COLS = 64;
 	private static long database[];
 	private HashMap <Long, TableRecord> table;
 	private int hits;
 
-	public TranspositionTable ()
+	private TranspositionTable ()
 	{
 		this.hits = 0;
 		this.table = new HashMap<>();
@@ -32,6 +33,16 @@ public class TranspositionTable
 		}
 	}
 
+	public static TranspositionTable getInstance ()
+	{
+		if (TranspositionTable.singleton == null)
+		{
+			TranspositionTable.singleton = new TranspositionTable();
+		}
+
+		return TranspositionTable.singleton;
+	}
+
 	public void put (long key, TableRecord record)
 	{
 		this.table.put(key,record);
@@ -41,7 +52,7 @@ public class TranspositionTable
 	{
 		TableRecord t;
 
-		if ((t = this.get(key)) != null)
+		if ((t = this.table.get(key)) != null)
 		{
 			this.hits++;
 		}

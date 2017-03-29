@@ -3,6 +3,7 @@ package Chess.Athena;
 import Chess.Game.Move;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by thomas on 23/03/17.
@@ -25,5 +26,15 @@ public class TableRecord
 		this.score = score;
 		this.depth = depth;
 		this.movelist = moves.toArray(new Move [0]);
+	}
+
+	public int getScore ()
+	{
+		return this.score;
+	}
+
+	public ArrayList <Move> getMoves ()
+	{
+		return new ArrayList <Move> (Arrays.asList(this.movelist));
 	}
 }

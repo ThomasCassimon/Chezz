@@ -44,7 +44,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		this.initBoard();
 
 		this.setResizable(false);
-		this.setVisible(true);
+		//this.setVisible(true);
 
 
 		Parser parser = new Parser();
@@ -82,7 +82,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			board.setPiece(piece);
 		}
 
-		//this.testAI();
+		this.testAI();
 	}
 
 
@@ -169,9 +169,9 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
-							System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
+							System.out.println("Hash before: " + Long.toBinaryString(gameManager.getHash()));
 							gameManager.makeMove(move);
-							System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
+							System.out.println("Hash after: " + Long.toBinaryString(gameManager.getHash()));
 							board.makeMove(move, gameManager.getActiveColorByte());
 
 							if (move.isPromotion())
@@ -242,8 +242,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public void testAI ()
 	{
+		//this.gameManager.isCheckMate(this.gameManager.getActiveColorByte());
 		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
-		System.out.println("Transposition table hits: " + Long.toString(AIPlayer.transpositionTable.getHits()) + "\nGenerated: " + aip.playTurn(this.gameManager, 7).toString());
+		long start = System.nanoTime();
+		Move m = aip.playTurn(this.gameManager, 5);
+		long end = System.nanoTime();
+		System.out.println("[AITest] Making move: " + m.toString());
+		System.out.println("Took " + Long.toString((end - start) / 1000000) + "ms");
 	}
 
 	@Override
