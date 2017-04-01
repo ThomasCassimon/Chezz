@@ -7,9 +7,7 @@ import Chess.Time.TimerTick;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Astrid on 08/03/2017.
- */
+
 public class TimePanel extends JPanel
 {
 	private Chronometer chronometer;

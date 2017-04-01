@@ -4,9 +4,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-/**
- * Created by Astrid on 27/02/2017.
- */
+
 public final class UIData
 {
 	//CONSTANTS

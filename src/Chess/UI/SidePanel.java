@@ -3,9 +3,7 @@ package Chess.UI;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Astrid on 23/02/2017.
- */
+
 public class SidePanel extends JPanel
 {
 	private JPanel leftPanel;
