@@ -128,7 +128,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
-			System.out.println("SELECTING SOURCE");
 			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
 			{
 				if (e.getSource() == board.getTile(i))
@@ -153,31 +152,20 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 		else                                                                                        //SELECT DESTINATION
 		{
-			System.out.println("SELECTING DESTINATION");
 			moves = gameManager.getCachedMoves();
-
 
 			board.setNormalTileColor(moves.get(0).get2DSrc());
 
 			for (i = 0; i < UIData.TOTAL_TILES; i++)
 			{
-				System.out.println(moves.size());
 				if (e.getSource() == board.getTile(i))
 				{
-					System.out.println(moves.size());
-					System.out.println("button found");
-					for (Move move : moves)
-					{
-						System.out.println("move");
-					}
 
 					for (Move move : moves)
 					{
-						System.out.println(move.getPrettySrcCoords() + "-" + move.getPrettyDstCoords());
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
-							System.out.println("found move");
 							//System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
 							gameManager.makeMove(move);
 							//System.out.println(Parser.moveToString(move));
