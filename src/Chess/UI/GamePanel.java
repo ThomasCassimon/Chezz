@@ -44,7 +44,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		this.initBoard();
 
 		this.setResizable(false);
-		//this.setVisible(true);
+		this.setVisible(true);
 
 
 		Parser parser = new Parser();
@@ -82,7 +82,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			board.setPiece(piece);
 		}
 
-		this.testAI();
+		//this.testAI();
 	}
 
 

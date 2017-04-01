@@ -679,57 +679,6 @@ public class GameManager
 		}
 
 		return this.isValidMove(piece, color, m);
-		/*
-		switch (piece)
-		{
-			case PieceData.PAWN_BYTE:
-				if (!this.isValidPawnMove(color, m))
-				{
-					//System.out.println("[isLegalMove] Pawn Removing " + m.toString());
-					return false;
-				}
-				break;
-			case PieceData.ROOK_BYTE:
-				if (!this.isValidRookMove(m))
-				{
-					//System.out.println("[isLegalMove] Rook: Removing " + m.toString());
-					return false;
-				}
-				break;
-			case PieceData.KNIGHT_BYTE:
-				// There are no special rules for knights besides the ones that are handled outside of this switch
-				break;
-			case PieceData.BISHOP_BYTE:
-				if (!this.isValidBishopMove(m))
-				{
-					//System.out.println("[isLegalMove] Bishop Removing " + m.toString());
-					return false;
-				}
-				break;
-			case PieceData.QUEEN_BYTE:
-				if ((!this.isValidBishopMove(m)) && (!this.isValidRookMove(m)))
-				{
-					//System.out.println("[isLegalMove] Queen Removing " + m.toString());
-					return false;
-				}
-				break;
-			case PieceData.KING_BYTE:
-				if (!this.isValidKingMove(color, m))
-				{
-					//System.out.println("[isLegalMove] King Removing " + m.toString());
-					return false;
-				}
-				break;
-			case PieceData.EMPTY_BYTE:
-				return true;
-			default:
-				//System.out.println("[isLegalMove] default: Removing " + m.toString());
-				return false;
-
-		}
-
-		return true;
-		*/
 	}
 
 	/**
@@ -772,11 +721,11 @@ public class GameManager
 
 			Collections.sort(possibleMoves);
 
-			//System.out.println("Generated:");
-			//for(Move m : possibleMoves)
-			//{
-				//System.out.println(m.toString());
-			//}
+			/*System.out.println("Generated:");
+			for(Move m : possibleMoves)
+			{
+				System.out.println(m.toString());
+			}*/
 
 			return possibleMoves;
 		}
@@ -877,9 +826,16 @@ public class GameManager
 	 */
 	public void undo ()
 	{
-		Move m = this.getLastMove();
-		this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));	// Making a dummy move which is just the inverse of the last move
-		this.moveHistory.remove(this.moveHistory.size() - 1);		// Always remove the dummy-move from the move history
+		if (this.moveHistory.size() > 0)
+		{
+			Move m = this.getLastMove();
+			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceWithoutColorByte());    // Empty the source square
+			this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+
+			//this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));		// Making a dummy move which is just the inverse of the last move
+			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the dummy-move from the move history
+			this.toggleActivePlayer();
+		}
 	}
 
 	/**
@@ -983,34 +939,10 @@ public class GameManager
 		if (color == PieceData.WHITE_BYTE)
 		{
 			pawnCapture = new AttackChecker(Movesets.PAWN_CAPTURE_WHITE, PieceData.PAWN_BYTE, color, index0x88, this);
-			/*
-			for (int i = 0; i < Movesets.PAWN_CAPTURE_WHITE.length; i++)
-			{
-				if ((p = this.get((tmp = index0x88 + Movesets.PAWN_CAPTURE_WHITE[i]))).getColor() == opponentColor)
-				{
-					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
-					{
-						return false;
-					}
-				}
-			}
-			*/
 		}
 		else if (color == PieceData.BLACK_BYTE)
 		{
 			pawnCapture = new AttackChecker(Movesets.PAWN_CAPTURE_BLACK, PieceData.PAWN_BYTE, color, index0x88, this);
-			/*
-			for (int i = 0; i < Movesets.PAWN_CAPTURE_BLACK.length; i++)
-			{
-				if ((p = this.get((tmp = index0x88 + Movesets.PAWN_CAPTURE_BLACK[i]))).getColor() == opponentColor)
-				{
-					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
-					{
-						return false;
-					}
-				}
-			}
-			*/
 		}
 
 		AttackChecker[] threadArray = new AttackChecker[6];
@@ -1045,87 +977,6 @@ public class GameManager
 		}
 
 		return attacked;
-
-		/*
-		for (int i = 0; i < Movesets.ROOK_MOVE.length; i++)
-		{
-			if (((tmp = index0x88 + Movesets.ROOK_MOVE[i]) & 0x88) == 0)
-			{
-				if (this.get(tmp).getColor() == opponentColor)
-				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
-					{
-						if(this.isValidRookMove(new Move (tmp, index0x88, 0x0)))
-						{
-							return false;
-						}
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < Movesets.KNIGHT_MOVE.length; i++)
-		{
-			if (((tmp = index0x88 + Movesets.KNIGHT_MOVE[i]) & 0x88) == 0)
-			{
-				if (this.get(tmp).getColor() == opponentColor)
-				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KNIGHT_BYTE)
-					{
-						return false;
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < Movesets.BISHOP_MOVE.length; i++)
-		{
-			if (((tmp = index0x88 + Movesets.BISHOP_MOVE[i]) & 0x88) == 0)
-			{
-				if (this.get(tmp).getColor() == opponentColor)
-				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.BISHOP_BYTE)
-					{
-						if(this.isValidBishopMove(new Move (tmp, to, 0x0)))
-						{
-							return false;
-						}
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < Movesets.QUEEN_MOVE.length; i++)
-		{
-			if (((tmp = index0x88 + Movesets.QUEEN_MOVE[i]) & 0x88) == 0)
-			{
-				if (this.get(tmp).getColor() == opponentColor)
-				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.QUEEN_BYTE)
-					{
-						if ((this.isValidRookMove(new Move (tmp, index0x88, 0x0)) || this.isValidBishopMove(new Move (tmp, to, 0x0))))
-						{
-							return false;
-						}
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < Movesets.KING_MOVE.length; i++)
-		{
-			if (((tmp = index0x88 + Movesets.KING_MOVE[i]) & 0x88) == 0)
-			{
-				if (this.get(tmp).getColor() == opponentColor)
-				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KING_BYTE)
-					{
-						return false;
-					}
-				}
-			}
-		}
-		*/
 	}
 
 	public void handlePromotion(int[] position, int piece)
