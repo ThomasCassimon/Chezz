@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.TimerTask;
 
-/**
- * Created by Astrid on 08/03/2017.
- */
+
 public class TimerTick extends TimerTask
 {
 	private int time;

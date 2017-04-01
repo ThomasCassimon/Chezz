@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-//Created by Astrid on 22/02/2017.
 
 public class GamePanel extends JFrame implements ActionListener, MouseListener
 {
@@ -51,15 +50,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 		Piece piece = gameManager.get(4,1);
 		Move move = new Move(ChessBoard.get0x88Index(4,1),ChessBoard.get0x88Index(4,5),0);
-		System.out.println("MANUAL: Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
-		if(gameManager.isLegalMove(piece ,move))
-		{
-			System.out.println("Valid");
-		}
-		else
-		{
-			System.out.println("Invalid");
-		}
+
 
 	}
 
@@ -97,13 +88,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		ArrayList<Move> moves;
 		Piece piece;
 
-		if (e.getSource() == sidePanel.getPause())													//PAUSE
+		if (e.getSource() == sidePanel.getPause())                                                    //PAUSE
 		{
 			GameManager.chronometer.pause();
 			System.out.println("Pause");
 		}
 
-		else if (e.getSource() == sidePanel.getUndo())												//UNDO
+		else if (e.getSource() == sidePanel.getUndo())                                                //UNDO
 		{
 			Move move = gameManager.getLastMove();
 			move = new Move(move.getDst(), move.getSrc(), 0);
@@ -112,10 +103,15 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			gameManager.undo();
 
 		}
+		else if (e.getSource() == sidePanel.getSave())                                                //SAVE
+		{
+			System.out.println("Save");
+			Parser.saveToFile(gameManager.getMoveHistory(), this);
+		}
 		else if (e.getSource() == sidePanel.getMoveInput())
 		{
 			String input = sidePanel.getMoveInput().getText();
-			Move move = Parser.moveFromString(input, gameManager);
+			Move move = Parser.stringToMove(input, gameManager);
 			if (move != null)
 			{
 				gameManager.makeMove(move);
@@ -130,8 +126,9 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 
 		}
-		else if (gameManager.getCachedMoves().isEmpty())											//SELECT SOURCE
+		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
+			System.out.println("SELECTING SOURCE");
 			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
 			{
 				if (e.getSource() == board.getTile(i))
@@ -154,37 +151,55 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				}
 			}
 		}
-		else																						//SELECT DESTINATION
+		else                                                                                        //SELECT DESTINATION
 		{
+			System.out.println("SELECTING DESTINATION");
 			moves = gameManager.getCachedMoves();
+
 
 			board.setNormalTileColor(moves.get(0).get2DSrc());
 
-			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
+			for (i = 0; i < UIData.TOTAL_TILES; i++)
 			{
+				System.out.println(moves.size());
 				if (e.getSource() == board.getTile(i))
 				{
+					System.out.println(moves.size());
+					System.out.println("button found");
 					for (Move move : moves)
 					{
+						System.out.println("move");
+					}
+
+					for (Move move : moves)
+					{
+						System.out.println(move.getPrettySrcCoords() + "-" + move.getPrettyDstCoords());
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
-							System.out.println("Hash before: " + Long.toBinaryString(gameManager.getHash()));
+							System.out.println("found move");
+							//System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
 							gameManager.makeMove(move);
-							System.out.println("Hash after: " + Long.toBinaryString(gameManager.getHash()));
+							//System.out.println(Parser.moveToString(move));
+							//System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
 							board.makeMove(move, gameManager.getActiveColorByte());
-
+							if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
+							{
+								this.handleCheckMate();
+							}
 							if (move.isPromotion())
 							{
 								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
 							}
 						}
+
 					}
 				}
 			}
 			gameManager.resetCachedMoves();
 		}
 	}
+
 
 	public Icon handlePromotion(int[] position)
 	{
@@ -238,6 +253,22 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 					return UIData.BP;
 			}
 		}
+	}
+
+	public void handleCheckMate()
+	{
+		Object[] options = { "Exit","Save & Exit","Save & Start New Game","Start New Game"};
+		String winner;
+		if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+		{
+			winner = "Black";
+		}
+		else
+		{
+			winner = "White";
+		}
+
+		int choice = JOptionPane.showOptionDialog(this,"Checkmate! " + winner + " wins!", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,  UIData.BK, options, null);
 	}
 
 	public void testAI ()

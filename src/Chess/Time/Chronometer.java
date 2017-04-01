@@ -3,9 +3,7 @@ package Chess.Time;
 import javax.swing.*;
 import java.util.Timer;
 
-/**
- * Created by Astrid on 17/03/2017.
- */
+
 public class Chronometer
 {
 	private static final int NANOSECOND = 1;

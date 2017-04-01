@@ -3,9 +3,7 @@ package Chess.UI;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Astrid on 23/02/2017.
- */
+
 public class SidePanel extends JPanel
 {
 	private JPanel leftPanel;
@@ -32,13 +30,13 @@ public class SidePanel extends JPanel
 
 
 		pause = new JButton("Pause");
-		pause.setPreferredSize(UIData.BUTTONS_DIMENSION);
+		//pause.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		undo = new JButton(("Undo"));
-		undo.setPreferredSize(UIData.BUTTONS_DIMENSION);
+		//undo.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		save = new JButton("Save");
-		save.setPreferredSize(UIData.BUTTONS_DIMENSION);
+		//save.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		exit = new JButton("Exit");
-		exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
+		//exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
 
 		timePanel = new TimePanel();
 		timePanel.setBackground(UIData.BACKGROUND);
@@ -102,6 +100,16 @@ public class SidePanel extends JPanel
 	public JButton getUndo()
 	{
 		return undo;
+	}
+
+	public JButton getSave()
+	{
+		return save;
+	}
+
+	public JButton getExit()
+	{
+		return exit;
 	}
 
 	public JTextField getMoveInput()
