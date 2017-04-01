@@ -1,6 +1,12 @@
 package Chess.Utils;
 
 import Chess.Game.*;
+import Chess.UI.GamePanel;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 
 public class Parser
@@ -75,8 +81,43 @@ public class Parser
 	 * Saves the history of the game to a file.
 	 * @param history History of the Moves in the game.
 	 */
-	public void saveToFile(Move[] history)
+	public static void saveToFile(ArrayList<Move> history, GamePanel gp)
 	{
+		JFileChooser fc = new JFileChooser();
+		File file;
+		PrintWriter writer;
+		String text ="";
+
+
+		int returnvalue = fc.showDialog(gp, "Save to...");
+
+		if(returnvalue == JFileChooser.APPROVE_OPTION)
+		{
+			file = new File(fc.getSelectedFile().getParent(), fc.getSelectedFile().getName()+ ".pgn");
+
+			try
+			{
+				writer = new PrintWriter(file);
+				for(Move move: history)
+				{
+					text += Parser.moveToString(move) + ";\n";
+				}
+				System.out.println("Writing to file");
+				writer.print(text);
+				writer.close();
+			}
+			catch (Exception e)
+			{
+				System.out.println("file not found");
+			}
+
+		}
+
+
+
+
+
+
 
 	}
 

@@ -23,18 +23,18 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public GamePanel()
 	{
-		 super("Chezz!");
-		 this.gameManager = new GameManager();
-		 this.gameManager.init();
-		 panel = new JPanel();
-		 board = new Board(this);
-		 sidePanel = new SidePanel(this);
+		super("Chezz!");
+		this.gameManager = new GameManager();
+		this.gameManager.init();
+		panel = new JPanel();
+		board = new Board(this);
+		sidePanel = new SidePanel(this);
 
-		 panel.setBackground(UIData.BACKGROUND_COLOR);
+		panel.setBackground(UIData.BACKGROUND_COLOR);
 
-		 this.setSize(UIData.WINDOW_DIMENSION);
-		 this.setResizable(false);
-		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		this.setSize(UIData.WINDOW_DIMENSION);
+		this.setResizable(false);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
 		panel.add(board);
@@ -88,12 +88,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		ArrayList<Move> moves;
 		Piece piece;
 
+
+
 		if (e.getSource() == sidePanel.getPause())													//PAUSE
 		{
 			GameManager.chronometer.pause();
 			System.out.println("Pause");
 		}
-
 		else if (e.getSource() == sidePanel.getUndo())												//UNDO
 		{
 			Move move = gameManager.getLastMove();
@@ -102,6 +103,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 			gameManager.undo();
 
+		}
+		else if (e.getSource() == sidePanel.getSave())												//SAVE
+		{
+			System.out.println("Save");
+			Parser.saveToFile(gameManager.getMoveHistory(), this);
 		}
 		else if (e.getSource() == sidePanel.getMoveInput())
 		{
@@ -173,7 +179,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 							{
 								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
 							}
-							this.handleCheckMate();
 						}
 					}
 				}
