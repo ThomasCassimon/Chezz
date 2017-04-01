@@ -1,7 +1,7 @@
 package Chess.Game;
 
-import Chess.Exceptions.Unchecked.IllegalSquareException;
 import Chess.Exceptions.Unchecked.IllegalPieceException;
+import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 /**
  * @author Thomas
@@ -114,7 +114,7 @@ public class ChessBoard
 	 * @throws IllegalSquareException
 	 * @throws IllegalPieceException
 	 */
-	public void set (int file, int rank, int piece) throws IllegalSquareException, IllegalPieceException
+	public synchronized void set (int file, int rank, int piece) throws IllegalSquareException, IllegalPieceException
 	{
 		int bitMask = ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK); // First two disable color-bits, last one disables piece-bits
 

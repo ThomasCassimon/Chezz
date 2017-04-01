@@ -12,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 
-
 public class GamePanel extends JFrame implements ActionListener, MouseListener
 {
 	private GameManager gameManager;
@@ -23,18 +22,18 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public GamePanel()
 	{
-		super("Chezz!");
-		this.gameManager = new GameManager();
-		this.gameManager.init();
-		panel = new JPanel();
-		board = new Board(this);
-		sidePanel = new SidePanel(this);
+		 super("Chezz!");
+		 this.gameManager = new GameManager();
+		 this.gameManager.init();
+		 panel = new JPanel();
+		 board = new Board(this);
+		 sidePanel = new SidePanel(this);
 
-		panel.setBackground(UIData.BACKGROUND_COLOR);
+		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
-		this.setSize(UIData.WINDOW_DIMENSION);
-		this.setResizable(false);
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		 this.setSize(UIData.WINDOW_DIMENSION);
+		 this.setResizable(false);
+		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
 		panel.add(board);
@@ -51,6 +50,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 		Piece piece = gameManager.get(4,1);
 		Move move = new Move(ChessBoard.get0x88Index(4,1),ChessBoard.get0x88Index(4,5),0);
+
 
 	}
 
@@ -88,13 +88,12 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		ArrayList<Move> moves;
 		Piece piece;
 
-
-
 		if (e.getSource() == sidePanel.getPause())													//PAUSE
 		{
 			GameManager.chronometer.pause();
 			System.out.println("Pause");
 		}
+
 		else if (e.getSource() == sidePanel.getUndo())												//UNDO
 		{
 			Move move = gameManager.getLastMove();
@@ -112,7 +111,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == sidePanel.getMoveInput())
 		{
 			String input = sidePanel.getMoveInput().getText();
-			Move move = Parser.stringToMove(input, gameManager);
+			Move move = Parser.moveFromString(input, gameManager);
 			if (move != null)
 			{
 				gameManager.makeMove(move);
@@ -180,8 +179,8 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
 							}
 						}
+
 					}
-				}
 			}
 			gameManager.resetCachedMoves();
 		}
@@ -259,8 +258,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public void testAI ()
 	{
+		//this.gameManager.isCheckMate(this.gameManager.getActiveColorByte());
 		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
-		System.out.println("Transposition table hits: " + Long.toString(AIPlayer.transpositionTable.getHits()) + "\nGenerated: " + aip.playTurn(this.gameManager, 7).toString());
+		long start = System.nanoTime();
+		Move m = aip.playTurn(this.gameManager, 5);
+		long end = System.nanoTime();
+		System.out.println("[AITest] Making move: " + m.toString());
+		System.out.println("Took " + Long.toString((end - start) / 1000000) + "ms");
 	}
 
 	@Override
