@@ -154,7 +154,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			moves = gameManager.getCachedMoves();
 
-
 			board.setNormalTileColor(moves.get(0).get2DSrc());
 
 			for (i = 0; i < UIData.TOTAL_TILES; i++)
