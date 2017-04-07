@@ -2,10 +2,10 @@ package Chess.Utils;
 
 import Chess.Game.*;
 import Chess.UI.GamePanel;
+import oracle.jvm.hotspot.jfr.JFR;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 
 
@@ -78,6 +78,24 @@ public class Parser
 	}
 
 	/**
+	 * Generates algebraic notation of given Move in a String.
+	 * @param move Move to be translated.
+	 * @return String with algebraic notation of the Move.
+	 */
+	public static String moveToString(Move move)
+	{
+		String string = "";
+
+		string += (char) (move.get2DSrc()[0] + 'a');
+		string += Integer.toString(move.get2DSrc()[1] + 1);
+		string += "-";
+		string += (char) (move.get2DDst()[0] + 'a');
+		string += Integer.toString(move.get2DDst()[1] + 1);
+
+		return string;
+	}
+
+	/**
 	 * Saves the history of the game to a file.
 	 * @param history History of the Moves in the game.
 	 */
@@ -100,7 +118,7 @@ public class Parser
 				writer = new PrintWriter(file);
 				for(Move move: history)
 				{
-					text += Parser.moveToString(move) + ";\n";
+					text += Parser.moveToString(move) + "\n";
 				}
 				System.out.println("Writing to file");
 				writer.print(text);
@@ -112,32 +130,41 @@ public class Parser
 			}
 
 		}
-
-
-
-
-
-
-
 	}
+
 
 	/**
-	 * Generates algebraic notation of given Move in a String.
-	 * @param move Move to be translated.
-	 * @return String with algebraic notation of the Move.
+	 * Reads moves from a file and the moves are made immediately.
 	 */
-	public static String moveToString(Move move)
+	public static void readFromFile(GameManager gm, GamePanel gp)
 	{
-		String string = "";
+		JFileChooser fc = new JFileChooser();
+		File file;
+		Move move = new Move();
 
-		string += (char) (move.get2DSrc()[0] + 'a');
-		string += Integer.toString(move.get2DSrc()[1] + 1);
-		string += "-";
-		string += (char) (move.get2DDst()[0] + 'a');
-		string += Integer.toString(move.get2DDst()[1] + 1);
+		int returnValue = fc.showDialog(gp, "Read from...");
 
-		return string;
+		if(returnValue == JFileChooser.APPROVE_OPTION)
+		{
+			try
+			{
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fc.getSelectedFile())));
+				String str;
+				while((str =reader.readLine()) != null & str.length() != 0)
+				{
+					move = Parser.stringToMove(str, gm);
+					gp.makeMove(move);
+				}
+			}
+			catch(Exception e)
+			{
+
+			}
+		}
 	}
+
+
 
 
 }
