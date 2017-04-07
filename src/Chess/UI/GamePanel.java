@@ -83,10 +83,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		int i;
-		int[] indexArr;
-		ArrayList<Move> moves;
-		Piece piece;
+
 
 		if (e.getSource() == sidePanel.getPause())                                                    //PAUSE
 		{
@@ -123,12 +120,18 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			{
 				sidePanel.setMoveInput("Invalid Move");
 			}
-
+		}
+		else if (e.getSource() == sidePanel.getLoad())												//LOAD
+		{
+			Parser.readFromFile(gameManager, this);
 
 		}
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
-			for (i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
+			int[] indexArr;
+			ArrayList<Move> moves;
+			Piece piece;
+			for (int i = 0; i < UIData.NUMBER_TILES * UIData.NUMBER_TILES; i++)
 			{
 				if (e.getSource() == board.getTile(i))
 				{
@@ -152,11 +155,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 		else                                                                                        //SELECT DESTINATION
 		{
+			ArrayList<Move> moves;
+
 			moves = gameManager.getCachedMoves();
 
 			board.setNormalTileColor(moves.get(0).get2DSrc());
 
-			for (i = 0; i < UIData.TOTAL_TILES; i++)
+			for (int i = 0; i < UIData.TOTAL_TILES; i++)
 			{
 				if (e.getSource() == board.getTile(i))
 				{
@@ -167,10 +172,10 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 						if (i == board.getIndex(move.get2DDst()))
 						{
 							//System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
-							gameManager.makeMove(move);
+
 							//System.out.println(Parser.moveToString(move));
 							//System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
-							board.makeMove(move, gameManager.getActiveColorByte());
+							this.makeMove(move);
 							if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
 							{
 								this.handleCheckMate();
@@ -257,6 +262,12 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 
 		int choice = JOptionPane.showOptionDialog(this,"Checkmate! " + winner + " wins!", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,  UIData.BK, options, null);
+	}
+
+	public void makeMove(Move move)
+	{
+		gameManager.makeMove(move);
+		board.makeMove(move, gameManager.getActiveColorByte());
 	}
 
 	public void testAI ()
