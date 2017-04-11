@@ -1,6 +1,8 @@
 package Chess;
 
+import Chess.UI.ConfigurationPanel;
 import Chess.UI.GamePanel;
+import Chess.UI.MainFrame;
 
 /**
  * @author Thomas
@@ -13,6 +15,10 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		GamePanel gamePanel = new GamePanel();
+		//GamePanel gamePanel = new GamePanel();
+		//ConfigurationPanel configurationPanel = new ConfigurationPanel();
+
+
+		MainFrame mainFrame = new MainFrame();
 	}
 }

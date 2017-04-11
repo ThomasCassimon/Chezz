@@ -74,7 +74,7 @@ public class SidePanel extends JPanel
 
 		this.pause.addActionListener(gamePanel);
 		this.undo.addActionListener(gamePanel);
-		this.exit.addActionListener(gamePanel);
+		//this.exit.addActionListener(gamePanel);
 		this.save.addActionListener(gamePanel);
 		this.load.addActionListener(gamePanel);
 		this.moveInput.addActionListener(gamePanel);

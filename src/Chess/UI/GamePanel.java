@@ -20,10 +20,10 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	private Board board;
 	private SidePanel sidePanel;
 
-	public GamePanel()
+	public GamePanel(GameManager gameManager)
 	{
 		 super("Chezz!");
-		 this.gameManager = new GameManager();
+		 this.gameManager = gameManager;
 		 this.gameManager.init();
 		 panel = new JPanel();
 		 board = new Board(this);
@@ -31,7 +31,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 		 panel.setBackground(UIData.BACKGROUND_COLOR);
 
-		 this.setSize(UIData.WINDOW_DIMENSION);
+		 this.setSize(UIData.GAMEPANEL_DIMENSION);
 		 this.setResizable(false);
 		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -39,18 +39,12 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		panel.add(board);
 		panel.add(sidePanel);
 
-		this.add(panel);
+		this.setContentPane(panel);
+		//this.add(panel);
 		this.initBoard();
 
 		this.setResizable(false);
-		this.setVisible(true);
-
-
-		Parser parser = new Parser();
-
-		Piece piece = gameManager.get(4,1);
-		Move move = new Move(ChessBoard.get0x88Index(4,1),ChessBoard.get0x88Index(4,5),0);
-
+		//this.setVisible(true);
 
 	}
 
@@ -268,6 +262,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	{
 		gameManager.makeMove(move);
 		board.makeMove(move, gameManager.getActiveColorByte());
+	}
+
+	public JButton getExit()
+	{
+		return sidePanel.getExit();
 	}
 
 	public void testAI ()
