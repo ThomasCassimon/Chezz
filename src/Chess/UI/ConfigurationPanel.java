@@ -67,7 +67,6 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		if(e.getSource() == load)
 		{
 			//Parser.readFromFile(gameManager,this);
-
 		}
 
 	}

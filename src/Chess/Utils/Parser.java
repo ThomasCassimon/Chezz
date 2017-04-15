@@ -150,7 +150,6 @@ public class Parser
 		{
 			try
 			{
-
 				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fc.getSelectedFile())));
 				String str;
 				while((str =reader.readLine()) != null & str.length() != 0)
