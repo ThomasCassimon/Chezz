@@ -91,7 +91,7 @@ public class GameManager
 		}
 		else
 		{
-			this.players[0] = new AIPlayer (PieceData.WHITE_BYTE);
+			this.players[0] = new AIPlayer (PieceData.WHITE_BYTE, 20);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class GameManager
 		}
 		else
 		{
-			this.players[1] = new AIPlayer (PieceData.BLACK_BYTE);
+			this.players[1] = new AIPlayer (PieceData.BLACK_BYTE, 20);
 		}
 	}
 
@@ -636,23 +636,6 @@ public class GameManager
 		return m;
 	}
 
-	/**
-	 * Returns all possible (non-legal) moves
-	 * @param p The piece for which we wish to generate all possible moves
-	 * @return An ArrayList containing all moves the piece can make (legal or illegal)
-	 */
-	public ArrayList <Move> getMoves (Piece p)
-	{
-		if ((p.getPieceWithoutColorByte() != 0) && (p.getColor() == this.activeColor))
-		{
-			return p.getAllPossibleMoves();
-		}
-		else
-		{
-			return new ArrayList<>();
-		}
-	}
-
 	public boolean isLegalMove(Piece p, Move m)
 	{
 		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceWithoutColorByte()));
@@ -675,6 +658,14 @@ public class GameManager
 		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 		{
 			//System.out.println("[isLegalMove] " + m.toString() + " captures king");
+			return false;
+		}
+
+		GameManager gm = new GameManager(this);
+		gm.makeMove(m);
+
+		if (gm.isCheckMate(color))
+		{
 			return false;
 		}
 
@@ -736,11 +727,40 @@ public class GameManager
 	}
 
 	/**
+	 * Returns all possible (non-legal) moves
+	 * @param p The piece for which we wish to generate all possible moves
+	 * @return An ArrayList containing all moves the piece can make (legal or illegal)
+	 */
+	public ArrayList <Move> getPseudoLegalMoves (Piece p)
+	{
+		ArrayList <Move> moves = p.getAllPossibleMoves();
+
+		for (int i = 0; i < moves.size(); i++)
+		{
+			Move m = moves.get(i);
+
+			if (this.get(m.getDst()).getColor() == p.getColor())
+			{
+				moves.remove(i);
+				i--;
+			}
+			else
+			{
+				moves.set(i, this.setFlags(p.getColor(), m));
+			}
+		}
+
+		Collections.sort(moves);
+
+		return moves;
+	}
+
+	/**
 	 * Makes the specified move
 	 * @param m The move to be made
-	 * @return a String in algebraic notation representing the move that was made
+	 * @return itself after making the move
 	 */
-	public String makeMove (Move m)
+	public GameManager makeMove (Move m)
 	{
 		/*this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getSrc());		// Hash-out the old piece
 
@@ -752,23 +772,23 @@ public class GameManager
 		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getDst());		// Hash-in new piece
 		*/
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
-		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);	// Empty the source square
+		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);    // Empty the source square
 
 		this.moveHistory.add(m);
 
-		String moveString = "";
-
-		if (this.cb.get(m.getDst()) != PieceData.PAWN_BYTE)
-		{
-			moveString += PieceData.toShortFromNum(this.cb.get(m.getDst()) & 0x07);
-		}
-
-		moveString += m.getPrettyDstCoords();
+		int color = this.activeColor;
 
 		this.toggleActivePlayer();
 		GameManager.chronometer.toggle();
 
-		return moveString;
+		if (this.isCheckMate(color))
+		{
+			this.undo();
+
+			return null;
+		}
+
+		return this;
 	}
 
 	/**
@@ -857,24 +877,29 @@ public class GameManager
 			}
 		}
 
-		ArrayList <Move> moves = this.getLegalMoves(king);
-		//System.out.println("#Moves: " + moves.size());
-		boolean allAttacked = true;
-
-		for (int i = 0; i < moves.size(); i++)
+		if (king != null)
 		{
-			if (this.isAttacked(color, moves.get(i).getDst()) == 0)
+			ArrayList<Move> moves = this.getLegalMoves(king);
+			//System.out.println("#Moves: " + moves.size());
+			boolean allAttacked = true;
+
+			for (int i = 0; i < moves.size(); i++)
 			{
-				//System.out.println(moves.get(i).toString() + " setting all attacked to false");
-				allAttacked = false;
-				break;
+				if (this.isAttacked(color, moves.get(i).getDst()) == 0)
+				{
+					//System.out.println(moves.get(i).toString() + " setting all attacked to false");
+					allAttacked = false;
+					break;
+				}
 			}
+
+			boolean kingAttacked = this.isAttacked(color, king.getPositionByte()) > 0;
+			//System.out.println("King attacked: " + Boolean.toString(kingAttacked));
+
+			return allAttacked && kingAttacked;
 		}
 
-		boolean kingAttacked = this.isAttacked(color, king.getPositionByte()) > 0;
-		//System.out.println("King attacked: " + Boolean.toString(kingAttacked));
-
-		return allAttacked && kingAttacked;
+		return true;
 	}
 
 	/**
@@ -923,6 +948,25 @@ public class GameManager
 		return moves;
 	}
 
+	public ArrayList <Move> getAllPseudoLegalMoves (int color)
+	{
+		ArrayList <Piece> pieces = this.getAllPieces(color);
+		ArrayList <Move> pieceMoves = new ArrayList<>(32);
+		ArrayList <Move> moves = new ArrayList<>(8);
+
+		for (Piece p : pieces)
+		{
+			pieceMoves = this.getPseudoLegalMoves(p);
+
+			for (Move m : pieceMoves)
+			{
+				moves.add(m);
+			}
+		}
+
+		return moves;
+	}
+
 	public int isAttacked (int color, int index0x88)
 	{
 		//System.out.println("[isAttacked] color: " + Integer.toHexString(color));
@@ -931,10 +975,15 @@ public class GameManager
 
 		AttackChecker pawnCapture = null;
 		AttackChecker rook = new AttackChecker(Movesets.ROOK_MOVE, PieceData.ROOK_BYTE, color, index0x88, this);
+		rook.setName("RookChecker");
 		AttackChecker knight = new AttackChecker(Movesets.KNIGHT_MOVE, PieceData.KNIGHT_BYTE, color, index0x88, this);
+		knight.setName("KnightChecker");
 		AttackChecker bishop = new AttackChecker(Movesets.BISHOP_MOVE, PieceData.BISHOP_BYTE, color, index0x88, this);
+		bishop.setName("BishopChecker");
 		AttackChecker queen = new AttackChecker(Movesets.QUEEN_MOVE, PieceData.QUEEN_BYTE, color, index0x88, this);
+		queen.setName("QueenChecker");
 		AttackChecker king = new AttackChecker(Movesets.KING_MOVE, PieceData.KING_BYTE, color, index0x88, this);
+		king.setName("KingChecker");
 
 		if (color == PieceData.WHITE_BYTE)
 		{

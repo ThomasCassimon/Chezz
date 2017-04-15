@@ -43,6 +43,7 @@ public class AttackChecker extends Thread
 					if (this.gm.get(tmp).getPieceWithoutColorByte() == this.pieceByte)
 					{
 						Move m;
+
 						if(this.gm.isValidMove(this.pieceByte, this.opponentColor, m = (new Move (tmp, index0x88, 0x0))))
 						{
 							//System.out.println("Color: " + Integer.toHexString(this.opponentColor));

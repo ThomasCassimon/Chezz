@@ -1,7 +1,11 @@
 package Chess.Utils;
 
-import Chess.Game.*;
+import Chess.Game.ChessBoard;
+import Chess.Game.GameManager;
+import Chess.Game.Move;
+import Chess.Game.Piece;
 import Chess.UI.GamePanel;
+
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -134,12 +138,11 @@ public class Parser
 	/**
 	 * Reads moves from a file and the moves are made immediately.
 	 */
-	public static void readFromFile(GameManager gm, JFrame gp)
+	public static void readFromFile(GameManager gm, GamePanel gp)
 	{
 		JFileChooser fc = new JFileChooser();
 		File file;
-		Move move;
-		ArrayList<Move> moves = new ArrayList<>();
+		Move move = new Move();
 
 		int returnValue = fc.showDialog(gp, "Read from...");
 
@@ -153,7 +156,7 @@ public class Parser
 				while((str =reader.readLine()) != null & str.length() != 0)
 				{
 					move = Parser.stringToMove(str, gm);
-					gm.makeMove(move);
+					gp.makeMove(move);
 				}
 			}
 			catch(Exception e)
@@ -161,11 +164,5 @@ public class Parser
 
 			}
 		}
-
-
 	}
-
-
-
-
 }
