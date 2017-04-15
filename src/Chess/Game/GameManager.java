@@ -862,6 +862,7 @@ public class GameManager
 
 			if (m.isCapture())
 			{
+				System.out.println("cap");
 				this.cb.set(m.getDst(), m.getCapturedPiece().getPieceByte());
 			}
 			else

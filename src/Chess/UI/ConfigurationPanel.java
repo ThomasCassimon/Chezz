@@ -58,7 +58,6 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 		this.setContentPane(panel);
 
-
 		this.setResizable(false);
 	}
 
