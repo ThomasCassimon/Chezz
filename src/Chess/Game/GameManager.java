@@ -24,7 +24,7 @@ public class GameManager
 	 * Stores the players, index 0 = White, index 1 = Black
 	 */
 	private Player[] players;
-	private ArrayList <Move> moveHistory;
+	private ArrayList <HistoryMove> moveHistory;
 	private ArrayList <Move> cachedMoves;
 	private int activeColor;
 	private long hash;
@@ -39,7 +39,7 @@ public class GameManager
 		this.activeColor = PieceData.WHITE_BYTE;
 		this.hash = 0;
 		this.players = new Player [2];
-		this.moveHistory = new ArrayList <Move> ();
+		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 
 		GameManager.chronometer.start();
@@ -51,7 +51,7 @@ public class GameManager
 		this.activeColor = gm.activeColor;
 		this.hash = gm.hash;
 		this.players = new Player [2];
-		this.moveHistory = new ArrayList <Move> ();
+		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 
 		for (int i = 0; i < 8; i++)
@@ -62,20 +62,9 @@ public class GameManager
 			}
 		}
 
-		for (int i = 0; i < gm.players.length; i++)
-		{
-			this.players[i] = gm.players[i];
-		}
-
-		for (int i = 0; i < gm.moveHistory.size(); i++)
-		{
-			this.moveHistory.add(gm.moveHistory.get(i));
-		}
-
-		for (int i = 0; i < gm.cachedMoves.size(); i++)
-		{
-			this.cachedMoves.add(gm.cachedMoves.get(i));
-		}
+		System.arraycopy(gm.players, 0, this.players, 0, gm.players.length);
+		this.moveHistory.addAll(gm.moveHistory);
+		this.cachedMoves.addAll(gm.cachedMoves);
 	}
 
 	/**
@@ -771,10 +760,18 @@ public class GameManager
 
 		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getDst());		// Hash-in new piece
 		*/
+
+		if (m.isCapture())
+		{
+			this.moveHistory.add(new HistoryMove(m, this.get(m.getDst())));
+		}
+		else
+		{
+			this.moveHistory.add(new HistoryMove(m));
+		}
+
 		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
 		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);    // Empty the source square
-
-		this.moveHistory.add(m);
 
 		int color = this.activeColor;
 
@@ -792,20 +789,36 @@ public class GameManager
 	}
 
 	/**
+	 * Returns true if there is a move in the history, aka when getLastMove will return a valid move object
+	 * @return
+	 */
+	public boolean hasLastMove ()
+	{
+		return this.moveHistory.size() > 0;
+	}
+
+	/**
 	 * Returns the last move made
 	 * If you wish to undo a move, please use the undo() method
 	 * @return The last move that was made
 	 */
-	public Move getLastMove ()
+	public HistoryMove getLastMove ()
 	{
-		return this.moveHistory.get(this.moveHistory.size() - 1);
+		if (this.hasLastMove())
+		{
+			return this.moveHistory.get(this.moveHistory.size() - 1);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
 	 * Returns the move history
 	 * @return an ArrayList containing all moves (in chronological order)
 	 */
-	public ArrayList<Move> getMoveHistory ()
+	public ArrayList<HistoryMove> getMoveHistory ()
 	{
 		return this.moveHistory;
 	}
@@ -817,11 +830,7 @@ public class GameManager
 	public void setCachedMoves (ArrayList <Move> moves)
 	{
 		this.cachedMoves = new ArrayList<Move>(moves.size());
-
-		for (Move m : moves)
-		{
-			this.cachedMoves.add(m);
-		}
+		this.cachedMoves.addAll(moves);
 	}
 
 	/**
@@ -848,9 +857,17 @@ public class GameManager
 	{
 		if (this.moveHistory.size() > 0)
 		{
-			Move m = this.getLastMove();
+			HistoryMove m = this.getLastMove();
 			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceWithoutColorByte());    // Empty the source square
-			this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+
+			if (m.isCapture())
+			{
+				this.cb.set(m.getDst(), m.getCapturedPiece().getPieceByte());
+			}
+			else
+			{
+				this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+			}
 
 			//this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));		// Making a dummy move which is just the inverse of the last move
 			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the dummy-move from the move history
