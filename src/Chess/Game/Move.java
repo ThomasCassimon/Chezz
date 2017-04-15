@@ -1,6 +1,5 @@
 package Chess.Game;
 
-import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 /**
@@ -78,6 +77,13 @@ public class Move implements Comparable<Move>
 		this.src = ChessBoard.get0x88Index(srcFile, srcRank);
 		this.dst = ChessBoard.get0x88Index(dstFile, dstRank);
 		this.special = special;
+	}
+
+	public Move(Move m)
+	{
+		this.src = m.src;
+		this.dst = m.dst;
+		this.special = m.special;
 	}
 
 	/**

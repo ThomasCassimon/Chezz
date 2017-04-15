@@ -11,11 +11,13 @@ public class HistoryMove extends Move
 
 	public HistoryMove (Move m)
 	{
+		super(m);
 		this.capturedPiece = null;
 	}
 
 	public HistoryMove (Move m, Piece p)
 	{
+		super(m);
 		this.capturedPiece = p;
 	}
 
