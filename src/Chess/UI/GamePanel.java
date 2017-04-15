@@ -1,9 +1,6 @@
 package Chess.UI;
 
-import Chess.Game.GameManager;
-import Chess.Game.Move;
-import Chess.Game.Piece;
-import Chess.Game.PieceData;
+import Chess.Game.*;
 import Chess.Utils.Parser;
 
 import javax.swing.*;
@@ -98,17 +95,20 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 		else if (e.getSource() == sidePanel.getUndo())                                                //UNDO
 		{
-			Move move = gameManager.getLastMove();
-			if(move.isCapture())
+			if(gameManager.hasLastMove())
 			{
 
-			}
-			else
-			{
-				move = new Move(move.getDst(), move.getSrc(), 0);
-				board.makeMove(move, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+				HistoryMove historyMove = gameManager.getLastMove();
+				historyMove = new HistoryMove(new Move(historyMove.getDst(), historyMove.getSrc(), 0),historyMove.getCapturedPiece());
+				board.makeMove(historyMove, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
 
 				gameManager.undo();
+
+				if (historyMove.isCapture())
+				{
+					board.setPiece(historyMove.getCapturedPiece());
+				}
+
 			}
 
 		}

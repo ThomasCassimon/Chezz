@@ -1,9 +1,6 @@
 package Chess.Utils;
 
-import Chess.Game.ChessBoard;
-import Chess.Game.GameManager;
-import Chess.Game.Move;
-import Chess.Game.Piece;
+import Chess.Game.*;
 import Chess.UI.GamePanel;
 
 import javax.swing.*;
@@ -101,7 +98,7 @@ public class Parser
 	 * Saves the history of the game to a file.
 	 * @param history History of the Moves in the game.
 	 */
-	public static void saveToFile(ArrayList<Move> history, GamePanel gp)
+	public static void saveToFile(ArrayList<HistoryMove> history, GamePanel gp)
 	{
 		JFileChooser fc = new JFileChooser();
 		File file;
@@ -138,7 +135,7 @@ public class Parser
 	/**
 	 * Reads moves from a file and the moves are made immediately.
 	 */
-	public static void readFromFile(GameManager gm, GamePanel gp)
+	public static void readFromFile(GameManager gm, JFrame gp)
 	{
 		JFileChooser fc = new JFileChooser();
 		File file;
@@ -155,7 +152,7 @@ public class Parser
 				while((str =reader.readLine()) != null & str.length() != 0)
 				{
 					move = Parser.stringToMove(str, gm);
-					gp.makeMove(move);
+					gm.makeMove(move);
 				}
 			}
 			catch(Exception e)
