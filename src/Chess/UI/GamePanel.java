@@ -1,7 +1,9 @@
 package Chess.UI;
 
-import Chess.Athena.AIPlayer;
-import Chess.Game.*;
+import Chess.Game.GameManager;
+import Chess.Game.Move;
+import Chess.Game.Piece;
+import Chess.Game.PieceData;
 import Chess.Utils.Parser;
 
 import javax.swing.*;
@@ -292,17 +294,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	public JButton getExit()
 	{
 		return sidePanel.getExit();
-	}
-
-	public void testAI ()
-	{
-		//this.gameManager.isCheckMate(this.gameManager.getActiveColorByte());
-		AIPlayer aip = new AIPlayer(PieceData.WHITE_BYTE);
-		long start = System.nanoTime();
-		Move m = aip.playTurn(this.gameManager, 5);
-		long end = System.nanoTime();
-		System.out.println("[AITest] Making move: " + m.toString());
-		System.out.println("Took " + Long.toString((end - start) / 1000000) + "ms");
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package Chess.Athena;
 
 import Chess.Game.*;
+import Chess.Utils.Telemetry;
 
 import java.util.ArrayList;
 
 import static Chess.Game.PieceData.*;
 import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 
 /**
  * @author Thomas
@@ -17,10 +19,16 @@ import static java.lang.Integer.max;
 public class AIPlayer extends Player
 {
 	private static final int inf = Integer.MAX_VALUE;
+	private static final int NullMoveReduction = 2;
+	private int maxSearchDepth;
+	private int maxNullSearchDepth;
 
-	public AIPlayer(int colorByte)
+	public AIPlayer(int colorByte, int maxSearchDepth)
 	{
 		super(colorByte);
+
+		this.maxSearchDepth = maxSearchDepth;
+		this.maxNullSearchDepth = maxSearchDepth;
 	}
 
 	/**
@@ -93,102 +101,192 @@ public class AIPlayer extends Player
 	 * Makes the AI play it's turn
 	 * @return The chosen move
 	 */
-	public Move playTurn(GameManager gm, int searchDepth)
+	public Move playTurn(GameManager gm)
 	{
+		Telemetry.start();
+
 		int score = 0;
 		int maxScore = -inf;
 		int maxIndex = -1;
 
-		ArrayList<Move> moves = new ArrayList<>();
-
-		for (Piece p : gm.getAllPieces(this.colorByte))
-		{
-			moves.addAll(gm.getLegalMoves(p));
-		}
-
-		//System.out.println("Found " + Integer.toString(moves.size()) + " pieces");
+		ArrayList<Move> moves = gm.getAllPseudoLegalMoves(this.colorByte);
 
 		for (int i = 0; i < moves.size(); i++)
 		{
+			Telemetry.searchedNode(0);
 			Move m = moves.get(i);
 
 			GameManager gm_alt = new GameManager(gm);
 			gm_alt.makeMove(m);
 
-			score = negaScout(gm_alt, searchDepth, -inf, inf, this.colorByte);
+			score = alphaBeta(gm_alt, maxSearchDepth, -inf, inf, true, true);
 
-			if (score > maxScore)
+			if (gm.isValidMove(gm.get(m.getSrc()).getPieceWithoutColorByte(), gm.getActiveColorByte(), m))
 			{
-				maxScore = score;
-				maxIndex = i;
+				if (score > maxScore)
+				{
+					maxScore = score;
+					maxIndex = i;
+				}
 			}
 		}
 
 		if (maxIndex >= 0)
 		{
+			Telemetry.stop();
 			return moves.get(maxIndex);
 		}
 		else
 		{
+			Telemetry.stop();
 			return new Move();
 		}
 	}
 
-	private static int negaScout(GameManager gm, int depth, int alpha, int beta, int color)
+	private int alphaBeta (GameManager gm, int depth, int alpha, int beta, Boolean maximizing, Boolean allowNull)
 	{
-		if (gm.isCheckMate(color) || depth == 0)
+		int color = gm.getActiveColorByte();
+		Telemetry.searchedNode(depth);
+		System.out.println("Alpha: " + alpha + " beta: " + beta + " maximizing: " + maximizing);
+
+		if ((depth == 0) || gm.isCheckMate(color))
 		{
-			//System.out.println("checkmate: " + gm.isCheckMate(color));
-			/*
-			TableRecord tr = null;
-			if ((tr = TranspositionTable.getInstance().get(gm.getHash())) != null)
-			{
-				System.out.println("Table hit");
-				return tr.getScore();
-			}
-			else
-			{*/
-				int score = AIPlayer.scoreGame(gm, color);
-				//tr = new TableRecord(score, depth, gm.getAllLegalMoves(color));
-				//TranspositionTable.getInstance().put(gm.getHash(), tr);
-				return score;
-			//}
+			return AIPlayer.scoreGame(gm, color);
 		}
-		else
+
+		if (maximizing)
 		{
-			int score = 0;
-			ArrayList <Move> opponentMoves = gm.getAllLegalMoves(PieceData.getOpponentColor(color));
+			int v = -inf;
 
-			for (int i = 0; i < opponentMoves.size(); i++)
+			/* NULL MOVE PRUNING
+			if (allowNull)
 			{
-				Move m = opponentMoves.get(i);
-
-				GameManager gm_alt = new GameManager(gm);
-				gm_alt.makeMove(m);
-
-				if (i != 0)
+				if (!gm.isCheckMate(color))
 				{
-					score = -negaScout(gm_alt, depth - 1, -alpha-1, -alpha, PieceData.getOpponentColor(color));
+					gm.toggleActivePlayer();
+					GameManager.chronometer.toggle();
 
-					if ((alpha < score) && (score < beta))
+					v = max(v, this.alphaBeta(gm, depth - 1 - AIPlayer.NullMoveReduction, alpha, beta, false, false));
+					alpha =
+
+					gm.toggleActivePlayer();
+					GameManager.chronometer.toggle();
+
+					if (beta <= v)
 					{
-						score = -negaScout(gm_alt, depth - 1, -beta, -score, PieceData.getOpponentColor(color));
+						return v;
 					}
 				}
-				else
-				{
-					score = -negaScout(gm_alt, depth-1, -beta, -alpha, PieceData.getOpponentColor(color));
-				}
+			}
+			// END NULL MOVE PRUNING
+			*/
 
-				alpha = max(alpha, score);
+			ArrayList <Move> moves = gm.getAllPseudoLegalMoves(color);
 
-				if (alpha >= beta)
+			for (Move m : moves)
+			{
+				GameManager alt = new GameManager(gm);
+				alt.makeMove(m);
+
+				v = max(v, this.alphaBeta(alt, depth - 1, alpha, beta, false, true));
+				alpha = max(v, alpha);
+
+				if (beta <= alpha)
 				{
 					break;
 				}
 			}
 
-			return alpha;
+			return v;
+
+		}
+		else
+		{
+			int v = inf;
+
+			/* NULL MOVE PRUNING
+			if (allowNull)
+			{
+				if (!gm.isCheckMate(color))
+				{
+					gm.toggleActivePlayer();
+					GameManager.chronometer.toggle();
+
+					v = this.alphaBeta(gm, depth - 1 - AIPlayer.NullMoveReduction, alpha, beta, true, false);
+
+					gm.toggleActivePlayer();
+					GameManager.chronometer.toggle();
+
+					if (beta <= v)
+					{
+						return v;
+					}
+				}
+			}
+			// END NULL MOVE PRUNING
+			*/
+
+			ArrayList <Move> moves = gm.getAllPseudoLegalMoves(color);
+
+			for (Move m : moves)
+			{
+				GameManager alt = new GameManager(gm);
+				alt.makeMove(m);
+
+				v = min(v, this.alphaBeta(alt, depth - 1, alpha, beta, true, true));
+				beta = min(v, beta);
+
+				if (beta <= alpha)
+				{
+					break;
+				}
+			}
+
+			return v;
 		}
 	}
+	/*
+	private static int negaScout(GameManager gm, int depth, int alpha, int beta, int color)
+	{
+		if (depth == 0 || gm.isCheckMate(color))
+		{
+			// Do Quiescence search here
+			return AIPlayer.scoreGame(gm, color);
+		}
+
+		System.out.println("Entered NegaScout: depth: " + depth + " alpha: " + alpha + " beta: " + beta);
+
+		int d = depth - 1;
+
+		ArrayList <Move> moves = gm.getAllPseudoLegalMoves(color);
+
+		int opponent_color =PieceData.getOpponentColor(color);
+
+		int b = beta;
+
+		for (int i = 0; i < moves.size(); i++)
+		{
+			GameManager alt = gm.makeMove(moves.get(i));
+
+			int score = -negaScout(alt, d, -b, -alpha, opponent_color);
+
+			if ((alpha < score) && (score < beta) && (1 < i))
+			{
+				// Re-search
+				score = -negaScout(alt, d, -beta,-alpha, opponent_color);
+			}
+
+			alpha = max(alpha, score);
+
+			if (alpha >= beta)
+			{
+				return alpha;
+			}
+
+			b = alpha + 1;
+		}
+
+		return alpha;
+	}
+	*/
 }
