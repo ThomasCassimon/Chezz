@@ -24,7 +24,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	{
 		 super("Chezz!");
 		 this.gameManager = gameManager;
-		 this.gameManager.init();
+		 //this.gameManager.init();
 		 panel = new JPanel();
 		 board = new Board(this);
 		 sidePanel = new SidePanel(this);
@@ -67,6 +67,15 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			board.setPiece(piece);
 		}
 
+		if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+		{
+			board.setBoardWhite();
+		}
+		else
+		{
+			board.setBoardBlack();
+		}
+
 		//this.testAI();
 	}
 
@@ -88,10 +97,17 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == sidePanel.getUndo())                                                //UNDO
 		{
 			Move move = gameManager.getLastMove();
-			move = new Move(move.getDst(), move.getSrc(), 0);
-			board.makeMove(move, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+			if(move.isCapture())
+			{
 
-			gameManager.undo();
+			}
+			else
+			{
+				move = new Move(move.getDst(), move.getSrc(), 0);
+				board.makeMove(move, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+
+				gameManager.undo();
+			}
 
 		}
 		else if (e.getSource() == sidePanel.getSave())                                                //SAVE
@@ -115,11 +131,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				sidePanel.setMoveInput("Invalid Move");
 			}
 		}
-		else if (e.getSource() == sidePanel.getLoad())												//LOAD
-		{
-			Parser.readFromFile(gameManager, this);
+		//else if (e.getSource() == sidePanel.getLoad())												//LOAD
+		//{
+			//Parser.readFromFile(gameManager, this);
 
-		}
+		//}
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
 			int[] indexArr;
@@ -262,6 +278,15 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	{
 		gameManager.makeMove(move);
 		board.makeMove(move, gameManager.getActiveColorByte());
+
+		String history = "";
+
+		for(Move move_history : gameManager.getMoveHistory())
+		{
+			history += Parser.moveToString(move_history) + "\n";
+		}
+
+		sidePanel.setHistory(history);
 	}
 
 	public JButton getExit()

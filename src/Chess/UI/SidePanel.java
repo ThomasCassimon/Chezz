@@ -11,7 +11,7 @@ public class SidePanel extends JPanel
 	private JButton undo;
 	private JButton save;
 	private JButton exit;
-	private JButton load;
+	//private JButton load;
 
 	private TimePanel timePanel;
 
@@ -37,7 +37,7 @@ public class SidePanel extends JPanel
 		//save.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		this.exit = new JButton("Exit");
 		//exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
-		this.load = new JButton("Load");
+		//this.load = new JButton("Load");
 
 
 		this.timePanel = new TimePanel();
@@ -52,7 +52,7 @@ public class SidePanel extends JPanel
 		this.leftPanel.add(undo);
 		this.leftPanel.add(save);
 		this.leftPanel.add(exit);
-		this.leftPanel.add(load);
+		//this.leftPanel.add(load);
 
 
 
@@ -74,9 +74,8 @@ public class SidePanel extends JPanel
 
 		this.pause.addActionListener(gamePanel);
 		this.undo.addActionListener(gamePanel);
-		//this.exit.addActionListener(gamePanel);
 		this.save.addActionListener(gamePanel);
-		this.load.addActionListener(gamePanel);
+		//this.load.addActionListener(gamePanel);
 		this.moveInput.addActionListener(gamePanel);
 		this.moveInput.addMouseListener(gamePanel);
 
@@ -99,7 +98,7 @@ public class SidePanel extends JPanel
 
 	/**
 	 * returns JButton undo
-	 * @return unod
+	 * @return undo
 	 */
 	public JButton getUndo()
 	{
@@ -116,9 +115,9 @@ public class SidePanel extends JPanel
 		return exit;
 	}
 
-	public JButton getLoad()
+	//public JButton getLoad()
 	{
-		return load;
+		//return load;
 	}
 
 	public JTextField getMoveInput()
@@ -129,6 +128,11 @@ public class SidePanel extends JPanel
 	public void setMoveInput(String text)
 	{
 		moveInput.setText(text);
+	}
+
+	public void setHistory(String history)
+	{
+		this.history.setText("History: \n" + history);
 	}
 
 }

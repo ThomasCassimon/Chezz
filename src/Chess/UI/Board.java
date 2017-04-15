@@ -40,7 +40,7 @@ public class Board extends JPanel
 			tiles[i].addActionListener(gamePanel);
 		}
 
-		this.setBoardWhite();
+		//this.setBoardWhite();
 	}
 
 

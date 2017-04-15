@@ -6,9 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Created by Astrid on 07/04/2017.
- */
+
 public class MainFrame implements ActionListener
 {
 	private GamePanel gamePanel;
@@ -19,6 +17,7 @@ public class MainFrame implements ActionListener
 	public MainFrame()
 	{
 		gameManager = new GameManager();
+		gameManager.init();
 		configurationPanel = new ConfigurationPanel(gameManager);
 		gamePanel = new GamePanel(gameManager);
 
@@ -34,6 +33,7 @@ public class MainFrame implements ActionListener
 		if(e.getSource() == configurationPanel.getStart())
 		{
 			configurationPanel.setVisible(false);
+			gamePanel = new GamePanel(gameManager);
 			gamePanel.setVisible(true);
 		}
 		else if(e.getSource() == gamePanel.getExit())
@@ -45,7 +45,9 @@ public class MainFrame implements ActionListener
 			{
 				configurationPanel.setVisible(true);
 				gamePanel.setVisible(false);
+				gameManager = new GameManager();
 			}
 		}
+		System.out.println("not start or exit");
 	}
 }
