@@ -1,7 +1,6 @@
 package Chess.UI;
 
 import Chess.Game.GameManager;
-import Chess.Utils.Parser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +66,7 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 	{
 		if(e.getSource() == load)
 		{
-			Parser.readFromFile(gameManager,this);
+			//Parser.readFromFile(gameManager,this);
 
 		}
 

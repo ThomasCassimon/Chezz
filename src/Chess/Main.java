@@ -4,11 +4,8 @@ import Chess.Athena.AIPlayer;
 import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.PieceData;
+import Chess.UI.MainFrame;
 import Chess.Utils.Telemetry;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * @author Thomas
@@ -21,6 +18,7 @@ public class Main
 {
 	public static void main (String[] args)
 	{
+		/*
 		System.out.println("Press ENTER to begin");
 		try
 		{
@@ -35,6 +33,9 @@ public class Main
 		Main.testAI();
 
 		System.exit(0);
+		*/
+
+		MainFrame mf = new MainFrame();
 	}
 
 	public static void testAI ()

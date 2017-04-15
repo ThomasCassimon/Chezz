@@ -792,13 +792,29 @@ public class GameManager
 	}
 
 	/**
+	 * Returns true if there is a move in the history, aka when getLastMove will return a valid move object
+	 * @return
+	 */
+	public boolean hasLastMove ()
+	{
+		return this.moveHistory.size() > 0;
+	}
+
+	/**
 	 * Returns the last move made
 	 * If you wish to undo a move, please use the undo() method
 	 * @return The last move that was made
 	 */
 	public Move getLastMove ()
 	{
-		return this.moveHistory.get(this.moveHistory.size() - 1);
+		if (this.hasLastMove())
+		{
+			return this.moveHistory.get(this.moveHistory.size() - 1);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
