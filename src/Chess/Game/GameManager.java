@@ -802,7 +802,7 @@ public class GameManager
 	 * If you wish to undo a move, please use the undo() method
 	 * @return The last move that was made
 	 */
-	public Move getLastMove ()
+	public HistoryMove getLastMove ()
 	{
 		if (this.hasLastMove())
 		{
@@ -857,9 +857,17 @@ public class GameManager
 	{
 		if (this.moveHistory.size() > 0)
 		{
-			Move m = this.getLastMove();
+			HistoryMove m = this.getLastMove();
 			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceWithoutColorByte());    // Empty the source square
-			this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+
+			if (m.isCapture())
+			{
+				this.cb.set(m.getDst(), m.getCapturedPiece().getPieceByte());
+			}
+			else
+			{
+				this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+			}
 
 			//this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));		// Making a dummy move which is just the inverse of the last move
 			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the dummy-move from the move history

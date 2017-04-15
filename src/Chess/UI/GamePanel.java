@@ -115,7 +115,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == sidePanel.getSave())                                                //SAVE
 		{
 			System.out.println("Save");
-			Parser.saveToFile(gameManager.getMoveHistory(), this);
+			//Parser.saveToFile(gameManager.getMoveHistory(), this);
 		}
 		else if (e.getSource() == sidePanel.getMoveInput())
 		{
