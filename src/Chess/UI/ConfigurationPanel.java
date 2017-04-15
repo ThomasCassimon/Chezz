@@ -1,14 +1,18 @@
 package Chess.UI;
 
 import Chess.Game.GameManager;
+import Chess.Utils.Parser;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class ConfigurationPanel extends JFrame implements ActionListener
 {
+	private JLabel logo;
+	private JLabel title;
 	private JButton load;
 	private JButton start;
 	private JCheckBox undo;
@@ -25,7 +29,11 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 		JPanel panel = new JPanel();
 
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+		this.logo = new JLabel("");
+		this.logo.setIcon(UIData.BK);
+		this.title = new JLabel("Chezz!");
 		this.load = new JButton("Load game");
 		this.start = new JButton("Start the game");
 
@@ -35,22 +43,33 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 
 		this.load.addActionListener(this);
-		//this.start.addActionListener(mainFrame);
 
-
+		panel.add(title);
+		title.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		title.setFont(title.getFont().deriveFont(UIData.TITLE_FONT_SIZE));
+		panel.add(UIData.SPACING);
+		panel.add(logo);
+		logo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(load);
+		load.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.add(UIData.SPACING);
 		panel.add(start);
+		start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		this.setContentPane(panel);
 
 
 		this.setResizable(false);
-		//this.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		if(e.getSource() == load)
+		{
+			Parser.readFromFile(gameManager,this);
+
+		}
 
 	}
 
