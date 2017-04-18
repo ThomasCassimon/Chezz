@@ -103,13 +103,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				board.makeMove(historyMove, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
 
 				System.out.println("PRE-UNDO");
-				System.out.println(this.gameManager.get(historyMove.getSrc()).toLongString());
-				System.out.println(this.gameManager.get(historyMove.getDst()).toLongString());
+				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getSrc()).getPieceByte()));
+				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getDst()).getPieceByte()));
 				gameManager.undo();
 
 				System.out.println("POST-UNDO");
-				System.out.println(this.gameManager.get(historyMove.getSrc()).toLongString());
-				System.out.println(this.gameManager.get(historyMove.getDst()).toLongString());
+				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getSrc()).getPieceByte()));
+				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getDst()).getPieceByte()));
 
 				if (historyMove.isCapture())
 				{
