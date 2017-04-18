@@ -862,7 +862,6 @@ public class GameManager
 
 			if (m.isCapture())
 			{
-				System.out.println("cap");
 				this.cb.set(m.getDst(), m.getCapturedPiece().getPieceByte());
 			}
 			else
@@ -871,8 +870,10 @@ public class GameManager
 			}
 
 			//this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));		// Making a dummy move which is just the inverse of the last move
-			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the dummy-move from the move history
+			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the last from the move history
 			this.toggleActivePlayer();
+
+			System.out.println("Moves in history: " + this.moveHistory.size());
 		}
 	}
 
