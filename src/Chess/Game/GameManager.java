@@ -365,13 +365,19 @@ public class GameManager
 	 */
 	public boolean isValidPawnMove(int color, Move m)
 	{
+		//System.out.println("Checking: " + m.toString());
+		//System.out.println("Src: " + this.get(m.getSrc()).getPieceByte());
+		//System.out.println("Dst: " + this.get(m.getDst()).getPieceByte());
+
 		int initRank = 1;
+		int colorMult = 1;
 		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
 		int deltaFile = abs((m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK));
 
 		if (color == PieceData.BLACK_BYTE)
 		{
 			initRank = 6;
+			colorMult = -1;
 		}
 
 		if (m.isCapture())
@@ -398,9 +404,9 @@ public class GameManager
 				return false;
 			}
 
-			if ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
+			if ((this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (1 * colorMult))).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
 			{
-				//System.out.println("Piece in the way of double move");
+				//System.out.println("Piece in the way of double move: " + this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (1 * colorMult)));
 				return false;
 			}
 		}
@@ -415,6 +421,7 @@ public class GameManager
 			}
 		}
 
+		//System.out.println("valid");
 		return true;
 	}
 
@@ -872,8 +879,6 @@ public class GameManager
 			//this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));		// Making a dummy move which is just the inverse of the last move
 			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the last from the move history
 			this.toggleActivePlayer();
-
-			System.out.println("Moves in history: " + this.moveHistory.size());
 		}
 	}
 
