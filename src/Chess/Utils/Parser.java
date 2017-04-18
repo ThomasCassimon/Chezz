@@ -50,19 +50,19 @@ public class Parser
 			file = chars[0]-'a';
 			rank = chars[1] - '1';
 			source = ChessBoard.get0x88Index(file,rank);
-			System.out.println("Source: File: " + file + " Rank: " + rank);
+			//System.out.println("Source: File: " + file + " Rank: " + rank);
 
 
 			file = chars[3] - 'a';
 			rank = chars[4] - '1';
 			destination = ChessBoard.get0x88Index(file, rank);
-			System.out.println("Destination: File: " + file + " Rank: " + rank);
+			//System.out.println("Destination: File: " + file + " Rank: " + rank);
 
 			move = new Move(source, destination,0);
 			move = gm.setFlags(gm.getActiveColorByte(), move);
 
 			piece = gm.get(source);
-			System.out.println("Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+			//System.out.println("Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
 			if(gm.getLegalMoves(piece).contains(move))
 			{
 				return move;
