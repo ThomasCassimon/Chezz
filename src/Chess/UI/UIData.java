@@ -21,7 +21,7 @@ public final class UIData
 	public static final Dimension HISTORY_DIMENSION = new Dimension(200,750);
 
 	//SPACING
-	public static final Component SPACING = Box.createRigidArea(new Dimension(0,20));
+	public static final Dimension SPACING = new Dimension(20,20);
 
 
 	//CHESS PIECES

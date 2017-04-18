@@ -111,6 +111,11 @@ public class Board extends JPanel
 			}
 
 		}
+		else
+		{
+			tiles[index].setIcon(null);
+		}
+
 
 	}
 
@@ -456,5 +461,17 @@ public class Board extends JPanel
 		this.repaint();
 
 
+	}
+
+	public void update(int color)
+	{
+		if(color == PieceData.WHITE_BYTE)
+		{
+			this.setBoardWhite();
+		}
+		else
+		{
+			this.setBoardBlack();
+		}
 	}
 }
