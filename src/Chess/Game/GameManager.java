@@ -858,7 +858,7 @@ public class GameManager
 		if (this.moveHistory.size() > 0)
 		{
 			HistoryMove m = this.getLastMove();
-			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceWithoutColorByte());    // Empty the source square
+			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceByte());    // Empty the source square
 
 			if (m.isCapture())
 			{
