@@ -21,29 +21,30 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public GamePanel(GameManager gameManager)
 	{
-		 super("Chezz!");
-		 this.gameManager = gameManager;
-		 //this.gameManager.init();
-		 panel = new JPanel();
-		 board = new Board(this);
-		 sidePanel = new SidePanel(this);
+		super("Chezz!");
+		this.gameManager = gameManager;
 
-		 panel.setBackground(UIData.BACKGROUND_COLOR);
+		//
+		panel = new JPanel();
+		board = new Board(this);
+		sidePanel = new SidePanel(this);
 
-		 this.setSize(UIData.GAMEPANEL_DIMENSION);
-		 this.setResizable(false);
-		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		panel.setBackground(UIData.BACKGROUND_COLOR);
+		this.setSize(UIData.GAMEPANEL_DIMENSION);
+
+
+		this.setResizable(false);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
 		panel.add(board);
 		panel.add(sidePanel);
 
 		this.setContentPane(panel);
-		//this.add(panel);
 		this.initBoard();
 
 		this.setResizable(false);
-		//this.setVisible(true);
 
 	}
 
@@ -74,8 +75,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			board.setBoardBlack();
 		}
-
-		//this.testAI();
 	}
 
 
@@ -101,8 +100,8 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				HistoryMove historyMove = gameManager.getLastMove();
 				gameManager.undo();
 
-				update(historyMove.getSrc());
-				update(historyMove.getDst());
+				board.setPiece(gameManager.get(historyMove.getSrc()));
+				board.setPiece(gameManager.get(historyMove.getDst()));
 
 
 				board.update(gameManager.getActiveColorByte());
@@ -178,10 +177,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
-							//System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
-
-							//System.out.println(Parser.moveToString(move));
-							//System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
 							this.makeMove(move);
 							if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
 							{
@@ -295,13 +290,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		return sidePanel.getExit();
 	}
 
-	public void update(int index)
-	{
-		board.setPiece(gameManager.get(index));
-		System.out.println("Color: " + gameManager.get(index).getColor());
-		System.out.println("Piece: " + gameManager.get(index).getPieceWithoutColorByte());
-
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent e)

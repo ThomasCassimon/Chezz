@@ -2,10 +2,8 @@ package Chess.UI;
 
 import Chess.Game.GameManager;
 import Chess.Time.Chronometer;
-import Chess.Time.TimerTick;
 
 import javax.swing.*;
-import java.awt.*;
 
 
 public class TimePanel extends JPanel
@@ -30,7 +28,7 @@ public class TimePanel extends JPanel
 
 		this.labelWhite.setIcon(UIData.WK);
 		this.labelBlack.setIcon(UIData.BK);
-		this.text.setBackground(UIData.BACKGROUND);
+		this.text.setBackground(UIData.BACKGROUND_COLOR);
 
 		this.timeWhite = this.chronometer.getDisplayWhite();
 		this.timeBlack = this.chronometer.getDisplayBlack();
