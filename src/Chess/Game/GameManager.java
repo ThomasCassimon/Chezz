@@ -381,7 +381,7 @@ public class GameManager
 	 * @param m The move a pawn wishes to make
 	 * @return True if and oly if the move is a valid pawn-type move, otherwise false
 	 */
-	public boolean isValidPawnMove(int color, Move m)
+	public boolean isValidPawnMove (int color, Move m)
 	{
 		//System.out.println("Checking: " + m.toString());
 		//System.out.println("Src: " + this.get(m.getSrc()).getPieceByte());
@@ -398,11 +398,14 @@ public class GameManager
 			colorMult = -1;
 		}
 
+		System.out.println("");
+
 		if (m.isCapture())
 		{
 			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
 			{
-				//System.out.println(m.toString() + " does not end on opponent's square");
+				System.out.println("Dst Color: " + Integer.toBinaryString(this.get(m.get2DDst()).getColor()));
+				System.out.println(m.toString() + " does not end on opponent's square");
 				return false;
 			}
 		}
@@ -435,6 +438,11 @@ public class GameManager
 			if (this.get(m.get2DDst()).getColor() == color)
 			{
 				//System.out.println(m.toString() + " is trying to capture own color");
+				return false;
+			}
+			else if (this.get(m.get2DDst()).getPieceWithoutColorByte() == PieceData.EMPTY_BYTE)
+			{
+				//System.out.println("Trying to capture empty sqaure");
 				return false;
 			}
 		}
@@ -836,7 +844,8 @@ public class GameManager
 		{
 
 		}
-		else*/ if ((p.getPieceWithoutColorByte() != 0) && (color == this.activeColor))
+		else*/
+		if ((p.getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) && (color == this.activeColor))
 		{
 			//System.out.println("NEW");
 			//int piece = p.getPieceWithoutColorByte();
