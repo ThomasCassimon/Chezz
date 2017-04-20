@@ -574,9 +574,17 @@ public class GameManager
 	 */
 	public boolean isCapture (int color, Move m)
 	{
+		//System.out.println("[isCapture] Color: " + Integer.toBinaryString(color) + " Move: " + m.toString());
 		if (this.get(m.get2DSrc()).getPieceWithoutColorByte() != PieceData.PAWN_BYTE)
 		{
 			return this.get(m.get2DDst()).getColor() == PieceData.getOpponentColor(color);
+		}
+		else if (this.get(m.get2DSrc()).getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+		{
+			if (m.get2DSrc()[0] != m.get2DDst()[0])
+			{
+				return this.get(m.get2DDst()).getColor() == PieceData.getOpponentColor(color);
+			}
 		}
 
 		return false;
@@ -622,6 +630,7 @@ public class GameManager
 	 */
 	public Move setFlags (int color, Move m)
 	{
+		//System.out.println("[setFlags] Color: " + Integer.toBinaryString(color) + " Move: " + m.toString());
 		int initRank = 1;
 		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
 		Piece p = this.get(m.getSrc());

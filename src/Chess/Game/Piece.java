@@ -146,7 +146,7 @@ public class Piece
 					{
 						if (((this.positionByte + Movesets.PAWN_CAPTURE_WHITE[i]) & 0x88) == 0)
 						{
-							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_WHITE[i]),  Move.CAPTURE_MASK));
+							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_WHITE[i]),  0x0));
 						}
 					}
 				}
@@ -166,7 +166,7 @@ public class Piece
 					{
 						if (((this.positionByte + Movesets.PAWN_CAPTURE_BLACK[i]) & 0x88) == 0)
 						{
-							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_BLACK[i]),  Move.CAPTURE_MASK));
+							moves.add(new Move (this.positionByte,  (this.positionByte + Movesets.PAWN_CAPTURE_BLACK[i]),  0x0));
 						}
 					}
 				}

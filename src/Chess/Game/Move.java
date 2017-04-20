@@ -262,7 +262,7 @@ public class Move implements Comparable<Move>
 	public String getPrettySrcCoords ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.src);
-		return ((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1);
+		return Character.toString((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1);
 	}
 
 	public String getPrettyDstCoords ()

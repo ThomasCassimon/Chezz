@@ -1,7 +1,6 @@
 package Chess.Utils;
 
 import Chess.Game.*;
-import Chess.Time.Chronometer;
 import Chess.UI.GamePanel;
 
 import javax.swing.*;
@@ -35,10 +34,12 @@ public class Parser
 		//System.out.println("Parsing move: " + string);
 		if(string == "o-o-o")
 		{
+			//System.out.println("Q-castle");
 			//QUEEN SIDE CASTLING
 		}
 		else if(string == "o-o")
 		{
+			//System.out.println("K-castle");
 			//KING SIDE CASTLING
 		}
 		else if(string.length() != 5)
@@ -47,24 +48,25 @@ public class Parser
 		}
 		else
 		{
-
-			file = chars[0]-'a';
+			//System.out.println("Entered parsing branch");
+			file = chars[0] - 'a';
 			rank = chars[1] - '1';
 			source = ChessBoard.get0x88Index(file,rank);
-			//System.out.println("Source: File: " + file + " Rank: " + rank);
+			//System.out.println("[PARSER] Source: File: " + file + " Rank: " + rank);
 
 
 			file = chars[3] - 'a';
 			rank = chars[4] - '1';
 			destination = ChessBoard.get0x88Index(file, rank);
-			//System.out.println("Destination: File: " + file + " Rank: " + rank);
+			//System.out.println("[PARSER] Destination: File: " + file + " Rank: " + rank);
 
 			move = new Move(source, destination,0);
 			move = gm.setFlags(gm.getActiveColorByte(), move);
 
 			piece = gm.get(source);
-			//System.out.println("Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
-			if(gm.getLegalMoves(piece).contains(move))
+			//System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+
+			if(gm.isLegalMove(gm.get(move.getSrc()), move))
 			{
 				return move;
 			}
