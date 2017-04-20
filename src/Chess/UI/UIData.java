@@ -19,9 +19,10 @@ public final class UIData
 	public static final Dimension GAMEPANEL_DIMENSION = new Dimension(1400,850);
 	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(300,500);
 	public static final Dimension HISTORY_DIMENSION = new Dimension(200,750);
+	public static final Dimension CONFIGURATIONPANEL_TEXTBOX = new Dimension(300,1);
 
 	//SPACING
-	public static final Component SPACING = Box.createRigidArea(new Dimension(0,20));
+	public static final Dimension SPACING = new Dimension(20,20);
 
 
 	//CHESS PIECES
@@ -45,20 +46,18 @@ public final class UIData
 	public static final ImageIcon BR = new ImageIcon(GamePanel.class.getResource("Chess_Pieces/Default/RB.png"));
 
 	//COLORS
-	public static final Color BROWN = new Color(140,70,20); 	//Saddlebrown (RGB 139,69,19)
-	public static final Color LIGHT_BROWN = new Color(210,180,140); 	//Tan (RGB 210,180,140)
-	public static final Color BACKGROUND = Color.WHITE;
-	public static final Color FRAME_COLOR = new Color (145,75,25);
-	public static final Color BACKGROUND_COLOR = Color.WHITE;
-	public static final Color TEXT_BACKGROUND_COLOR = Color.WHITE;
+	public static final Color BROWN = new Color(88,39,7); 	//Saddlebrown (RGB 139,69,19)
+	public static final Color LIGHT_BROWN = new Color(220,204,163); 	//Tan (RGB 210,180,140)
+	public static final Color BACKGROUND_COLOR = new Color(247,249,249) ; 	//Tan (RGB 210,180,140)
+	public static final Color FRAME_COLOR =new Color(98,49,17); ;
+	public static final Color TEXT_BACKGROUND_COLOR = BACKGROUND_COLOR;
 	public static final Color BORDER_COLOR = Color.BLACK;
-	public static final Color HIGHLIGHT = Color.GREEN;
-	//public static final Color HIGHLIGHT = new Color (0,255,0,127);
-	public static final Color ACTIVE_PIECE = Color.YELLOW;
-	//public static final Color ACTIVE_PIECE = new Color(255,255,0,127);
-	public static final Color CAPTURE = Color.RED;
-	public static final Color PROMOTION = Color.BLUE;
-	public static final Color CAPTURE_AND_PROMOTION = new Color(138,43,226);
+	//public static final Color HIGHLIGHT = Color.GREEN;
+	public static final Color HIGHLIGHT = new Color(0,85,0);
+	public static final Color ACTIVE_PIECE = new Color(252,168,4);
+	public static final Color CAPTURE = new Color(131,39,37);
+	public static final Color PROMOTION = new Color (36,123,160); //lapis lazuli
+	public static final Color CAPTURE_AND_PROMOTION = new Color(74,37,72); //russian violet
 
 
 	//FONTS

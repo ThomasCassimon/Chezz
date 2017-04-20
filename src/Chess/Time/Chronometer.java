@@ -166,5 +166,4 @@ public class Chronometer
 	{
 		return this.running;
 	}
-
 }

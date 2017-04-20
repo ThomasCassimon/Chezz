@@ -22,29 +22,30 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public GamePanel(GameManager gameManager)
 	{
-		 super("Chezz!");
-		 this.gameManager = gameManager;
-		 //this.gameManager.init();
-		 panel = new JPanel();
-		 board = new Board(this);
-		 sidePanel = new SidePanel(this);
+		super("Chezz!");
+		this.gameManager = gameManager;
 
-		 panel.setBackground(UIData.BACKGROUND_COLOR);
+		//
+		panel = new JPanel();
+		board = new Board(this);
+		sidePanel = new SidePanel(this);
 
-		 this.setSize(UIData.GAMEPANEL_DIMENSION);
-		 this.setResizable(false);
-		 this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		panel.setBackground(UIData.BACKGROUND_COLOR);
+		this.setSize(UIData.GAMEPANEL_DIMENSION);
+
+
+		this.setResizable(false);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
 		panel.add(board);
 		panel.add(sidePanel);
 
 		this.setContentPane(panel);
-		//this.add(panel);
 		this.initBoard();
 
 		this.setResizable(false);
-		//this.setVisible(true);
 
 	}
 
@@ -75,8 +76,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			board.setBoardBlack();
 		}
-
-		//this.testAI();
 	}
 
 
@@ -100,22 +99,15 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			{
 
 				HistoryMove historyMove = gameManager.getLastMove();
-				historyMove = new HistoryMove(new Move(historyMove.getDst(), historyMove.getSrc(), 0),historyMove.getCapturedPiece());
-				board.makeMove(historyMove, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
-
-				System.out.println("PRE-UNDO");
-				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getSrc()).getPieceByte()));
-				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getDst()).getPieceByte()));
 				gameManager.undo();
 
-				System.out.println("POST-UNDO");
-				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getSrc()).getPieceByte()));
-				System.out.println(Integer.toBinaryString(this.gameManager.get(historyMove.getDst()).getPieceByte()));
+				board.setPiece(gameManager.get(historyMove.getSrc()));
+				board.setPiece(gameManager.get(historyMove.getDst()));
 
-				if (historyMove.isCapture())
-				{
-					board.setPiece(historyMove.getCapturedPiece());
-				}
+
+				board.update(gameManager.getActiveColorByte());
+
+				this.setHistory();
 
 			}
 
@@ -125,7 +117,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			System.out.println("Save");
 			Parser.saveToFile(gameManager.getMoveHistory(), this);
 		}
-		else if (e.getSource() == sidePanel.getMoveInput())
+		else if (e.getSource() == sidePanel.getMoveInput())											//TEXT MOVE
 		{
 			String input = sidePanel.getMoveInput().getText();
 			Move move = Parser.stringToMove(input, gameManager);
@@ -150,11 +142,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				sidePanel.setMoveInput("Invalid Move");
 			}
 		}
-		//else if (e.getSource() == sidePanel.getLoad())												//LOAD
-		//{
-			//Parser.readFromFile(gameManager, this);
-
-		//}
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
 			int[] indexArr;
@@ -200,10 +187,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 						board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
-							//System.out.println("Hash before: " + Long.toBinaryString(gameManager.getZobristHash()));
-
-							//System.out.println(Parser.moveToString(move));
-							//System.out.println("Hash after: " + Long.toBinaryString(gameManager.getZobristHash()));
 							this.makeMove(move);
 							if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
 							{
@@ -306,7 +289,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 
 		board.makeMove(move, gameManager.getActiveColorByte());
+		this.setHistory();
+	}
 
+	public void setHistory()
+	{
 		String history = "";
 
 		for(Move move_history : gameManager.getMoveHistory())
@@ -321,6 +308,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	{
 		return sidePanel.getExit();
 	}
+
 
 	@Override
 	public void mouseClicked(MouseEvent e)

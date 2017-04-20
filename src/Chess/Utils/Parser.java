@@ -1,6 +1,7 @@
 package Chess.Utils;
 
 import Chess.Game.*;
+import Chess.Time.Chronometer;
 import Chess.UI.GamePanel;
 
 import javax.swing.*;
@@ -115,11 +116,13 @@ public class Parser
 			try
 			{
 				writer = new PrintWriter(file);
+
+				
+
 				for(Move move: history)
 				{
 					text += Parser.moveToString(move) + "\n";
 				}
-				System.out.println("Writing to file");
 				writer.print(text);
 				writer.close();
 			}
@@ -138,8 +141,6 @@ public class Parser
 	public static void readFromFile(GameManager gm, JFrame gp)
 	{
 		JFileChooser fc = new JFileChooser();
-		File file;
-		Move move = new Move();
 
 		int returnValue = fc.showDialog(gp, "Read from...");
 
@@ -151,7 +152,7 @@ public class Parser
 				String str;
 				while((str =reader.readLine()) != null & str.length() != 0)
 				{
-					move = Parser.stringToMove(str, gm);
+					Move move = Parser.stringToMove(str, gm);
 					gm.makeMove(move);
 				}
 			}
