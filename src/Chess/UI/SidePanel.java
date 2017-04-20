@@ -11,7 +11,6 @@ public class SidePanel extends JPanel
 	private JButton undo;
 	private JButton save;
 	private JButton exit;
-	//private JButton load;
 
 	private TimePanel timePanel;
 
@@ -30,44 +29,43 @@ public class SidePanel extends JPanel
 
 
 		this.pause = new JButton("Pause");
-		//pause.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		this.undo = new JButton(("Undo"));
-		//undo.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		this.save = new JButton("Save");
-		//save.setPreferredSize(UIData.BUTTONS_DIMENSION);
 		this.exit = new JButton("Exit");
-		//exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
-		//this.load = new JButton("Load");
+
 
 
 		this.timePanel = new TimePanel();
-		this.timePanel.setBackground(UIData.BACKGROUND);
+		this.timePanel.setBackground(UIData.BACKGROUND_COLOR);
 
 
 		this.leftPanel = new JPanel();
 		this.leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-		this.leftPanel.setBackground(UIData.BACKGROUND);
+		this.leftPanel.setBackground(UIData.BACKGROUND_COLOR);
 		this.leftPanel.add(timePanel);
 		this.leftPanel.add(pause);
 		this.leftPanel.add(undo);
 		this.leftPanel.add(save);
 		this.leftPanel.add(exit);
-		//this.leftPanel.add(load);
 
+		this.pause.setAlignmentX(CENTER_ALIGNMENT);
+		this.undo.setAlignmentX(CENTER_ALIGNMENT);
+		this.save.setAlignmentX(CENTER_ALIGNMENT);
+		this.exit.setAlignmentX(CENTER_ALIGNMENT);
 
 
 		this.history = new JTextArea("History:");
 		this.history.setEditable(false);
 		this.history.setPreferredSize(UIData.HISTORY_DIMENSION);
-		this.history.setBackground(Color.WHITE);
+		this.history.setBackground(UIData.TEXT_BACKGROUND_COLOR);
 
 		this.moveInput = new JTextField("<Insert your move here>");
-		this.moveInput.setBackground(Color.WHITE);
+		this.moveInput.setBackground(UIData.TEXT_BACKGROUND_COLOR);
 
 		this.rightPanel = new JPanel();
 		this.rightPanel.setPreferredSize(UIData.HISTORY_DIMENSION);
 		this.rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		this.rightPanel.setBackground(UIData.BACKGROUND);
+		this.rightPanel.setBackground(UIData.BACKGROUND_COLOR);
 		this.rightPanel.setBorder(UIData.BORDER_BLACK);
 		this.rightPanel.add(history);
 		this.rightPanel.add(moveInput);
@@ -75,7 +73,6 @@ public class SidePanel extends JPanel
 		this.pause.addActionListener(gamePanel);
 		this.undo.addActionListener(gamePanel);
 		this.save.addActionListener(gamePanel);
-		//this.load.addActionListener(gamePanel);
 		this.moveInput.addActionListener(gamePanel);
 		this.moveInput.addMouseListener(gamePanel);
 
@@ -113,11 +110,6 @@ public class SidePanel extends JPanel
 	public JButton getExit()
 	{
 		return exit;
-	}
-
-	//public JButton getLoad()
-	{
-		//return load;
 	}
 
 	public JTextField getMoveInput()

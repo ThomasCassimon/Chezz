@@ -14,7 +14,11 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 	private JLabel title;
 	private JButton load;
 	private JButton start;
+
+	private JLabel undoText;
 	private JCheckBox undo;
+
+	private JLabel timeLimitText;
 	private JComboBox<Integer> timeLimit;
 
 	private GameManager gameManager;
@@ -34,50 +38,75 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		this.title = new JLabel("Chezz!");
 		this.load = new JButton("Load game");
 		this.start = new JButton("Start the game");
-		this.undo = new JCheckBox("Undo enabled");
-		timeLimit = new JComboBox<Integer>();
 
-		this.setBackground(UIData.BACKGROUND);
+		this.undoText = new JLabel("");
+		this.undo = new JCheckBox("Undo enabled");
+
+		this.timeLimitText = new JLabel("");
+		this.timeLimit = new JComboBox<Integer>();
+
+		this.setBackground(UIData.BACKGROUND_COLOR);
 		this.setSize(UIData.CONFIGURATIONPANEL_DIMENSION);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		//LAYOUT
-		panel.setBackground(UIData.BACKGROUND);
+		panel.setBackground(UIData.BACKGROUND_COLOR);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-
-		this.load.addActionListener(this);
-
-
-
 
 		title.setFont(title.getFont().deriveFont(UIData.TITLE_FONT_SIZE));
 		title.setFont(title.getFont().deriveFont(Font.BOLD));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(title);
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
 
+		timeLimitText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//timeLimitText.setPreferredSize(UIData.CONFIGURATIONPANEL_TEXTBOX);
+		timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one from the options below. </html>");
+		//timeLimitText.setBorder(UIData.BORDER_BLACK);
 
-		panel.add(timeLimit);
 		timeLimit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//timeLimit.setPreferredSize(UIData.CONFIGURATIONPANEL_TEXTBOX);
+
+
+		undoText.setAlignmentX(Component.CENTER_ALIGNMENT );
+		undoText.setText("Do you want to enable undo's?");
+		//undoText.setBorder(UIData.BORDER_BLACK);
+
+		undo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		load.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		start.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		//BUTTON FUNCTIONALITY
+		load.addActionListener(this);
+
+
+
+
+		//ADDING COMPONENTS
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
+		panel.add(title);
+
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+
+		panel.add(timeLimitText);
+		panel.add(timeLimit);
+
+		panel.add(Box.createRigidArea(UIData.SPACING));
+
+		panel.add(undoText);
 		panel.add(undo);
-		undo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
 		panel.add(load);
-		load.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
 		panel.add(start);
-		start.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-
 
 		this.setContentPane(panel);
 
