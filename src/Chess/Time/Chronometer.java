@@ -162,15 +162,8 @@ public class Chronometer
 		return timerTickBlack.getTime();
 	}
 
-	/**
-	 * indicates if game is running (or paused)
-	 * @return running
-	 */
-	public boolean isRunning()
+	public boolean isRunning ()
 	{
-		return running;
+		return this.running;
 	}
-
-
-
 }

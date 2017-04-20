@@ -2,9 +2,11 @@ package Chess.Game;
 
 import Chess.Athena.AIPlayer;
 import Chess.Athena.TableRecord;
+import Chess.Exceptions.Checked.GameOverException;
 import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Time.Chronometer;
+import Chess.Utils.SettingsObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +31,7 @@ public class GameManager
 	private int activeColor;
 	private long hash;
 	private ChessBoard cb;
+	private SettingsObject so;
 
 	public static Chronometer chronometer = new Chronometer();
 
@@ -41,6 +44,20 @@ public class GameManager
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
+		this.so = new SettingsObject();
+
+		GameManager.chronometer.start();
+	}
+
+	public GameManager (SettingsObject so)
+	{
+		this.cb = new ChessBoard();
+		this.activeColor = PieceData.WHITE_BYTE;
+		this.hash = 0;
+		this.players = new Player [2];
+		this.moveHistory = new ArrayList <HistoryMove> ();
+		this.cachedMoves = new ArrayList <Move> ();
+		this.so = new SettingsObject(so);
 
 		GameManager.chronometer.start();
 	}
@@ -65,6 +82,7 @@ public class GameManager
 		System.arraycopy(gm.players, 0, this.players, 0, gm.players.length);
 		this.moveHistory.addAll(gm.moveHistory);
 		this.cachedMoves.addAll(gm.cachedMoves);
+		this.so = new SettingsObject(gm.so);
 	}
 
 	/**
@@ -606,6 +624,7 @@ public class GameManager
 	{
 		int initRank = 1;
 		int deltaRank = abs((m.getDst() >> 4) - (m.getSrc() >> 4));
+		Piece p = this.get(m.getSrc());
 
 		if (color == PieceData.BLACK_BYTE)
 		{
@@ -626,7 +645,23 @@ public class GameManager
 
 		if ((deltaRank == 2) && ((m.getSrc() >> 4) == initRank) && ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() == PieceData.EMPTY_BYTE))
 		{
-			m.setSpecial(m.getSpecial() | Move.DOUBLE_PAWN_PUSH_MASK);
+			m.setDoublePawnPush();
+		}
+
+		if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+		{
+			// Piece is a king
+			if (!p.hasMoved())
+			{
+				if (m.get2DDst()[0] < m.get2DSrc()[0])
+				{
+					m.setQueenSideCastle();
+				}
+				else if (m.get2DSrc()[0] < m.get2DDst()[0])
+				{
+					m.setKingSideCastle();
+				}
+			}
 		}
 
 		return m;
@@ -639,6 +674,7 @@ public class GameManager
 		//int srcFile = m.get2DSrc()[0];
 		//int srcRank = m.get2DSrc()[1];
 		int dst = m.getDst();
+		int src = m.getSrc();
 		//int dstFile = m.get2DSrc()[0];
 		//int dstRank = m.get2DSrc()[1];
 		int color = p.getColor();
@@ -657,8 +693,116 @@ public class GameManager
 			return false;
 		}
 
+		if (m.isKingCastle())
+		{
+			ArrayList <Piece> pieces = this.getAllPieces(p.getColor());
+			ArrayList <Piece> rooks = new ArrayList<>(2);
+
+			for (Piece r : pieces)
+			{
+				if (r.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+				{
+					rooks.add(r);
+				}
+			}
+
+			for (Piece rook : rooks)
+			{
+				if (rook.hasMoved())
+				{
+					// Rook moved, castling no longer possible
+					System.out.println("Rook moved, no castling possible");
+					return false;
+				}
+				else
+				{
+					if (p.hasMoved())
+					{
+						// King move, castling no longer possible
+						System.out.println("King moved, no castling possible");
+						return false;
+					}
+					else
+					{
+						if ((this.get(src + 0x0001).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src + 0x0002).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE))
+						{
+							// One of squares between king and rook is occupied
+							System.out.println("one of the spaces is occupied, no castling possible");
+							return false;
+						}
+						else
+						{
+							if ((this.isAttacked(color, src + 0x0001) > 0) || (this.isAttacked(color, src + 0x0002) > 0))
+							{
+								// One of the squares was attacked
+								System.out.println("one of the spaces is attacked, no castling possible");
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		else if (m.isQueenCastle())
+		{
+			ArrayList <Piece> pieces = this.getAllPieces(p.getColor());
+			ArrayList <Piece> rooks = new ArrayList<>(2);
+
+			for (Piece r : pieces)
+			{
+				if (r.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+				{
+					rooks.add(r);
+				}
+			}
+
+			for (Piece rook : rooks)
+			{
+				if (rook.hasMoved())
+				{
+					// Rook moved, castling no longer possible
+					System.out.println("Rook moved, no castling possible");
+					return false;
+				}
+				else
+				{
+					if (p.hasMoved())
+					{
+						// King move, castling no longer possible
+						System.out.println("King moved, no castling possible");
+						return false;
+					}
+					else
+					{
+						if ((this.get(src - 0x0001).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0002).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0003).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE))
+						{
+							// One of squares between king and rook
+							System.out.println("Squares between king and rook occupied, no castling possible");
+							return false;
+						}
+						else
+						{
+							if ((this.isAttacked(color, src - 0x0001) > 0) || (this.isAttacked(color, src - 0x0002) > 0) || ((this.isAttacked(color, src - 0x0003) > 0)))
+							{
+								// One of the squares was attacked
+								System.out.println("Squares between king and rook attacked, no castling possible");
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		GameManager gm = new GameManager(this);
-		gm.makeMove(m);
+		try
+		{
+			gm.makeMove(m);
+		}
+		catch (GameOverException goe)
+		{
+			// Nothings happens, the timer for this is not relevant
+		}
 
 		if (gm.isCheckMate(color))
 		{
@@ -756,9 +900,10 @@ public class GameManager
 	 * @param m The move to be made
 	 * @return itself after making the move
 	 */
-	public GameManager makeMove (Move m)
+	public GameManager makeMove (Move m) throws GameOverException
 	{
-		/*this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getSrc());		// Hash-out the old piece
+		/*
+		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getSrc());		// Hash-out the old piece
 
 		if (m.isCapture())
 		{
@@ -768,31 +913,91 @@ public class GameManager
 		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getDst());		// Hash-in new piece
 		*/
 
-		if (m.isCapture())
+		if (GameManager.chronometer.isRunning())
 		{
-			this.moveHistory.add(new HistoryMove(m, this.get(m.getDst())));
+			int color = this.activeColor;
+
+			if (m.isKingCastle())
+			{
+				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				ArrayList<Piece> rooks = new ArrayList<>(2);
+
+				for (Piece p : pieces)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					{
+						rooks.add(p);
+					}
+				}
+
+				for (Piece r : rooks)
+				{
+					if (r.get2DCoord()[0] == 7)
+					{
+						this.cb.set(r.getPositionByte() - 0x0002, r.getPieceByte());
+						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
+						this.get(r.getPositionByte() - 0x0002).incMoves();
+						break;
+
+					}
+				}
+			}
+			else if (m.isQueenCastle())
+			{
+				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				ArrayList<Piece> rooks = new ArrayList<>(2);
+
+				for (Piece p : pieces)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					{
+						rooks.add(p);
+					}
+				}
+
+				for (Piece r : rooks)
+				{
+					if (r.get2DCoord()[0] == 0)
+					{
+						this.cb.set(r.getPositionByte() + 0x0003, r.getPieceByte());
+						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
+						this.get(r.getPositionByte() + 0x0003).incMoves();
+						break;
+
+					}
+				}
+			}
+
+			this.get(m.getSrc()).incMoves();
+
+			if (m.isCapture())
+			{
+				this.moveHistory.add(new HistoryMove(m, this.get(m.getDst())));
+			}
+			else
+			{
+				this.moveHistory.add(new HistoryMove(m));
+			}
+
+			this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
+			this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);    // Empty the source square
+
+			this.toggleActivePlayer();
+			GameManager.chronometer.toggle();
+
+			if (this.isCheckMate(color))
+			{
+				this.undo();
+
+				return null;
+			}
+
+			return this;
 		}
 		else
 		{
-			this.moveHistory.add(new HistoryMove(m));
+			throw new GameOverException("Timer of the active player is not running, it may have ran out or the game might be paused");
 		}
-
-		this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
-		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);    // Empty the source square
-
-		int color = this.activeColor;
-
-		this.toggleActivePlayer();
-		GameManager.chronometer.toggle();
-
-		if (this.isCheckMate(color))
-		{
-			this.undo();
-
-			return null;
-		}
-
-		return this;
 	}
 
 	/**
@@ -862,7 +1067,7 @@ public class GameManager
 	 */
 	public void undo ()
 	{
-		if (this.moveHistory.size() > 0)
+		if ((this.moveHistory.size() > 0) && (this.so.undoEnabled()))
 		{
 			HistoryMove m = this.getLastMove();
 			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceByte());    // Empty the source square
@@ -879,6 +1084,10 @@ public class GameManager
 			//this.makeMove(new Move (m.getDst(), m.getSrc(), 0x0));		// Making a dummy move which is just the inverse of the last move
 			this.moveHistory.remove(this.moveHistory.size() - 1);        // Always remove the last from the move history
 			this.toggleActivePlayer();
+		}
+		else if (!this.so.undoEnabled())
+		{
+			System.out.println("Undo is not enabled");
 		}
 	}
 
@@ -1054,7 +1263,7 @@ public class GameManager
 
 	public void handlePromotion(int[] position, int piece)
 	{
-		System.out.println("Promo: (" + Integer.toString(position[0]) + Integer.toString(position[1]) + " piecebyte: " + Integer.toBinaryString(piece));
+		//System.out.println("Promo: (" + Integer.toString(position[0]) + Integer.toString(position[1]) + " piecebyte: " + Integer.toBinaryString(piece));
 
 		this.cb.set(position[0],position[1],piece);
 	}

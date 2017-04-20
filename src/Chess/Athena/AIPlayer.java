@@ -1,5 +1,6 @@
 package Chess.Athena;
 
+import Chess.Exceptions.Checked.GameOverException;
 import Chess.Game.*;
 import Chess.Utils.Telemetry;
 
@@ -117,7 +118,15 @@ public class AIPlayer extends Player
 			Move m = moves.get(i);
 
 			GameManager gm_alt = new GameManager(gm);
-			gm_alt.makeMove(m);
+			try
+			{
+				gm_alt.makeMove(m);
+			}
+			catch (GameOverException goe)
+			{
+				// Timer ran out
+				return null;
+			}
 
 			score = alphaBeta(gm_alt, maxSearchDepth, -inf, inf, true, true);
 
@@ -186,7 +195,14 @@ public class AIPlayer extends Player
 			for (Move m : moves)
 			{
 				GameManager alt = new GameManager(gm);
-				alt.makeMove(m);
+				try
+				{
+					alt.makeMove(m);
+				}
+				catch (GameOverException goe)
+				{
+					// Nothings happens, not relevant
+				}
 
 				v = max(v, this.alphaBeta(alt, depth - 1, alpha, beta, false, true));
 				alpha = max(v, alpha);
@@ -231,7 +247,14 @@ public class AIPlayer extends Player
 			for (Move m : moves)
 			{
 				GameManager alt = new GameManager(gm);
-				alt.makeMove(m);
+				try
+				{
+					alt.makeMove(m);
+				}
+				catch (GameOverException goe)
+				{
+					// Nothing happens, not relevant
+				}
 
 				v = min(v, this.alphaBeta(alt, depth - 1, alpha, beta, true, true));
 				beta = min(v, beta);

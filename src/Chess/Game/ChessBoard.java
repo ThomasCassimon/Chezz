@@ -18,7 +18,6 @@ import Chess.Exceptions.Unchecked.IllegalSquareException;
 public class ChessBoard
 {
 	public static final short BOARD_ARRAY_SIZE = 128;
-	public static final int ERROR = -1;
 	/*
 	 *	Actual board...
 	 */
@@ -71,12 +70,12 @@ public class ChessBoard
 		this.set(5, 7, PieceData.BISHOP_BYTE | PieceData.BLACK_BYTE);
 
 		// Queens
-		this.set(4, 0, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
-		this.set(4, 7, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
+		this.set(3, 0, PieceData.QUEEN_BYTE | PieceData.WHITE_BYTE);
+		this.set(3, 7, PieceData.QUEEN_BYTE | PieceData.BLACK_BYTE);
 
 		// Kings
-		this.set(3, 0, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
-		this.set(3, 7, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
+		this.set(4, 0, PieceData.KING_BYTE | PieceData.WHITE_BYTE);
+		this.set(4, 7, PieceData.KING_BYTE | PieceData.BLACK_BYTE);
 
 		return this;
 	}

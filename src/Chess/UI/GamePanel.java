@@ -1,5 +1,6 @@
 package Chess.UI;
 
+import Chess.Exceptions.Checked.GameOverException;
 import Chess.Game.*;
 import Chess.Utils.Parser;
 
@@ -122,7 +123,16 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			Move move = Parser.stringToMove(input, gameManager);
 			if (move != null)
 			{
-				gameManager.makeMove(move);
+				try
+				{
+					gameManager.makeMove(move);
+				}
+				catch (GameOverException goe)
+				{
+					// Game is over
+					System.out.println("Game over!");
+				}
+
 				board.makeMove(move, gameManager.getActiveColorByte());
 				System.out.println("Move input: " + input);
 				sidePanel.setMoveInput("");
@@ -268,7 +278,16 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public void makeMove(Move move)
 	{
-		gameManager.makeMove(move);
+		try
+		{
+			gameManager.makeMove(move);
+		}
+		catch (GameOverException goe)
+		{
+			// Game was over
+			System.out.println("Game over!");
+		}
+
 		board.makeMove(move, gameManager.getActiveColorByte());
 		this.setHistory();
 	}

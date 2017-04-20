@@ -18,7 +18,8 @@ public class Move implements Comparable<Move>
 	public static final int CAPTURE_MASK = 0x04;
 	public static final int PROMO_MASK = 0x08;
 	public static final int DOUBLE_PAWN_PUSH_MASK = 0x01;
-	public static final int HASH_OFFSET = 97;
+	public static final int KING_SIDE_CASTLE_MASK = 2;
+	public static final int QUEEN_SIDE_CASTLE_MASK = 3;
 	/**
 	 * Both src and dst are stored as 0x88 squares
 	 */
@@ -60,9 +61,9 @@ public class Move implements Comparable<Move>
 
 	public Move ()
 	{
-		this.src = 0xFF;
-		this.dst = 0xFF;
-		this.special = 0xFF;
+		this.src = 0xFFFF;
+		this.dst = 0xFFFF;
+		this.special = 0xFFFF;
 	}
 
 	public Move (int src, int dst, int special)
@@ -205,6 +206,16 @@ public class Move implements Comparable<Move>
 		this.special = this.special | PROMO_MASK;
 	}
 
+	public void setKingSideCastle ()
+	{
+		this.special |= KING_SIDE_CASTLE_MASK;
+	}
+
+	public void setQueenSideCastle ()
+	{
+		this.special |= QUEEN_SIDE_CASTLE_MASK;
+	}
+
 	/**
 	 * Resets the capture flag to 0
 	 */
@@ -281,12 +292,6 @@ public class Move implements Comparable<Move>
 		}
 	}
 
-	@Override
-	public int hashCode ()
-	{
-		return HASH_OFFSET + this.src + this.dst + this.special;
-	}
-
 	// Promo > Capture
 	// Capture > Normal
 	// So: Normal < Capture < Promo
@@ -323,5 +328,10 @@ public class Move implements Comparable<Move>
 				}
 			}
 		}
+	}
+
+	public void setDoublePawnPush()
+	{
+		this.special |= DOUBLE_PAWN_PUSH_MASK;
 	}
 }
