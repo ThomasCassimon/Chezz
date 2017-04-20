@@ -162,6 +162,9 @@ public class Chronometer
 		return timerTickBlack.getTime();
 	}
 
-
+	public boolean isRunning ()
+	{
+		return this.running;
+	}
 
 }

@@ -15,12 +15,15 @@ import java.util.ArrayList;
 
 public class Piece
 {
+	// If the king has moved we set the moved mask to indicate castling is no longer possible
+	private static final int MOVED_MASK = 512;
+
 	/*	Piece byte is used as follows:
-	 *	XXBB XXXX: BB is the color of the piece
-	 *	XXXX XBBB: BBB is the type of the piece
-	 *
+	 *	XXXX XXXX XXXX XXXX XXXX XXXX XXBB XXXX: BB is the color of the piece
+	 *	XXXX XXXX XXXX XXXX XXXX XXXX XXXX XBBB: BBB is the type of the piece
 	 */
 
+	private int moveCounter;
 	private int pieceByte;
 	private int positionByte;
 
@@ -30,8 +33,8 @@ public class Piece
 	@Deprecated
 	public Piece ()
 	{
-		this.pieceByte = 0xFF;
-		this.positionByte = 0xFF;
+		this.pieceByte = 0xFFFF;
+		this.positionByte = 0xFFFF;
 	}
 
 	/**
@@ -104,7 +107,6 @@ public class Piece
 		this.positionByte = ChessBoard.get0x88Index(file,rank);
 	}
 
-	@Deprecated
 	public int getPieceByte ()
 	{
 		return this.pieceByte;
@@ -295,6 +297,21 @@ public class Piece
 	public int[] get2DCoord()
 	{
 		return ChessBoard.get2DCoord(this.positionByte);
+	}
+
+	public Boolean hasMoved ()
+	{
+		return this.moveCounter > 0;
+	}
+
+	public void incMoves()
+	{
+		this.moveCounter++;
+	}
+
+	public void decMoves()
+	{
+		this.moveCounter--;
 	}
 
 	@Override
