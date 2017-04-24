@@ -2,10 +2,13 @@ package Chess.UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class SidePanel extends JPanel
 {
+
 	private JPanel leftPanel;
 	private JButton pause;
 	private JButton undo;
@@ -35,7 +38,7 @@ public class SidePanel extends JPanel
 
 
 
-		this.timePanel = new TimePanel();
+		this.timePanel = new TimePanel(gamePanel.getGameManager());
 		this.timePanel.setBackground(UIData.BACKGROUND_COLOR);
 
 
@@ -75,6 +78,7 @@ public class SidePanel extends JPanel
 		this.save.addActionListener(gamePanel);
 		this.moveInput.addActionListener(gamePanel);
 		this.moveInput.addMouseListener(gamePanel);
+		this.exit.addActionListener(gamePanel);
 
 
 		this.add(leftPanel);
@@ -126,5 +130,6 @@ public class SidePanel extends JPanel
 	{
 		this.history.setText("History: \n" + history);
 	}
+
 
 }

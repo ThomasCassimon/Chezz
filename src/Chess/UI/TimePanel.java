@@ -18,9 +18,9 @@ public class TimePanel extends JPanel
 	private JLabel timeWhite;
 	private JLabel timeBlack;
 
-	public TimePanel()
+	public TimePanel(GameManager gameManager)
 	{
-		this.chronometer = GameManager.chronometer;
+		this.chronometer = gameManager.getChronometer();
 
 		this.labelWhite = new JLabel("");
 		this.labelBlack = new JLabel("");

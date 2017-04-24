@@ -1,5 +1,8 @@
 package Chess.UI;
 
+import Chess.Game.ChessBoard;
+import Chess.Game.Move;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -66,4 +69,10 @@ public final class UIData
 
 	//BORDERS
 	public static final Border BORDER_BLACK = BorderFactory.createLineBorder(Color.BLACK);
+
+	//MOVES
+	public static final Move KINGSIDE_CASTLING_W = new Move(ChessBoard.get0x88Index(0,7), ChessBoard.get0x88Index(3,7),0);
+	public static final Move QUEENSIDE_CASTLING_W = new Move(ChessBoard.get0x88Index(7,0), ChessBoard.get0x88Index(5,0),0);
+	public static final Move QUEENSIDE_CASTLING_B = new Move(ChessBoard.get0x88Index(0,7), ChessBoard.get0x88Index(3,7),0);
+	public static final Move KINGSIDE_CASTLING_B = new Move(ChessBoard.get0x88Index(7,0), ChessBoard.get0x88Index(5,0),0);
 }

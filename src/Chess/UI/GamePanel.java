@@ -19,11 +19,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	private JPanel panel;
 	private Board board;
 	private SidePanel sidePanel;
+	private MainFrame mainFrame;
 
-	public GamePanel(GameManager gameManager)
+	public GamePanel(GameManager gameManager, MainFrame mainFrame)
 	{
 		super("Chezz!");
 		this.gameManager = gameManager;
+		this.mainFrame = mainFrame;
 
 		//
 		panel = new JPanel();
@@ -89,7 +91,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 		if (e.getSource() == sidePanel.getPause())                                                    //PAUSE
 		{
-			GameManager.chronometer.pause();
+			this.gameManager.getChronometer().pause();
 			System.out.println("Pause");
 		}
 
@@ -121,22 +123,28 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			String input = sidePanel.getMoveInput().getText();
 			Move move = Parser.stringToMove(input, gameManager);
-			System.out.println("Move: " + move.toString());
-			System.out.println("Move: " + move.getPrettySrcCoords() + " - " + move.getPrettyDstCoords());
-			System.out.println("Pieces: Src: " + this.gameManager.get(move.getSrc()).toString() + " Dst: " + this.gameManager.get(move.getDst()).toString());
+			//System.out.println("Move: " + move.toString());
+			//System.out.println("Move: " + move.getPrettySrcCoords() + " - " + move.getPrettyDstCoords());
+			//System.out.println("Pieces: Src: " + this.gameManager.get(move.getSrc()).toString() + " Dst: " + this.gameManager.get(move.getDst()).toString());
+
+
 			if (move != null)
 			{
-				try
+				if(move.isKingCastle()|move.isKingCastle())
 				{
-					gameManager.makeMove(move);
+					handleCastling(move);
 				}
-				catch (GameOverException goe)
+				//try
+				{
+					this.makeMove(move);
+
+				}
+				//catch (GameOverException goe)
 				{
 					// Game is over
 					System.out.println("Game over!");
 				}
 
-				board.makeMove(move, gameManager.getActiveColorByte());
 				System.out.println("Move input: " + input);
 				sidePanel.setMoveInput("");
 			}
@@ -144,6 +152,13 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			{
 				sidePanel.setMoveInput("Invalid Move");
 			}
+
+
+		}
+		else if(e.getSource() == sidePanel.getExit())
+		{
+			System.out.println("Exit detected in gamepanel");
+			mainFrame.actionPerformed(e);
 		}
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
@@ -198,6 +213,10 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 							if (move.isPromotion())
 							{
 								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
+							}
+							if(move.isKingCastle()|move.isQueenCastle())
+							{
+								this.handleCastling(move);
 							}
 						}
 
@@ -279,6 +298,32 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		int choice = JOptionPane.showOptionDialog(this,"Checkmate! " + winner + " wins!", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,  UIData.BK, options, null);
 	}
 
+	public void handleCastling(Move move)
+	{
+		if(move.isKingCastle())
+		{
+			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+			{
+				this.makeMove(UIData.KINGSIDE_CASTLING_W);
+			}
+			else
+			{
+				this.makeMove(UIData.KINGSIDE_CASTLING_B);
+			}
+		}
+		else
+		{
+			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+			{
+				this.makeMove(UIData.QUEENSIDE_CASTLING_W);
+			}
+			else
+			{
+				this.makeMove(UIData.QUEENSIDE_CASTLING_B);
+			}
+		}
+	}
+
 	public void makeMove(Move move)
 	{
 		try
@@ -310,6 +355,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	public JButton getExit()
 	{
 		return sidePanel.getExit();
+	}
+
+	public GameManager getGameManager()
+	{
+		return gameManager;
 	}
 
 
@@ -345,4 +395,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	{
 
 	}
+
+
 }
