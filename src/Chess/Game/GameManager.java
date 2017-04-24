@@ -839,6 +839,7 @@ public class GameManager
 		int color = p.getColor();
 		TableRecord tr = null;
 
+
 		/*
 		if (TranspositionTable.getInstance().get(this.hash) != null)
 		{
