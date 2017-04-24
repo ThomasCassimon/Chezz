@@ -10,7 +10,7 @@ public class SettingsObject
 
 	public SettingsObject ()
 	{
-		this.undo = false;
+		this.undo = true;
 	}
 
 	public SettingsObject (boolean undoEnabled, long time_seconds)

@@ -33,7 +33,7 @@ public class GameManager
 	private ChessBoard cb;
 	private SettingsObject so;
 
-	public static Chronometer chronometer = new Chronometer();
+	private Chronometer chronometer = new Chronometer();
 
 
 	public GameManager ()
@@ -46,7 +46,7 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject();
 
-		GameManager.chronometer.start();
+		this.chronometer.start();
 	}
 
 	public GameManager (SettingsObject so)
@@ -59,7 +59,7 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject(so);
 
-		GameManager.chronometer.start();
+		this.chronometer.start();
 	}
 
 	public GameManager (GameManager gm)
@@ -839,6 +839,7 @@ public class GameManager
 		int color = p.getColor();
 		TableRecord tr = null;
 
+
 		/*
 		if (TranspositionTable.getInstance().get(this.hash) != null)
 		{
@@ -931,7 +932,7 @@ public class GameManager
 		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getDst());		// Hash-in new piece
 		*/
 
-		if (GameManager.chronometer.isRunning())
+		if (this.chronometer.isRunning())
 		{
 			int color = this.activeColor;
 
@@ -1001,7 +1002,7 @@ public class GameManager
 			this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);    // Empty the source square
 
 			this.toggleActivePlayer();
-			GameManager.chronometer.toggle();
+			this.chronometer.toggle();
 
 			if (this.isCheckMate(color))
 			{
@@ -1289,5 +1290,10 @@ public class GameManager
 	public long getHash ()
 	{
 		return this.hash;
+	}
+
+	public Chronometer getChronometer()
+	{
+		return this.chronometer;
 	}
 }

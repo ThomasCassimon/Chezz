@@ -36,6 +36,7 @@ public class Main
 		*/
 
 		MainFrame mf = new MainFrame();
+
 	}
 
 	public static void testAI ()
