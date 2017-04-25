@@ -725,7 +725,7 @@ public class GameManager
 				if (rook.hasMoved())
 				{
 					// Rook moved, castling no longer possible
-					System.out.println("Rook moved, no castling possible");
+					//System.out.println("Rook moved, no castling possible");
 					return false;
 				}
 				else
@@ -733,7 +733,7 @@ public class GameManager
 					if (p.hasMoved())
 					{
 						// King move, castling no longer possible
-						System.out.println("King moved, no castling possible");
+						//System.out.println("King moved, no castling possible");
 						return false;
 					}
 					else
@@ -741,7 +741,7 @@ public class GameManager
 						if ((this.get(src + 0x0001).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src + 0x0002).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE))
 						{
 							// One of squares between king and rook is occupied
-							System.out.println("one of the spaces is occupied, no castling possible");
+							//System.out.println("one of the spaces is occupied, no castling possible");
 							return false;
 						}
 						else
@@ -749,7 +749,7 @@ public class GameManager
 							if ((this.isAttacked(color, src + 0x0001) > 0) || (this.isAttacked(color, src + 0x0002) > 0))
 							{
 								// One of the squares was attacked
-								System.out.println("one of the spaces is attacked, no castling possible");
+								//System.out.println("one of the spaces is attacked, no castling possible");
 								return false;
 							}
 						}
@@ -775,7 +775,7 @@ public class GameManager
 				if (rook.hasMoved())
 				{
 					// Rook moved, castling no longer possible
-					System.out.println("Rook moved, no castling possible");
+					//System.out.println("Rook moved, no castling possible");
 					return false;
 				}
 				else
@@ -783,7 +783,7 @@ public class GameManager
 					if (p.hasMoved())
 					{
 						// King move, castling no longer possible
-						System.out.println("King moved, no castling possible");
+						//System.out.println("King moved, no castling possible");
 						return false;
 					}
 					else
@@ -791,7 +791,7 @@ public class GameManager
 						if ((this.get(src - 0x0001).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0002).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0003).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE))
 						{
 							// One of squares between king and rook
-							System.out.println("Squares between king and rook occupied, no castling possible");
+							//System.out.println("Squares between king and rook occupied, no castling possible");
 							return false;
 						}
 						else
@@ -799,7 +799,7 @@ public class GameManager
 							if ((this.isAttacked(color, src - 0x0001) > 0) || (this.isAttacked(color, src - 0x0002) > 0) || ((this.isAttacked(color, src - 0x0003) > 0)))
 							{
 								// One of the squares was attacked
-								System.out.println("Squares between king and rook attacked, no castling possible");
+								//System.out.println("Squares between king and rook attacked, no castling possible");
 								return false;
 							}
 						}
@@ -1086,6 +1086,58 @@ public class GameManager
 		if ((this.moveHistory.size() > 0) && (this.so.undoEnabled()))
 		{
 			HistoryMove m = this.getLastMove();
+
+			if (m.isKingCastle())
+			{
+				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				ArrayList<Piece> rooks = new ArrayList<>(2);
+
+				for (Piece p : pieces)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					{
+						rooks.add(p);
+					}
+				}
+
+				for (Piece r : rooks)
+				{
+					if (r.get2DCoord()[0] == 5)
+					{
+						this.cb.set(r.getPositionByte() + 0x0002, r.getPieceByte());
+						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
+						this.get(r.getPositionByte() + 0x0002).decMoves();
+						break;
+
+					}
+				}
+			}
+			else if (m.isQueenCastle())
+			{
+				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				ArrayList<Piece> rooks = new ArrayList<>(2);
+
+				for (Piece p : pieces)
+				{
+					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					{
+						rooks.add(p);
+					}
+				}
+
+				for (Piece r : rooks)
+				{
+					if (r.get2DCoord()[0] == 3)
+					{
+						this.cb.set(r.getPositionByte() - 0x0003, r.getPieceByte());
+						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
+						this.get(r.getPositionByte() - 0x0003).decMoves();
+						break;
+
+					}
+				}
+			}
+
 			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceByte());    // Empty the source square
 
 			if (m.isCapture())

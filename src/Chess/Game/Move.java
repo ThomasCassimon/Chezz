@@ -48,7 +48,7 @@ public class Move implements Comparable<Move>
 	 * XXXX 1010 = Rook promotion
 	 * XXXX 1011 = Queen promotion
 	 *
-	 * For promo+capture:
+	 * For promo + capture:
 	 * XXXX 1100 = Knight-promo + capture
 	 * XXXX 1101 = Bishop-promo + capture
 	 * XXXX 1110 = Rook-promo + capture
