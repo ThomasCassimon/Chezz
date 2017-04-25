@@ -34,4 +34,14 @@ public class SettingsObject
 	{
 		return this.time_s;
 	}
+
+	public void setUndo(boolean undo)
+	{
+		this.undo = undo;
+	}
+
+	public void setTime_s(long seconds)
+	{
+		this.time_s = seconds;
+	}
 }

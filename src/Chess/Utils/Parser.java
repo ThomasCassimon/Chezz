@@ -2,6 +2,7 @@ package Chess.Utils;
 
 import Chess.Game.*;
 import Chess.UI.GamePanel;
+import Chess.UI.UIData;
 
 import javax.swing.*;
 import java.io.*;
@@ -36,14 +37,31 @@ public class Parser
 		{
 			//System.out.println("Q-castle");
 			//QUEEN SIDE CASTLING
+			if(gm.getActiveColorByte() == PieceData.WHITE_BYTE)
+			{
+				move = UIData.KING_QUEENSIDE_CASTLING_W;
+			}
+			else
+			{
+				move = UIData.KING_QUEENSIDE_CASTLING_B;
+			}
 		}
 		else if(string == "o-o")
 		{
 			//System.out.println("K-castle");
 			//KING SIDE CASTLING
+			if(gm.getActiveColorByte() == PieceData.WHITE_BYTE)
+			{
+				move = UIData.KING_KINGSIDE_CASTLING_W;
+			}
+			else
+			{
+				move = UIData.KING_KINGSIDE_CASTLING_B;
+			}
 		}
 		else if(string.length() != 5)
 		{
+			System.out.println(string);
 			System.out.println("invalid move (too long/short)");
 		}
 		else
@@ -52,26 +70,27 @@ public class Parser
 			file = chars[0] - 'a';
 			rank = chars[1] - '1';
 			source = ChessBoard.get0x88Index(file,rank);
-			//System.out.println("[PARSER] Source: File: " + file + " Rank: " + rank);
+			System.out.println("[PARSER] Source: File: " + file + " Rank: " + rank);
 
 
 			file = chars[3] - 'a';
 			rank = chars[4] - '1';
 			destination = ChessBoard.get0x88Index(file, rank);
-			//System.out.println("[PARSER] Destination: File: " + file + " Rank: " + rank);
+			System.out.println("[PARSER] Destination: File: " + file + " Rank: " + rank);
 
 			move = new Move(source, destination,0);
 			move = gm.setFlags(gm.getActiveColorByte(), move);
 
 			piece = gm.get(source);
-			//System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+			System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
 
-			if(gm.isLegalMove(gm.get(move.getSrc()), move))
+			if(gm.isLegalMove(piece, move))
 			{
 				return move;
 			}
 			else
 			{
+				System.out.println(string);
 				System.out.println("invalid move (no piece can move there)");
 			}
 		}

@@ -36,7 +36,7 @@ public class Move implements Comparable<Move>
 	 * XXXX 0000 = Quiet move
 	 * XXXX 0001 = Double pawn push
 	 * XXXX 0010 = King-side castle
-	 * XXXX 0011 = Queen castle
+	 * XXXX 0011 = Queen-side castle
 	 *
 	 * For capture:
 	 * XXXX 0100 = regular capture

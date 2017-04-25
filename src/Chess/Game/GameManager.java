@@ -46,7 +46,6 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject();
 
-		this.chronometer.start();
 	}
 
 	public GameManager (SettingsObject so)
@@ -58,8 +57,6 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject(so);
-
-		this.chronometer.start();
 	}
 
 	public GameManager (GameManager gm)
@@ -1295,5 +1292,15 @@ public class GameManager
 	public Chronometer getChronometer()
 	{
 		return this.chronometer;
+	}
+
+	public void setSettings(SettingsObject settings)
+	{
+		this.so = settings;
+	}
+
+	public void startChronometer()
+	{
+		this.chronometer.start();
 	}
 }
