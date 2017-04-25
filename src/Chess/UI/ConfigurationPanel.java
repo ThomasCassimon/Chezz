@@ -2,6 +2,7 @@ package Chess.UI;
 
 import Chess.Game.GameManager;
 import Chess.Utils.Parser;
+import Chess.Utils.SettingsObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 	private JCheckBox undo;
 
 	private JLabel timeLimitText;
-	private JComboBox<Integer> timeLimit;
+	private JComboBox<String> timeLimit;
 
 	private GameManager gameManager;
 
@@ -35,6 +36,10 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 
 		//
+		String[] timeOptions = { "1 min", "2.5 min", "5 min", "30 min", "1 hour"};
+
+		timeLimit = new JComboBox<>(timeOptions);
+
 		this.title = new JLabel("Chezz!");
 		this.load = new JButton("Load game");
 		this.start = new JButton("Start the game");
@@ -43,7 +48,7 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		this.undo = new JCheckBox("Undo enabled");
 
 		this.timeLimitText = new JLabel("");
-		this.timeLimit = new JComboBox<Integer>();
+
 
 		this.setBackground(UIData.BACKGROUND_COLOR);
 		this.setSize(UIData.CONFIGURATIONPANEL_DIMENSION);
@@ -59,7 +64,7 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 		timeLimitText.setAlignmentX(Component.CENTER_ALIGNMENT);
 		//timeLimitText.setPreferredSize(UIData.CONFIGURATIONPANEL_TEXTBOX);
-		timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one from the options below. </html>");
+		timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one of the default options. </html>");
 		//timeLimitText.setBorder(UIData.BORDER_BLACK);
 
 		timeLimit.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -79,6 +84,10 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		//BUTTON FUNCTIONALITY
 		load.addActionListener(this);
 
+		this.undo.setSelected(true);
+
+
+
 
 
 
@@ -87,6 +96,11 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 		panel.add(title);
 
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
@@ -121,6 +135,17 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 			Parser.readFromFile(gameManager,this);
 		}
 
+	}
+
+	public SettingsObject getSettings()
+	{
+		SettingsObject settings = new SettingsObject();
+
+		settings.setUndo(undo.isSelected());
+
+		//settings.setTime_s((long) timeLimit.getSelectedItem());
+
+		return settings;
 	}
 
 	public JButton getStart()
