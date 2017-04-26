@@ -1180,7 +1180,17 @@ public class GameManager
 
 		if (king != null)
 		{
-			ArrayList<Move> moves = this.getLegalMoves(king);
+			ArrayList<Move> moves = king.getAllPossibleMoves();
+			ArrayList<Move> legalMoves = new ArrayList<>();
+
+			for (Move m : moves)
+			{
+				if (this.isLegalMove(king, m))
+				{
+					legalMoves.add(m);
+				}
+			}
+
 			//System.out.println("#Moves: " + moves.size());
 			boolean allAttacked = true;
 
