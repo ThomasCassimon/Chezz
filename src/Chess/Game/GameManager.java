@@ -67,7 +67,6 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.chronometer = new Chronometer(gm.chronometer);
-		this.chronometer.start();
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -151,7 +150,6 @@ public class GameManager
 		this.players[0] = new HumanPlayer(PieceData.WHITE_BYTE);
 		this.players[1] = new HumanPlayer(PieceData.BLACK_BYTE);
 
-		this.chronometer.start();
 
 		return this;
 	}
@@ -689,6 +687,7 @@ public class GameManager
 		boolean almost = this.isAlmostLegalMove(p,m);
 
 		GameManager gm = new GameManager(this);
+		gm.startChronometer();
 		try
 		{
 			gm.makeMove(m);
@@ -697,7 +696,7 @@ public class GameManager
 		{
 			goe.printStackTrace();
 		}
-		return almost && gm.isCheckMate(p.getColor());
+		return almost && !gm.isCheckMate(p.getColor());
 	}
 
 	public boolean isAlmostLegalMove(Piece p, Move m)

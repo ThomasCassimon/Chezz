@@ -83,7 +83,7 @@ public class Chronometer
 	 */
 	public void toggle()
 	{
-		System.out.println("Chronometer toggled");
+		//System.out.println("Chronometer toggled");
 		timeWhite = timerTickWhite.getTime();
 		timeBlack = timerTickBlack.getTime();
 
