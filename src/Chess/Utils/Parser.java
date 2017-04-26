@@ -84,7 +84,7 @@ public class Parser
 			piece = gm.get(source);
 			System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
 
-			if(gm.isLegalMove(piece, move))
+			if(gm.isAlmostLegalMove(piece, move))
 			{
 				return move;
 			}

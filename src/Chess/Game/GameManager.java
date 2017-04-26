@@ -45,7 +45,6 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject();
-
 	}
 
 	public GameManager (SettingsObject so)
@@ -67,6 +66,8 @@ public class GameManager
 		this.players = new Player [2];
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
+		this.chronometer = new Chronometer(gm.chronometer);
+		this.chronometer.start();
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -149,6 +150,8 @@ public class GameManager
 		this.activeColor = PieceData.WHITE_BYTE;
 		this.players[0] = new HumanPlayer(PieceData.WHITE_BYTE);
 		this.players[1] = new HumanPlayer(PieceData.BLACK_BYTE);
+
+		this.chronometer.start();
 
 		return this;
 	}
@@ -681,7 +684,23 @@ public class GameManager
 		return m;
 	}
 
-	public boolean isLegalMove(Piece p, Move m)
+	public boolean isLegalMove (Piece p, Move m)
+	{
+		boolean almost = this.isAlmostLegalMove(p,m);
+
+		GameManager gm = new GameManager(this);
+		try
+		{
+			gm.makeMove(m);
+		}
+		catch (GameOverException goe)
+		{
+			goe.printStackTrace();
+		}
+		return almost && gm.isCheckMate(p.getColor());
+	}
+
+	public boolean isAlmostLegalMove(Piece p, Move m)
 	{
 		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceWithoutColorByte()));
 		//int src = m.getSrc();
@@ -697,13 +716,13 @@ public class GameManager
 		// You can't end on one of your own pieces
 		if (this.isCollision(color, m))
 		{
-			//System.out.println("[isLegalMove] " + m.toString() + " collided");
+			//System.out.println("[isAlmostLegalMove] " + m.toString() + " collided");
 			return false;
 		}
 
 		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 		{
-			//System.out.println("[isLegalMove] " + m.toString() + " captures king");
+			//System.out.println("[isAlmostLegalMove] " + m.toString() + " captures king");
 			return false;
 		}
 
@@ -808,21 +827,6 @@ public class GameManager
 			}
 		}
 
-		GameManager gm = new GameManager(this);
-		try
-		{
-			gm.makeMove(m);
-		}
-		catch (GameOverException goe)
-		{
-			// Nothings happens, the timer for this is not relevant
-		}
-
-		if (gm.isCheckMate(color))
-		{
-			return false;
-		}
-
 		return this.isValidMove(piece, color, m);
 	}
 
@@ -834,8 +838,7 @@ public class GameManager
 	public ArrayList<Move> getLegalMoves(Piece p)
 	{
 		int color = p.getColor();
-		TableRecord tr = null;
-
+		//TableRecord tr = null;
 
 		/*
 		if (TranspositionTable.getInstance().get(this.hash) != null)
@@ -918,17 +921,6 @@ public class GameManager
 	 */
 	public GameManager makeMove (Move m) throws GameOverException
 	{
-		/*
-		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getSrc());		// Hash-out the old piece
-
-		if (m.isCapture())
-		{
-			this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getDst()).getPieceWithoutColorByte(), m.getDst());	// Hash-out captured piece
-		}
-
-		this.hash = this.hash ^ TranspositionTable.getHash(this.get(m.getSrc()).getPieceWithoutColorByte(), m.getDst());		// Hash-in new piece
-		*/
-
 		if (this.chronometer.isRunning())
 		{
 			int color = this.activeColor;
@@ -1185,7 +1177,7 @@ public class GameManager
 
 			for (Move m : moves)
 			{
-				if (this.isLegalMove(king, m))
+				if (this.isAlmostLegalMove(king, m))
 				{
 					legalMoves.add(m);
 				}
