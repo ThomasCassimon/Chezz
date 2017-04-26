@@ -36,13 +36,13 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 
 		//
-		String[] timeOptions = { "1 min", "2.5 min", "5 min", "30 min", "1 hour"};
+		String[] timeOptions = { "No Time Limit","1 min", "2.5 min", "5 min", "30 min", "1 hour"};
 
 		timeLimit = new JComboBox<>(timeOptions);
 
 		this.title = new JLabel("Chezz!");
 		this.load = new JButton("Load game");
-		this.start = new JButton("Start the game");
+		this.start = new JButton("Start new game");
 
 		this.undoText = new JLabel("");
 		this.undo = new JCheckBox("Undo enabled");
@@ -58,31 +58,30 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		panel.setBackground(UIData.BACKGROUND_COLOR);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		title.setFont(title.getFont().deriveFont(UIData.TITLE_FONT_SIZE));
-		title.setFont(title.getFont().deriveFont(Font.BOLD));
-		title.setAlignmentX(Component.CENTER_ALIGNMENT);
+		this.title.setFont(title.getFont().deriveFont(UIData.TITLE_FONT_SIZE));
+		this.title.setFont(title.getFont().deriveFont(Font.BOLD));
+		this.title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		timeLimitText.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//timeLimitText.setPreferredSize(UIData.CONFIGURATIONPANEL_TEXTBOX);
-		timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one of the default options. </html>");
-		//timeLimitText.setBorder(UIData.BORDER_BLACK);
+		this.timeLimitText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		this.timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one of the default options. </html>");
 
-		timeLimit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//timeLimit.setPreferredSize(UIData.CONFIGURATIONPANEL_TEXTBOX);
+		this.timeLimit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
-		undoText.setAlignmentX(Component.CENTER_ALIGNMENT );
-		undoText.setText("Do you want to enable undo's?");
+		this.undoText.setAlignmentX(Component.CENTER_ALIGNMENT );
+		this.undoText.setText("Do you want to enable undo's?");
 		//undoText.setBorder(UIData.BORDER_BLACK);
 
-		undo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		this.undo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		load.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		start.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+//		this.load.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+//		this.start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		//BUTTON FUNCTIONALITY
-		load.addActionListener(this);
+		this.load.addActionListener(this);
 
 		this.undo.setSelected(true);
 
@@ -92,14 +91,25 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 
 		//ADDING COMPONENTS
+		JPanel startPanel = new JPanel();
+		startPanel.setLayout(new BoxLayout(startPanel,BoxLayout.X_AXIS));
+		startPanel.setBackground(UIData.BACKGROUND_COLOR);
+
+		startPanel.add(load);
+		startPanel.add(start);
+
+
+
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
 		panel.add(title);
 
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
+
+
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
@@ -112,15 +122,13 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		panel.add(undoText);
 		panel.add(undo);
 
-
+		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(load);
-
-
+		panel.add(startPanel);
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(start);
+
 
 		this.setContentPane(panel);
 

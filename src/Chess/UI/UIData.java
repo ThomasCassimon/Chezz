@@ -20,7 +20,7 @@ public final class UIData
 	public static final Dimension BUTTONS_DIMENSION = new Dimension(250, 20);
 	public static final Dimension BOARD_DIMENSION = new Dimension(800, 800);
 	public static final Dimension GAMEPANEL_DIMENSION = new Dimension(1400, 850);
-	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(300, 500);
+	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(350, 500);
 	public static final Dimension HISTORY_DIMENSION = new Dimension(200, 750);
 	public static final Dimension CONFIGURATIONPANEL_TEXTBOX = new Dimension(300, 1);
 
@@ -53,7 +53,7 @@ public final class UIData
 	public static final Color LIGHT_BROWN = new Color(220, 204, 163);    //Tan (RGB 210,180,140)
 	public static final Color BACKGROUND_COLOR = new Color(247, 249, 249);    //Tan (RGB 210,180,140)
 	public static final Color FRAME_COLOR = new Color(98, 49, 17);
-	;
+
 	public static final Color TEXT_BACKGROUND_COLOR = BACKGROUND_COLOR;
 	public static final Color BORDER_COLOR = Color.BLACK;
 	public static final Color HIGHLIGHT = new Color(0, 85, 0);
@@ -65,7 +65,7 @@ public final class UIData
 
 	//FONTS
 	public static final float FONT_SIZE = 25.0f;
-	public static final float TITLE_FONT_SIZE = 40.0f;
+	public static final float TITLE_FONT_SIZE = 60.0f;
 
 	//BORDERS
 	public static final Border BORDER_BLACK = BorderFactory.createLineBorder(Color.BLACK);

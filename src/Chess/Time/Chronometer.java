@@ -50,6 +50,24 @@ public class Chronometer
 		timerTickBlack = new TimerTick(timeBlack);
 	}
 
+	public Chronometer(Chronometer chronometer)
+	{
+		timer= new Timer();
+
+		timeWhite = chronometer.getTimeWhite();
+		timeBlack = chronometer.getTimeWhite();
+
+		running = isRunning();
+
+		labelWhite = chronometer.getDisplayWhite();
+		labelBlack = chronometer.getDisplayBlack();
+
+		activeWhite = chronometer.isActiveWhite();
+
+		timerTickWhite = new TimerTick(timeWhite);
+		timerTickBlack = new TimerTick(timeBlack);
+	}
+
 	/**
 	 * start chronometer (white starts)
 	 */
@@ -166,5 +184,10 @@ public class Chronometer
 	public boolean isRunning ()
 	{
 		return this.running;
+	}
+
+	public boolean isActiveWhite()
+	{
+		return activeWhite;
 	}
 }

@@ -130,23 +130,15 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 			if (move != null)
 			{
+
+					this.makeMove(move);
+
+				System.out.println("Move input: " + input);
+				sidePanel.setMoveInput("");
 				if(move.isKingCastle()|move.isKingCastle())
 				{
 					handleCastling(move);
 				}
-				//try
-				{
-					this.makeMove(move);
-
-				}
-				//catch (GameOverException goe)
-				{
-					// Game is over
-					System.out.println("Game over!");
-				}
-
-				System.out.println("Move input: " + input);
-				sidePanel.setMoveInput("");
 			}
 			else
 			{
@@ -206,18 +198,9 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 						if (i == board.getIndex(move.get2DDst()))
 						{
 							this.makeMove(move);
-							if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
-							{
-								this.handleCheckMate();
-							}
-							if (move.isPromotion())
-							{
-								board.getTile(i).setIcon(this.handlePromotion(board.get2DCoord(i)));
-							}
-							if(move.isKingCastle()|move.isQueenCastle())
-							{
-								this.handleCastling(move);
-							}
+							this.handleMove(move);
+
+
 						}
 
 					}
@@ -326,6 +309,8 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public void makeMove(Move move)
 	{
+
+
 		try
 		{
 			gameManager.makeMove(move);
@@ -338,6 +323,22 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 		board.makeMove(move, gameManager.getActiveColorByte());
 		this.setHistory();
+	}
+
+	public void handleMove(Move move)
+	{
+		if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
+		{
+			this.handleCheckMate();
+		}
+		if (move.isPromotion())
+		{
+			board.getTile(board.getIndex(move.get2DSrc())).setIcon(this.handlePromotion(move.get2DSrc()));
+		}
+		if(move.isKingCastle()|move.isQueenCastle())
+		{
+			this.handleCastling(move);
+		}
 	}
 
 	public void setHistory()

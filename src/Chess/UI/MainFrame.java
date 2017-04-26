@@ -21,7 +21,6 @@ public class MainFrame implements ActionListener
 		configurationPanel = new ConfigurationPanel(gameManager);
 		gamePanel = new GamePanel(gameManager, this);
 
-		//gamePanel.getExit().addActionListener(this);
 		configurationPanel.getStart().addActionListener(this);
 
 		configurationPanel.setVisible(true);
@@ -30,14 +29,14 @@ public class MainFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		System.out.println("Action performed");
+		//System.out.println("Action performed");
 
 		if(e.getSource() == configurationPanel.getStart())
 		{
 			configurationPanel.setVisible(false);
 			gameManager.startChronometer();
 			gameManager.setSettings(configurationPanel.getSettings());
-			//gamePanel = new GamePanel(gameManager,this);
+			gamePanel = new GamePanel(gameManager,this);
 			gamePanel.setVisible(true);
 		}
 		else if(e.getSource() == gamePanel.getExit())
@@ -51,10 +50,6 @@ public class MainFrame implements ActionListener
 				gamePanel.setVisible(false);
 				gameManager = new GameManager();
 			}
-		}
-		else
-		{
-			System.out.println("not start or exit");
 		}
 
 	}
