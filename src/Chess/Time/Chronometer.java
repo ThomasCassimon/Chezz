@@ -71,6 +71,9 @@ public class Chronometer
 		this.timerTickWhite = new TimerTick(timeWhite);
 		this.timerTickBlack = new TimerTick(timeBlack);
 
+		this.labelBlack = timerTickBlack.getTimeDisplay();
+		this.labelWhite = timerTickWhite.getTimeDisplay();
+
 		this.activeWhite = true;
 		this.enabled = true;
 	}
@@ -81,10 +84,6 @@ public class Chronometer
 
 		this.timeWhite = chronometer.getTimeWhite();
 		this.timeBlack = chronometer.getTimeWhite();
-
-
-		this.labelWhite = chronometer.getDisplayWhite();
-		this.labelBlack = chronometer.getDisplayBlack();
 
 		this.activeWhite = true;
 
@@ -189,7 +188,15 @@ public class Chronometer
 	 */
 	public JLabel getDisplayWhite()
 	{
-		return timerTickWhite.getTimeDisplay();
+		if (enabled)
+		{
+			return timerTickWhite.getTimeDisplay();
+		}
+		else
+		{
+			return labelWhite;
+		}
+
 	}
 
 	/**
@@ -198,7 +205,15 @@ public class Chronometer
 	 */
 	public JLabel getDisplayBlack()
 	{
-		return timerTickBlack.getTimeDisplay();
+		if(enabled)
+		{
+			return timerTickBlack.getTimeDisplay();
+		}
+		else
+		{
+			return labelBlack;
+		}
+
 	}
 
 	/**
@@ -226,10 +241,22 @@ public class Chronometer
 
 	public void disable()
 	{
+		System.out.println("Timer disabled");
+
+		if(enabled)
+		{
+			labelBlack = timerTickBlack.getTimeDisplay();
+			labelWhite = timerTickWhite.getTimeDisplay();
+			timerTickBlack = null;
+			timerTickWhite = null;
+			timer.cancel();
+			labelWhite.setText("/");
+			labelBlack.setText("/");
+		}
+
+
 		enabled = false;
-		timerTickBlack.disable();
-		timerTickWhite.disable();
-		timer.cancel();
+
 	}
 
 

@@ -1363,6 +1363,6 @@ public class GameManager
 
 	public void disableChronometer()
 	{
-
+		chronometer.disable();
 	}
 }
