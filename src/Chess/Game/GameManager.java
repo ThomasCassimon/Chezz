@@ -5,6 +5,7 @@ import Chess.Athena.TableRecord;
 import Chess.Exceptions.Checked.GameOverException;
 import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
+import Chess.Exceptions.Unchecked.KingNotFoundException;
 import Chess.Time.Chronometer;
 import Chess.Utils.SettingsObject;
 
@@ -687,7 +688,7 @@ public class GameManager
 		boolean almost = this.isAlmostLegalMove(p,m);
 
 		GameManager gm = new GameManager(this);
-		gm.startChronometer();
+		//gm.startChronometer();
 
 		gm.makeMove(m);
 
@@ -1147,11 +1148,13 @@ public class GameManager
 	 */
 	public boolean isCheckMate (int color)
 	{
+		System.out.println("IS CHECK MATE");
 		Piece king = null;
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 
 		for (int i = 0; i < pieces.size(); i++)
 		{
+			System.out.println("Piece: " + pieces.get(i).toString());
 			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
 			{
 				king = pieces.get(i);
@@ -1178,8 +1181,10 @@ public class GameManager
 
 			return this.isCheck(color) && !checkPreventionPossible;
 		}
-
-		return this.isCheck(color);
+		else
+		{
+			throw new KingNotFoundException("isCheckMate() couldn't find king");
+		}
 	}
 
 	/**
@@ -1207,10 +1212,8 @@ public class GameManager
 		}
 		else
 		{
-			System.out.println("King not found");
+			throw new KingNotFoundException("isCheck() couldn't find king");
 		}
-
-		return true;
 	}
 
 	/**
@@ -1342,5 +1345,10 @@ public class GameManager
 	public void startChronometer()
 	{
 		this.chronometer.start();
+	}
+
+	public void disableChronometer()
+	{
+
 	}
 }
