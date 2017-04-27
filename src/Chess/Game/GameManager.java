@@ -35,7 +35,7 @@ public class GameManager
 	private ChessBoard cb;
 	private SettingsObject so;
 
-	private Chronometer chronometer = new Chronometer();
+	private Chronometer chronometer;
 
 
 	public GameManager ()
@@ -47,6 +47,8 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject();
+		this.chronometer = new Chronometer();
+		this.chronometer.disable();
 	}
 
 	public GameManager (SettingsObject so)
@@ -58,6 +60,8 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject(so);
+		this.chronometer = new Chronometer();
+		this.chronometer.disable();
 	}
 
 	public GameManager (GameManager gm)
@@ -69,6 +73,7 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.chronometer = new Chronometer(gm.chronometer);
+		this.chronometer.disable();
 
 		for (int i = 0; i < 8; i++)
 		{
