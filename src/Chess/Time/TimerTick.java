@@ -113,10 +113,5 @@ public class TimerTick extends TimerTask
 		this.timeDisplay = timeDisplay;
 		timeDisplay.setText(getPrettyTime());
 	}
-
-	public void disable()
-	{
-		this.timeDisplay.setText("/");
-	}
 }
 
