@@ -48,7 +48,7 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject();
 		this.chronometer = new Chronometer();
-		this.chronometer.disable();
+		//this.chronometer.disable();
 	}
 
 	public GameManager (SettingsObject so)
@@ -61,7 +61,7 @@ public class GameManager
 		this.cachedMoves = new ArrayList <Move> ();
 		this.so = new SettingsObject(so);
 		this.chronometer = new Chronometer();
-		this.chronometer.disable();
+		//this.chronometer.disable();
 	}
 
 	public GameManager (GameManager gm)
@@ -73,7 +73,7 @@ public class GameManager
 		this.moveHistory = new ArrayList <HistoryMove> ();
 		this.cachedMoves = new ArrayList <Move> ();
 		this.chronometer = new Chronometer(gm.chronometer);
-		this.chronometer.disable();
+		//this.chronometer.disable();
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -695,6 +695,7 @@ public class GameManager
 
 		GameManager gm = new GameManager(this);
 		//gm.startChronometer();
+		gm.disableChronometer();
 
 		gm.makeMove(m);
 
@@ -1173,6 +1174,7 @@ public class GameManager
 			ArrayList <Move> pseudoLegalMoves = this.getAllPseudoLegalMoves(color);
 
 			GameManager gm = new GameManager(this);
+			gm.disableChronometer();
 
 			boolean checkPreventionPossible = false;
 
@@ -1363,6 +1365,6 @@ public class GameManager
 
 	public void disableChronometer()
 	{
-		chronometer.disable();
+		this.chronometer.disable();
 	}
 }
