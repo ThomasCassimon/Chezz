@@ -152,9 +152,9 @@ public class ConfigurationPanel extends JFrame
 		{
 			case "No time limit":
 				System.out.println("no time limit");
-				settings.setTime_ms(0);
-				gameManager.getChronometer().getDisplayBlack().setText("/");
-				gameManager.getChronometer().getDisplayWhite().setText("/");
+				gameManager.getChronometer().disable();
+				//gameManager.getChronometer().getDisplayBlack().setText("/");
+				//gameManager.getChronometer().getDisplayWhite().setText("/");
 				break;
 			case "1 min":
 				System.out.println("time limit 1 min");

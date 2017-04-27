@@ -14,6 +14,7 @@ public class Chronometer
 
 	private boolean activeWhite;      //true = white, false = black
 	private boolean running;
+	private boolean enabled;
 
 	private long timeWhite;
 	private long timeBlack;
@@ -37,6 +38,7 @@ public class Chronometer
 
 
 		activeWhite = true;
+		enabled = true;
 	}
 
 	public Chronometer(long initialWhite, long initialBlack, JLabel labelWhite, JLabel labelBlack)
@@ -56,6 +58,7 @@ public class Chronometer
 		this.timerTickBlack.setTimeDisplay(this.labelBlack);
 
 		this.activeWhite = true;
+		this.enabled = true;
 	}
 
 	public Chronometer()
@@ -69,6 +72,7 @@ public class Chronometer
 		this.timerTickBlack = new TimerTick(timeBlack);
 
 		this.activeWhite = true;
+		this.enabled = true;
 	}
 
 	public Chronometer(Chronometer chronometer)
@@ -89,6 +93,9 @@ public class Chronometer
 
 		this.timerTickWhite.setTimeDisplay(labelWhite);
 		this.timerTickBlack.setTimeDisplay(labelBlack);
+
+		this.activeWhite = true;
+		this.enabled = true;
 	}
 
 	/**
@@ -96,9 +103,12 @@ public class Chronometer
 	 */
 	public void start()
 	{
-		activeWhite = true;
-		running = true;
-		timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
+		if(enabled)
+		{
+			activeWhite = true;
+			running = true;
+			timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
+		}
 	}
 
 	/**
@@ -106,31 +116,33 @@ public class Chronometer
 	 */
 	public void toggle()
 	{
-		//System.out.println("Chronometer toggled");
-		timeWhite = timerTickWhite.getTime();
-		timeBlack = timerTickBlack.getTime();
-
-		labelWhite = timerTickWhite.getTimeDisplay();
-		labelBlack = timerTickBlack.getTimeDisplay();
-
-		timer.cancel();
-		timer = new Timer();
-
-		timerTickWhite = new TimerTick(timeWhite,labelWhite);
-		timerTickBlack = new TimerTick(timeBlack,labelBlack);
-
-
-
-		if(activeWhite)
+		if(enabled)
 		{
-			timer.scheduleAtFixedRate(timerTickBlack,0, MILLISECOND);
-		}
-		else
-		{
-			timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
-		}
+			//System.out.println("Chronometer toggled");
+			timeWhite = timerTickWhite.getTime();
+			timeBlack = timerTickBlack.getTime();
 
-		activeWhite = !activeWhite;
+			labelWhite = timerTickWhite.getTimeDisplay();
+			labelBlack = timerTickBlack.getTimeDisplay();
+
+			timer.cancel();
+			timer = new Timer();
+
+			timerTickWhite = new TimerTick(timeWhite, labelWhite);
+			timerTickBlack = new TimerTick(timeBlack, labelBlack);
+
+
+			if (activeWhite)
+			{
+				timer.scheduleAtFixedRate(timerTickBlack, 0, MILLISECOND);
+			}
+			else
+			{
+				timer.scheduleAtFixedRate(timerTickWhite, 0, MILLISECOND);
+			}
+
+			activeWhite = !activeWhite;
+		}
 	}
 
 	/**
@@ -138,32 +150,35 @@ public class Chronometer
 	 */
 	public void pause()
 	{
-		if (running)
+		if(enabled)
 		{
-			timeWhite = timerTickWhite.getTime();
-			timeBlack = timerTickBlack.getTime();
-			labelWhite = timerTickWhite.getTimeDisplay();
-			labelBlack = timerTickBlack.getTimeDisplay();
-			timer.cancel();
-			running = false;
-		}
-		else
-		{
-
-			timer = new Timer();
-			timerTickWhite = new TimerTick(timeWhite,labelWhite);
-			timerTickBlack = new TimerTick(timeBlack, labelBlack);
-
-			if(activeWhite)
+			if (running)
 			{
-				timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
+				timeWhite = timerTickWhite.getTime();
+				timeBlack = timerTickBlack.getTime();
+				labelWhite = timerTickWhite.getTimeDisplay();
+				labelBlack = timerTickBlack.getTimeDisplay();
+				timer.cancel();
+				running = false;
 			}
 			else
 			{
-				timer.scheduleAtFixedRate(timerTickBlack,0, MILLISECOND);
-			}
 
-			running = true;
+				timer = new Timer();
+				timerTickWhite = new TimerTick(timeWhite, labelWhite);
+				timerTickBlack = new TimerTick(timeBlack, labelBlack);
+
+				if (activeWhite)
+				{
+					timer.scheduleAtFixedRate(timerTickWhite, 0, MILLISECOND);
+				}
+				else
+				{
+					timer.scheduleAtFixedRate(timerTickBlack, 0, MILLISECOND);
+				}
+
+				running = true;
+			}
 		}
 
 	}
@@ -207,6 +222,14 @@ public class Chronometer
 	public boolean isRunning ()
 	{
 		return this.running;
+	}
+
+	public void disable()
+	{
+		enabled = false;
+		timerTickBlack.disable();
+		timerTickWhite.disable();
+		timer.cancel();
 	}
 
 
