@@ -8,6 +8,7 @@ import javax.swing.*;
 
 public class TimePanel extends JPanel
 {
+	private GameManager gameManager;
 	private Chronometer chronometer;
 
 	private JLabel labelWhite;
@@ -20,6 +21,7 @@ public class TimePanel extends JPanel
 
 	public TimePanel(GameManager gameManager)
 	{
+		this.gameManager = gameManager;
 		this.chronometer = gameManager.getChronometer();
 
 		this.labelWhite = new JLabel("");
@@ -44,5 +46,10 @@ public class TimePanel extends JPanel
 
 		//this.setBorder(UIData.BORDER_BLACK);
 
+	}
+
+	public void refreshChronometer(long timeLimit)
+	{
+		gameManager.setChronometer(new Chronometer(timeLimit, timeLimit, timeWhite, timeBlack));
 	}
 }

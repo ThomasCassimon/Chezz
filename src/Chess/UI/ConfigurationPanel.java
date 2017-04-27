@@ -1,20 +1,18 @@
 package Chess.UI;
 
 import Chess.Game.GameManager;
-import Chess.Utils.Parser;
 import Chess.Utils.SettingsObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
-public class ConfigurationPanel extends JFrame implements ActionListener
+public class ConfigurationPanel extends JFrame
 {
 	private JLabel title;
 	private JButton load;
 	private JButton start;
+	private JButton exit;
 
 	private JLabel undoText;
 	private JCheckBox undo;
@@ -36,13 +34,13 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 
 		//
-		String[] timeOptions = { "No Time Limit","1 min", "2.5 min", "5 min", "30 min", "1 hour"};
 
-		timeLimit = new JComboBox<>(timeOptions);
+		timeLimit = new JComboBox<>(UIData.timeOptions);
 
 		this.title = new JLabel("Chezz!");
 		this.load = new JButton("Load game");
 		this.start = new JButton("Start new game");
+		this.exit = new JButton("Exit game");
 
 		this.undoText = new JLabel("");
 		this.undo = new JCheckBox("Undo enabled");
@@ -66,6 +64,7 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		this.timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one of the default options. </html>");
 
 		this.timeLimit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		this.timeLimit.setBackground(UIData.BACKGROUND_COLOR);
 
 
 		this.undoText.setAlignmentX(Component.CENTER_ALIGNMENT );
@@ -74,6 +73,8 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 
 		this.undo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+		this.exit.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
 
 //		this.load.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -81,7 +82,6 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 //		this.start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		//BUTTON FUNCTIONALITY
-		this.load.addActionListener(this);
 
 		this.undo.setSelected(true);
 
@@ -96,10 +96,11 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		startPanel.setBackground(UIData.BACKGROUND_COLOR);
 
 		startPanel.add(load);
+		startPanel.add(Box.createRigidArea(UIData.SPACING));
 		startPanel.add(start);
 
-
-
+		//panel.add(Box.createRigidArea(UIData.SPACING));
+		//panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
@@ -128,6 +129,9 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		panel.add(startPanel);
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
+		panel.add(exit);
+		panel.add(Box.createRigidArea(UIData.SPACING));
+
 
 
 		this.setContentPane(panel);
@@ -135,23 +139,44 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 		this.setResizable(false);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if(e.getSource() == load)
-		{
-			Parser.readFromFile(gameManager,this);
-		}
 
-	}
 
 	public SettingsObject getSettings()
 	{
+
 		SettingsObject settings = new SettingsObject();
 
 		settings.setUndo(undo.isSelected());
 
-		//settings.setTime_s((long) timeLimit.getSelectedItem());
+		switch( (String) timeLimit.getSelectedItem())
+		{
+			case "No time limit":
+				System.out.println("no time limit");
+				settings.setTime_ms(0);
+				gameManager.getChronometer().getDisplayBlack().setText("/");
+				gameManager.getChronometer().getDisplayWhite().setText("/");
+				break;
+			case "1 min":
+				System.out.println("time limit 1 min");
+				settings.setTime_ms(60000); //1 min
+				break;
+			case "2.5 min":
+				System.out.println("time limit 2.5 min");
+				settings.setTime_ms(150000); //2.5 min
+				break;
+			case "5 min":
+				System.out.println("time limit 5 min");
+				settings.setTime_ms(300000); //5 min
+				break;
+			case "30 min":
+				System.out.println("time limit 30 min");
+				settings.setTime_ms(1800000); //30 min
+				break;
+			case "1 hour":
+				System.out.println("time limit 1 hour");
+				settings.setTime_ms(3600000); //60 min
+
+		}
 
 		return settings;
 	}
@@ -159,5 +184,15 @@ public class ConfigurationPanel extends JFrame implements ActionListener
 	public JButton getStart()
 	{
 		return this.start;
+	}
+
+	public JButton getLoad()
+	{
+		return this.load;
+	}
+
+	public JButton getExit()
+	{
+		return this.exit;
 	}
 }

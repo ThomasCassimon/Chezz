@@ -34,7 +34,7 @@ public class SidePanel extends JPanel
 		this.pause = new JButton("Pause");
 		this.undo = new JButton(("Undo"));
 		this.save = new JButton("Save");
-		this.exit = new JButton("Exit");
+		this.exit = new JButton("Exit to main menu");
 
 
 
@@ -79,6 +79,14 @@ public class SidePanel extends JPanel
 		this.moveInput.addActionListener(gamePanel);
 		this.moveInput.addMouseListener(gamePanel);
 		this.exit.addActionListener(gamePanel);
+
+		if(MainFrame.isSpecialLayout())
+		{
+			this.pause.setPreferredSize(UIData.BUTTONS_DIMENSION);
+			this.save.setPreferredSize(UIData.BUTTONS_DIMENSION);
+			this.exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
+			this.undo.setPreferredSize(UIData.BUTTONS_DIMENSION);
+		}
 
 
 		this.add(leftPanel);
@@ -129,6 +137,11 @@ public class SidePanel extends JPanel
 	public void setHistory(String history)
 	{
 		this.history.setText("History: \n" + history);
+	}
+
+	public void refreshTimePanel(long timelimit)
+	{
+		timePanel.refreshChronometer(timelimit);
 	}
 
 
