@@ -7,6 +7,7 @@ import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Exceptions.Unchecked.KingNotFoundException;
 import Chess.Time.Chronometer;
+import Chess.UI.GamePanel;
 import Chess.Utils.SettingsObject;
 
 import java.util.ArrayList;
@@ -1337,14 +1338,22 @@ public class GameManager
 		return this.chronometer;
 	}
 
-	public void setSettings(SettingsObject settings)
+	public void setSettings(SettingsObject settings, GamePanel gamePanel)
 	{
 		this.so = settings;
+
+		System.out.println("Setting chronometer to " + settings.getTime_ms());
+		gamePanel.refreshTimePanel(settings.getTime_ms());
 	}
 
 	public void startChronometer()
 	{
 		this.chronometer.start();
+	}
+
+	public void setChronometer(Chronometer chronometer)
+	{
+		this.chronometer = chronometer;
 	}
 
 	public void disableChronometer()

@@ -6,7 +6,7 @@ import java.util.Timer;
 
 public class Chronometer
 {
-	private static final int NANOSECOND = 1;
+	private static final int MILLISECOND = 1;
 	private Timer timer;
 
 	private TimerTick timerTickWhite;
@@ -15,15 +15,15 @@ public class Chronometer
 	private boolean activeWhite;      //true = white, false = black
 	private boolean running;
 
-	private int timeWhite;
-	private int timeBlack;
+	private long timeWhite;
+	private long timeBlack;
 
 	private JLabel labelWhite;
 	private JLabel labelBlack;
 
 
 
-	public Chronometer(int initialWhite, int initialBlack)
+	public Chronometer(long initialWhite, long initialBlack)
 	{
 		timer= new Timer();
 
@@ -39,33 +39,56 @@ public class Chronometer
 		activeWhite = true;
 	}
 
+	public Chronometer(long initialWhite, long initialBlack, JLabel labelWhite, JLabel labelBlack)
+	{
+		this.timer= new Timer();
+
+		this.timeWhite = initialWhite;
+		this.timeBlack = initialBlack;
+
+		this.timerTickWhite = new TimerTick(timeWhite);
+		this.timerTickBlack = new TimerTick(timeBlack);
+
+		this.labelWhite = labelWhite;
+		this.labelBlack = labelBlack;
+
+		this.timerTickWhite.setTimeDisplay(this.labelWhite);
+		this.timerTickBlack.setTimeDisplay(this.labelBlack);
+
+		this.activeWhite = true;
+	}
+
 	public Chronometer()
 	{
-		timer= new Timer();
+		this.timer= new Timer();
 
-		timeWhite = 300000;
-		timeBlack = 300000;
+		this.timeWhite = 300000;
+		this.timeBlack = 300000;
 
-		timerTickWhite = new TimerTick(timeWhite);
-		timerTickBlack = new TimerTick(timeBlack);
+		this.timerTickWhite = new TimerTick(timeWhite);
+		this.timerTickBlack = new TimerTick(timeBlack);
+
+		this.activeWhite = true;
 	}
 
 	public Chronometer(Chronometer chronometer)
 	{
-		timer= new Timer();
+		this.timer= new Timer();
 
-		timeWhite = chronometer.getTimeWhite();
-		timeBlack = chronometer.getTimeWhite();
+		this.timeWhite = chronometer.getTimeWhite();
+		this.timeBlack = chronometer.getTimeWhite();
 
-		running = isRunning();
 
-		labelWhite = chronometer.getDisplayWhite();
-		labelBlack = chronometer.getDisplayBlack();
+		this.labelWhite = chronometer.getDisplayWhite();
+		this.labelBlack = chronometer.getDisplayBlack();
 
-		activeWhite = chronometer.isActiveWhite();
+		this.activeWhite = true;
 
-		timerTickWhite = new TimerTick(timeWhite);
-		timerTickBlack = new TimerTick(timeBlack);
+		this.timerTickWhite = new TimerTick(timeWhite);
+		this.timerTickBlack = new TimerTick(timeBlack);
+
+		this.timerTickWhite.setTimeDisplay(labelWhite);
+		this.timerTickBlack.setTimeDisplay(labelBlack);
 	}
 
 	/**
@@ -75,7 +98,7 @@ public class Chronometer
 	{
 		activeWhite = true;
 		running = true;
-		timer.scheduleAtFixedRate(timerTickWhite,0,NANOSECOND);
+		timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
 	}
 
 	/**
@@ -100,11 +123,11 @@ public class Chronometer
 
 		if(activeWhite)
 		{
-			timer.scheduleAtFixedRate(timerTickBlack,0, NANOSECOND);
+			timer.scheduleAtFixedRate(timerTickBlack,0, MILLISECOND);
 		}
 		else
 		{
-			timer.scheduleAtFixedRate(timerTickWhite,0, NANOSECOND);
+			timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
 		}
 
 		activeWhite = !activeWhite;
@@ -133,11 +156,11 @@ public class Chronometer
 
 			if(activeWhite)
 			{
-				timer.scheduleAtFixedRate(timerTickWhite,0, NANOSECOND);
+				timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
 			}
 			else
 			{
-				timer.scheduleAtFixedRate(timerTickBlack,0, NANOSECOND);
+				timer.scheduleAtFixedRate(timerTickBlack,0, MILLISECOND);
 			}
 
 			running = true;
@@ -167,7 +190,7 @@ public class Chronometer
 	 * get time White
 	 * @return time White
 	 */
-	public int getTimeWhite()
+	public long getTimeWhite()
 	{
 		return timerTickWhite.getTime();
 	}
@@ -176,7 +199,7 @@ public class Chronometer
 	 * get time Black
 	 * @return time Black
 	 */
-	public int getTimeBlack()
+	public long getTimeBlack()
 	{
 		return timerTickBlack.getTime();
 	}
@@ -186,8 +209,5 @@ public class Chronometer
 		return this.running;
 	}
 
-	public boolean isActiveWhite()
-	{
-		return activeWhite;
-	}
+
 }

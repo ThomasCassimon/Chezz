@@ -15,9 +15,12 @@ public final class UIData
 	public static final int NUMBER_TILES = 8;
 	public static final int TOTAL_TILES = UIData.NUMBER_TILES * UIData.NUMBER_TILES;
 
+	//STRINGS
+	public static final String[] timeOptions = {"No time limit", "1 min" , "2.5 min", "5 min", "30 min", "1 hour"};
+
 
 	//DIMENSIONS
-	public static final Dimension BUTTONS_DIMENSION = new Dimension(250, 20);
+	public static final Dimension BUTTONS_DIMENSION = new Dimension(300, 25);
 	public static final Dimension BOARD_DIMENSION = new Dimension(800, 800);
 	public static final Dimension GAMEPANEL_DIMENSION = new Dimension(1400, 850);
 	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(350, 500);
@@ -56,11 +59,11 @@ public final class UIData
 
 	public static final Color TEXT_BACKGROUND_COLOR = BACKGROUND_COLOR;
 	public static final Color BORDER_COLOR = Color.BLACK;
-	public static final Color HIGHLIGHT = new Color(0, 85, 0);
-	public static final Color ACTIVE_PIECE = new Color(252, 168, 4);
-	public static final Color CAPTURE = new Color(131, 39, 37);
+	public static final Color HIGHLIGHT = new Color(93, 176, 93);
+	public static final Color ACTIVE_PIECE = new Color(255, 237, 83);
+	public static final Color CAPTURE = new Color(189, 60, 56);
 	public static final Color PROMOTION = new Color(36, 123, 160); //lapis lazuli
-	public static final Color CAPTURE_AND_PROMOTION = new Color(74, 37, 72); //russian violet
+	public static final Color CAPTURE_AND_PROMOTION = new Color(138, 25, 130); //russian violet
 
 
 	//FONTS

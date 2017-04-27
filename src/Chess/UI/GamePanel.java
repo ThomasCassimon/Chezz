@@ -54,7 +54,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	/**
 	 * Sets all the pieces in the right place at the beginning of the game
 	 */
-	private void initBoard()
+	public void initBoard()
 	{
 		ArrayList<Piece> pieces;
 		pieces = this.gameManager.getAllPieces(PieceData.WHITE_BYTE);
@@ -351,6 +351,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	public GameManager getGameManager()
 	{
 		return gameManager;
+	}
+
+	public void refreshTimePanel(long timelimit)
+	{
+		sidePanel.refreshTimePanel(timelimit);
 	}
 
 

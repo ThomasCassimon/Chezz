@@ -1,6 +1,7 @@
 package Chess.UI;
 
 import Chess.Game.GameManager;
+import Chess.Utils.Parser;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,8 @@ public class MainFrame implements ActionListener
 		gamePanel = new GamePanel(gameManager, this);
 
 		configurationPanel.getStart().addActionListener(this);
+		configurationPanel.getLoad().addActionListener(this);
+		configurationPanel.getExit().addActionListener(this);
 
 		configurationPanel.setVisible(true);
 	}
@@ -34,10 +37,14 @@ public class MainFrame implements ActionListener
 		if(e.getSource() == configurationPanel.getStart())
 		{
 			configurationPanel.setVisible(false);
+			gameManager.setSettings(configurationPanel.getSettings(),gamePanel);
+			gamePanel.initBoard();
 			gameManager.startChronometer();
-			gameManager.setSettings(configurationPanel.getSettings());
-			gamePanel = new GamePanel(gameManager,this);
 			gamePanel.setVisible(true);
+		}
+		if(e.getSource() == configurationPanel.getLoad())
+		{
+			Parser.readFromFile(gameManager,configurationPanel);
 		}
 		else if(e.getSource() == gamePanel.getExit())
 		{
@@ -49,8 +56,29 @@ public class MainFrame implements ActionListener
 				configurationPanel.setVisible(true);
 				gamePanel.setVisible(false);
 				gameManager = new GameManager();
+				gameManager.init();
+				gamePanel = new GamePanel(gameManager, this);
 			}
 		}
+		else if(e.getSource() == configurationPanel.getExit())
+		{
+			System.exit(0);
+		}
 
+	}
+
+
+	public static boolean isSpecialLayout()
+	{
+		String os = System.getProperty("os.name").toLowerCase();
+
+		if (os.indexOf("mac") >= 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
