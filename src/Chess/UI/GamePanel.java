@@ -309,17 +309,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public void makeMove(Move move)
 	{
-
-
-		try
-		{
-			gameManager.makeMove(move);
-		}
-		catch (GameOverException goe)
-		{
-			// Game was over
-			System.out.println("Game over!");
-		}
+		gameManager.makeMove(move);
 
 		board.makeMove(move, gameManager.getActiveColorByte());
 		this.setHistory();

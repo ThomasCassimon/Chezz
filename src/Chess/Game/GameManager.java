@@ -688,15 +688,14 @@ public class GameManager
 
 		GameManager gm = new GameManager(this);
 		gm.startChronometer();
-		try
-		{
-			gm.makeMove(m);
-		}
-		catch (GameOverException goe)
-		{
-			goe.printStackTrace();
-		}
-		return almost && !gm.isCheckMate(p.getColor());
+
+		gm.makeMove(m);
+
+		boolean check = gm.isCheckMate(p.getColor());
+
+		//System.out.println("Move: " + m.toString() + " almost: " + almost + " checkMate: " + check);
+
+		return almost && !check;
 	}
 
 	public boolean isAlmostLegalMove(Piece p, Move m)
@@ -918,7 +917,7 @@ public class GameManager
 	 * @param m The move to be made
 	 * @return itself after making the move
 	 */
-	public GameManager makeMove (Move m) throws GameOverException
+	public GameManager makeMove (Move m)
 	{
 		if (this.chronometer.isRunning())
 		{
@@ -992,19 +991,10 @@ public class GameManager
 			this.toggleActivePlayer();
 			this.chronometer.toggle();
 
-			if (this.isCheckMate(color))
-			{
-				this.undo();
-
-				return null;
-			}
-
 			return this;
 		}
-		else
-		{
-			throw new GameOverException("Timer of the active player is not running, it may have ran out or the game might be paused");
-		}
+
+		return null;
 	}
 
 	/**
@@ -1171,37 +1161,25 @@ public class GameManager
 
 		if (king != null)
 		{
-			ArrayList<Move> moves = king.getAllPossibleMoves();
-			ArrayList<Move> legalMoves = new ArrayList<>();
+			ArrayList <Move> pseudoLegalMoves = this.getAllPseudoLegalMoves(color);
 
-			for (Move m : moves)
+			GameManager gm = new GameManager(this);
+
+			boolean checkPreventionPossible = false;
+
+			for (Move m : pseudoLegalMoves)
 			{
-				if (this.isAlmostLegalMove(king, m))
+				gm.makeMove(m);
+				if (!gm.isCheck(color))
 				{
-					legalMoves.add(m);
+					checkPreventionPossible = true;
 				}
 			}
 
-			//System.out.println("#Moves: " + moves.size());
-			boolean allAttacked = true;
-
-			for (int i = 0; i < moves.size(); i++)
-			{
-				if (this.isAttacked(color, moves.get(i).getDst()) == 0)
-				{
-					//System.out.println(moves.get(i).toString() + " setting all attacked to false");
-					allAttacked = false;
-					break;
-				}
-			}
-
-			boolean kingAttacked = this.isAttacked(color, king.getPositionByte()) > 0;
-			//System.out.println("King attacked: " + Boolean.toString(kingAttacked));
-
-			return allAttacked && kingAttacked;
+			return this.isCheck(color) && !checkPreventionPossible;
 		}
 
-		return true;
+		return this.isCheck(color);
 	}
 
 	/**
@@ -1223,7 +1201,16 @@ public class GameManager
 			}
 		}
 
-		return (this.isAttacked(color, king.getPositionByte()) >= 1);
+		if (king != null)
+		{
+			return (this.isAttacked(color, king.getPositionByte()) >= 1);
+		}
+		else
+		{
+			System.out.println("King not found");
+		}
+
+		return true;
 	}
 
 	/**
