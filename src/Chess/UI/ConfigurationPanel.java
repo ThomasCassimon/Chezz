@@ -152,7 +152,7 @@ public class ConfigurationPanel extends JFrame
 		{
 			case "No time limit":
 				System.out.println("no time limit");
-				gameManager.getChronometer().disable();
+				gameManager.disableChronometer();
 				//gameManager.getChronometer().getDisplayBlack().setText("/");
 				//gameManager.getChronometer().getDisplayWhite().setText("/");
 				break;
