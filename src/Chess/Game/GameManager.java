@@ -1155,13 +1155,13 @@ public class GameManager
 	 */
 	public boolean isCheckMate (int color)
 	{
-		System.out.println("IS CHECK MATE");
+		//System.out.println("IS CHECK MATE");
 		Piece king = null;
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 
 		for (int i = 0; i < pieces.size(); i++)
 		{
-			System.out.println("Piece: " + pieces.get(i).toString());
+			//System.out.println("Piece: " + pieces.get(i).toString());
 			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
 			{
 				king = pieces.get(i);
@@ -1366,5 +1366,6 @@ public class GameManager
 	public void disableChronometer()
 	{
 		this.chronometer.disable();
+		System.out.println("Chronometer disabled via gamemanager");
 	}
 }

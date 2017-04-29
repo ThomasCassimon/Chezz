@@ -78,6 +78,11 @@ public class Chronometer
 		this.enabled = true;
 	}
 
+	/**
+	 * Creates new chronometer from another chronometer
+	 * DOESN'T copy the labels to prevent conflicts!!!
+	 * @param chronometer
+	 */
 	public Chronometer(Chronometer chronometer)
 	{
 		this.timer= new Timer();
@@ -87,14 +92,27 @@ public class Chronometer
 
 		this.activeWhite = true;
 
-		this.timerTickWhite = new TimerTick(timeWhite);
-		this.timerTickBlack = new TimerTick(timeBlack);
+		this.enabled = chronometer.isEnabled();
 
-		this.timerTickWhite.setTimeDisplay(labelWhite);
-		this.timerTickBlack.setTimeDisplay(labelBlack);
+		System.out.println("New chronometer ENABLED = " + enabled);
+
+		if(this.enabled)
+		{
+			this.timerTickWhite = new TimerTick(timeWhite);
+			this.timerTickBlack = new TimerTick(timeBlack);
+
+//			this.timerTickWhite.setTimeDisplay(chronometer.getDisplayWhite());
+//			this.timerTickBlack.setTimeDisplay(chronometer.getDisplayBlack());
+		}
+		else
+		{
+			this.timerTickWhite = null;
+			this.timerTickBlack = null;
+		}
+
 
 		this.activeWhite = true;
-		this.enabled = true;
+
 	}
 
 	/**
@@ -102,10 +120,12 @@ public class Chronometer
 	 */
 	public void start()
 	{
+		activeWhite = true;
+		running = true;
+
 		if(enabled)
 		{
-			activeWhite = true;
-			running = true;
+
 			timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
 		}
 	}
@@ -222,7 +242,15 @@ public class Chronometer
 	 */
 	public long getTimeWhite()
 	{
-		return timerTickWhite.getTime();
+		if(enabled)
+		{
+			return timerTickWhite.getTime();
+		}
+		else
+		{
+			return timeWhite;
+		}
+
 	}
 
 	/**
@@ -231,7 +259,15 @@ public class Chronometer
 	 */
 	public long getTimeBlack()
 	{
-		return timerTickBlack.getTime();
+		if(enabled)
+		{
+			return timerTickBlack.getTime();
+		}
+		else
+		{
+			return timeBlack;
+		}
+
 	}
 
 	public boolean isRunning ()
@@ -257,6 +293,11 @@ public class Chronometer
 
 		enabled = false;
 
+	}
+
+	public boolean isEnabled()
+	{
+		return enabled;
 	}
 
 
