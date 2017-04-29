@@ -59,6 +59,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		ArrayList<Piece> pieces;
 		pieces = this.gameManager.getAllPieces(PieceData.WHITE_BYTE);
 
+		for(int i= 0; i< UIData.TOTAL_TILES; i++)
+		{
+			board.setTileIcon(i,null);
+		}
+
 		for (Piece piece: pieces)
 		{
 			board.setPiece(piece);

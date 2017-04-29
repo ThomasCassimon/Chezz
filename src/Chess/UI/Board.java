@@ -474,4 +474,9 @@ public class Board extends JPanel
 			this.setBoardBlack();
 		}
 	}
+
+	public void setTileIcon(int i, Icon icon)
+	{
+		tiles[i].setIcon(icon);
+	}
 }

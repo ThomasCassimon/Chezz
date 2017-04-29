@@ -44,7 +44,12 @@ public class MainFrame implements ActionListener
 		}
 		if(e.getSource() == configurationPanel.getLoad())
 		{
+			gameManager.startChronometer();
 			Parser.readFromFile(gameManager,configurationPanel);
+			configurationPanel.setVisible(false);
+			gamePanel.initBoard();
+			gamePanel.setVisible(true);
+
 		}
 		else if(e.getSource() == gamePanel.getExit())
 		{
