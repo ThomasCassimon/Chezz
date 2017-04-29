@@ -94,7 +94,7 @@ public class Chronometer
 
 		this.enabled = chronometer.isEnabled();
 
-		System.out.println("New chronometer ENABLED = " + enabled);
+		//System.out.println("New chronometer ENABLED = " + enabled);
 
 		if(this.enabled)
 		{
@@ -277,7 +277,7 @@ public class Chronometer
 
 	public void disable()
 	{
-		System.out.println("Timer disabled");
+		//System.out.println("Timer disabled");
 
 		if(enabled)
 		{
