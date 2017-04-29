@@ -14,14 +14,14 @@ public class TimerTick extends TimerTask
 	{
 		time = initialCounter;
 		timeDisplay = new JLabel(getPrettyTime());
-		System.out.println("New timertick created with initial time");
+		//System.out.println("New timertick created with initial time");
 	}
 
 	public TimerTick(long initialCounter, JLabel label)
 	{
 		time = initialCounter;
 		timeDisplay = label;
-		System.out.println("New timertick created with initial time and label");
+		//System.out.println("New timertick created with initial time and label");
 	}
 
 	@Override

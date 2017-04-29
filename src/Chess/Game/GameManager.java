@@ -1349,7 +1349,7 @@ public class GameManager
 	{
 		this.so = settings;
 
-		System.out.println("Setting chronometer to " + settings.getTime_ms());
+		//System.out.println("Setting chronometer to " + settings.getTime_ms());
 		gamePanel.refreshTimePanel(settings.getTime_ms());
 	}
 
@@ -1366,6 +1366,6 @@ public class GameManager
 	public void disableChronometer()
 	{
 		this.chronometer.disable();
-		System.out.println("Chronometer disabled via gamemanager");
+		//System.out.println("Chronometer disabled via gamemanager");
 	}
 }

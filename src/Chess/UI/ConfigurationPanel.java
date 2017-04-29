@@ -151,29 +151,29 @@ public class ConfigurationPanel extends JFrame
 		switch( (String) timeLimit.getSelectedItem())
 		{
 			case "No time limit":
-				System.out.println("no time limit");
+				//System.out.println("no time limit");
 				gameManager.disableChronometer();
 				//gameManager.getChronometer().getDisplayBlack().setText("/");
 				//gameManager.getChronometer().getDisplayWhite().setText("/");
 				break;
 			case "1 min":
-				System.out.println("time limit 1 min");
+				//System.out.println("time limit 1 min");
 				settings.setTime_ms(60000); //1 min
 				break;
 			case "2.5 min":
-				System.out.println("time limit 2.5 min");
+				//System.out.println("time limit 2.5 min");
 				settings.setTime_ms(150000); //2.5 min
 				break;
 			case "5 min":
-				System.out.println("time limit 5 min");
+				//System.out.println("time limit 5 min");
 				settings.setTime_ms(300000); //5 min
 				break;
 			case "30 min":
-				System.out.println("time limit 30 min");
+				//System.out.println("time limit 30 min");
 				settings.setTime_ms(1800000); //30 min
 				break;
 			case "1 hour":
-				System.out.println("time limit 1 hour");
+				//System.out.println("time limit 1 hour");
 				settings.setTime_ms(3600000); //60 min
 
 		}
