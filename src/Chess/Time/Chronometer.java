@@ -91,6 +91,7 @@ public class Chronometer
 		this.timeBlack = chronometer.getTimeWhite();
 
 		this.activeWhite = true;
+		this.running = true;
 
 		this.enabled = chronometer.isEnabled();
 
@@ -110,9 +111,6 @@ public class Chronometer
 			this.timerTickBlack = null;
 		}
 
-
-		this.activeWhite = true;
-
 	}
 
 	/**
@@ -120,12 +118,11 @@ public class Chronometer
 	 */
 	public void start()
 	{
+		timer = new Timer();
 		activeWhite = true;
-		running = true;
 
 		if(enabled)
 		{
-
 			timer.scheduleAtFixedRate(timerTickWhite,0, MILLISECOND);
 		}
 	}
