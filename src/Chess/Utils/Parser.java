@@ -2,6 +2,7 @@ package Chess.Utils;
 
 import Chess.Game.*;
 import Chess.UI.GamePanel;
+import Chess.UI.MainFrame;
 import Chess.UI.UIData;
 
 import javax.swing.*;
@@ -128,6 +129,29 @@ public class Parser
 		String text ="";
 
 
+		if(gp.getGameManager().getSettings().undoEnabled())
+		{
+			text += "1\n";
+		}
+		else
+		{
+			text += "0\n";
+		}
+		if(gp.getGameManager().getChronometer().isEnabled())
+		{
+			text += Long.toString( gp.getGameManager().getChronometer().getTimeWhite()) + "\n";
+			text += Long.toString( gp.getGameManager().getChronometer().getTimeBlack()) + "\n";
+		}
+		else
+		{
+			text += "/\n";
+		}
+
+		for(Move move: history)
+		{
+			text += Parser.moveToString(move) + "\n";
+		}
+
 		int returnvalue = fc.showDialog(gp, "Save to...");
 
 		if(returnvalue == JFileChooser.APPROVE_OPTION)
@@ -140,10 +164,7 @@ public class Parser
 
 				
 
-				for(Move move: history)
-				{
-					text += Parser.moveToString(move) + "\n";
-				}
+
 				writer.print(text);
 				writer.close();
 			}
@@ -159,7 +180,7 @@ public class Parser
 	/**
 	 * Reads moves from a file and the moves are made immediately.
 	 */
-	public static void readFromFile(GameManager gm, JFrame gp)
+	public static void readFromFile(GameManager gm, JFrame gp, MainFrame mf)
 	{
 		JFileChooser fc = new JFileChooser();
 
@@ -171,11 +192,38 @@ public class Parser
 			{
 				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fc.getSelectedFile())));
 				String str;
+				SettingsObject so = new SettingsObject();
+
+				if( reader.readLine() == "1")
+				{
+					System.out.println("Undo enabled via file");
+					so.setUndo(true);
+				}
+				else
+				{
+					System.out.println("Undo disabled via file");
+					so.setUndo(false);
+				}
+
+				if((str = reader.readLine()) == "/")
+				{
+					System.out.println("Chronometer disabled via file");
+					gm.getChronometer().disable();
+				}
+				else
+				{
+					System.out.println("Chronometer values set via file");
+					so.setTime_ms_W(Long.valueOf(str));
+					so.setTime_ms_B(Long.valueOf(reader.readLine()));
+				}
+				gm.setSettings(so, mf.getGamePanel());
 				while((str =reader.readLine()) != null & str.length() != 0)
 				{
 					Move move = Parser.stringToMove(str, gm);
 					gm.makeMove(move);
 				}
+
+
 			}
 			catch(Exception e)
 			{
