@@ -188,7 +188,6 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 						board.setActive(i);
 					}
 
-
 					gameManager.setCachedMoves(moves);
 					for (Move move : moves)
 					{
