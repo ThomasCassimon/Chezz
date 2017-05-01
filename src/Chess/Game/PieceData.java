@@ -1,7 +1,7 @@
 package Chess.Game;
 
 import Chess.Exceptions.Unchecked.IllegalPieceException;
-import Chess.Exceptions.Unchecked.IllegalSideException;
+import Chess.Exceptions.Unchecked.IllegalColorException;
 import Chess.UI.UIData;
 
 /**
@@ -359,10 +359,22 @@ public final class PieceData
 	 * Thie function finds the color int of the opponent
 	 * @param color The players color
 	 * @return The opponent's color
-	 * @throws IllegalSideException
 	 */
-	public static int getOpponentColor(int color) throws IllegalSideException
+	public static int getOpponentColor(int color)
 	{
 		return color ^ PieceData.COLOR_MASK;
+	}
+
+	public static String getColorString (int color) throws IllegalColorException
+	{
+		switch (color)
+		{
+			case WHITE_BYTE:
+				return "White";
+			case BLACK_BYTE:
+				return "Black";
+			default:
+				throw new IllegalColorException(Integer.toString(color) + " is not a valid color byte");
+		}
 	}
 }
