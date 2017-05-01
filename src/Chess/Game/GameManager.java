@@ -425,7 +425,8 @@ public class GameManager
 				return false;
 			}
 
-			if ((this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (1 * colorMult))).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
+			//todo: look into the lonely colorMult
+			if ((this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (colorMult))).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
 			{
 				//System.out.println("Piece in the way of double move: " + this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (1 * colorMult)));
 				return false;
@@ -462,7 +463,7 @@ public class GameManager
 		int opponentColor = PieceData.getOpponentColor(color);
 		int from = m.getSrc();
 		int to = m.getDst();
-		int tmp = 0;
+		int tmp = 0;	// todo: look into usage of tmp
 		Piece p;
 
 
@@ -688,15 +689,23 @@ public class GameManager
 	{
 		boolean almost = this.isAlmostLegalMove(p,m);
 
+		/*
 		GameManager gm = new GameManager(this);
 		//gm.startChronometer();
 		gm.disableChronometer();
 
 		gm.makeMove(m);
+		*/
 
-		boolean check = gm.isCheckMate(p.getColor());
+		this.cb.set(m.getDst(), p.getPieceByte());
+		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
 
-		//System.out.println("Move: " + m.toString() + " almost: " + almost + " checkMate: " + check);
+		boolean check = this.isCheckMate(p.getColor());
+
+		this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+		this.cb.set(m.getSrc(), p.getPieceByte());
+
+		System.out.println("Move: " + m.toString() + " almost: " + almost + " checkMate: " + check);
 
 		return almost && !check;
 	}
@@ -1004,7 +1013,7 @@ public class GameManager
 
 	/**
 	 * Returns true if there is a move in the history, aka when getLastMove will return a valid move object
-	 * @return
+	 * @return returns true if and only if there's still a move in the moveHistory
 	 */
 	public boolean hasLastMove ()
 	{
@@ -1159,12 +1168,12 @@ public class GameManager
 		Piece king = null;
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 
-		for (int i = 0; i < pieces.size(); i++)
+		for (Piece piece : pieces)
 		{
 			//System.out.println("Piece: " + pieces.get(i).toString());
-			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (piece.getPieceWithoutColorByte() == PieceData.KING_BYTE)
 			{
-				king = pieces.get(i);
+				king = piece;
 				break;
 			}
 		}
@@ -1180,18 +1189,25 @@ public class GameManager
 
 			for (Move m : pseudoLegalMoves)
 			{
-				gm.makeMove(m);
+				//gm.makeMove(m);
+
+				this.cb.set(m.getDst(), this.get(m.getSrc()).getPieceByte());
+				this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
+
 				if (!gm.isCheck(color))
 				{
 					checkPreventionPossible = true;
 				}
+
+				this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
+				this.cb.set(m.getSrc(), this.get(m.getSrc()).getPieceByte());
 			}
 
 			return this.isCheck(color) && !checkPreventionPossible;
 		}
 		else
 		{
-			throw new KingNotFoundException("isCheckMate() couldn't find king");
+			throw new KingNotFoundException("isCheckMate() couldn't find king for " + PieceData.getColorString(color));
 		}
 	}
 
@@ -1208,12 +1224,12 @@ public class GameManager
 
 		System.out.println("Pieces: " + pieces.size());
 
-		for (int i = 0; i < pieces.size(); i++)
+		for (Piece piece : pieces)
 		{
-			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (piece.getPieceWithoutColorByte() == PieceData.KING_BYTE)
 			{
 				System.out.println("King detected");
-				king = pieces.get(i);
+				king = piece;
 				break;
 			}
 		}
@@ -1224,7 +1240,7 @@ public class GameManager
 		}
 		else
 		{
-			throw new KingNotFoundException("isCheck() couldn't find king");
+			throw new KingNotFoundException("isCheck() couldn't find king for " + PieceData.getColorString(color));
 		}
 	}
 
@@ -1243,10 +1259,7 @@ public class GameManager
 		{
 			pieceMoves = this.getLegalMoves(p);
 
-			for (Move m : pieceMoves)
-			{
-				moves.add(m);
-			}
+			moves.addAll(pieceMoves);
 		}
 
 		return moves;
@@ -1255,17 +1268,11 @@ public class GameManager
 	public ArrayList <Move> getAllPseudoLegalMoves (int color)
 	{
 		ArrayList <Piece> pieces = this.getAllPieces(color);
-		ArrayList <Move> pieceMoves = new ArrayList<>(32);
 		ArrayList <Move> moves = new ArrayList<>(8);
 
 		for (Piece p : pieces)
 		{
-			pieceMoves = this.getPseudoLegalMoves(p);
-
-			for (Move m : pieceMoves)
-			{
-				moves.add(m);
-			}
+			moves.addAll(this.getPseudoLegalMoves(p));
 		}
 
 		return moves;
@@ -1307,18 +1314,18 @@ public class GameManager
 		threadArray[4] = queen;
 		threadArray[5] = king;
 
-		for (int i = 0; i < threadArray.length; i++)
+		for (AttackChecker aThreadArray : threadArray)
 		{
-			threadArray[i].start();
+			aThreadArray.start();
 		}
 
 		try
 		{
-			for (int i = 0; i < threadArray.length; i++)
+			for (AttackChecker aThreadArray : threadArray)
 			{
-				threadArray[i].join();
+				aThreadArray.join();
 
-				if (threadArray[i].getResult())
+				if (aThreadArray.getResult())
 				{
 					attacked++;
 				}
