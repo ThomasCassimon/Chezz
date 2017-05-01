@@ -48,11 +48,11 @@ public class TimePanel extends JPanel
 
 	}
 
-	public void refreshChronometer(long timeLimit)
+	public void refreshChronometer(long timeLimit_W, long timelimit_B)
 	{
 		if(gameManager.getChronometer().isEnabled())
 		{
-			gameManager.setChronometer(new Chronometer(timeLimit, timeLimit, timeWhite, timeBlack));
+			gameManager.setChronometer(new Chronometer(timeLimit_W, timelimit_B, timeWhite, timeBlack));
 		}
 	}
 }

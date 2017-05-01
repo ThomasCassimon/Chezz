@@ -158,23 +158,28 @@ public class ConfigurationPanel extends JFrame
 				break;
 			case "1 min":
 				//System.out.println("time limit 1 min");
-				settings.setTime_ms(60000); //1 min
+				settings.setTime_ms_W(60000); //1 min
+				settings.setTime_ms_B(60000);
 				break;
 			case "2.5 min":
 				//System.out.println("time limit 2.5 min");
-				settings.setTime_ms(150000); //2.5 min
+				settings.setTime_ms_W(150000); //2.5 min
+				settings.setTime_ms_B(150000);
 				break;
 			case "5 min":
 				//System.out.println("time limit 5 min");
-				settings.setTime_ms(300000); //5 min
+				settings.setTime_ms_W(300000); //5 min
+				settings.setTime_ms_B(300000);
 				break;
 			case "30 min":
 				//System.out.println("time limit 30 min");
-				settings.setTime_ms(1800000); //30 min
+				settings.setTime_ms_W(1800000); //30 min
+				settings.setTime_ms_B(1800000);
 				break;
 			case "1 hour":
 				//System.out.println("time limit 1 hour");
-				settings.setTime_ms(3600000); //60 min
+				settings.setTime_ms_W(3600000); //60 min
+				settings.setTime_ms_B(3600000);
 
 		}
 

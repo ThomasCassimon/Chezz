@@ -139,9 +139,9 @@ public class SidePanel extends JPanel
 		this.history.setText("History: \n" + history);
 	}
 
-	public void refreshTimePanel(long timelimit)
+	public void refreshTimePanel(long timelimit_W,long timelimit_B)
 	{
-		timePanel.refreshChronometer(timelimit);
+		timePanel.refreshChronometer(timelimit_W, timelimit_B);
 	}
 
 

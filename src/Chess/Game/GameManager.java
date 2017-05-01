@@ -1,8 +1,6 @@
 package Chess.Game;
 
 import Chess.Athena.AIPlayer;
-import Chess.Athena.TableRecord;
-import Chess.Exceptions.Checked.GameOverException;
 import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSideException;
 import Chess.Exceptions.Unchecked.KingNotFoundException;
@@ -1349,8 +1347,8 @@ public class GameManager
 	{
 		this.so = settings;
 
-		//System.out.println("Setting chronometer to " + settings.getTime_ms());
-		gamePanel.refreshTimePanel(settings.getTime_ms());
+		//System.out.println("Setting chronometer to " + settings.getTime_ms_W());
+		gamePanel.refreshTimePanel(settings.getTime_ms_W(),settings.getTime_ms_B());
 	}
 
 	public void startChronometer()
@@ -1367,5 +1365,10 @@ public class GameManager
 	{
 		this.chronometer.disable();
 		//System.out.println("Chronometer disabled via gamemanager");
+	}
+
+	public SettingsObject getSettings()
+	{
+		return this.so;
 	}
 }

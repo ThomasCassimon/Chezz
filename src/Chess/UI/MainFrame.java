@@ -45,7 +45,7 @@ public class MainFrame implements ActionListener
 		if(e.getSource() == configurationPanel.getLoad())
 		{
 			gameManager.startChronometer();
-			Parser.readFromFile(gameManager,configurationPanel);
+			Parser.readFromFile(gameManager,configurationPanel,this);
 			configurationPanel.setVisible(false);
 			gamePanel.initBoard();
 			gamePanel.setVisible(true);
@@ -85,5 +85,10 @@ public class MainFrame implements ActionListener
 		{
 			return true;
 		}
+	}
+
+	public GamePanel getGamePanel()
+	{
+		return this.gamePanel;
 	}
 }

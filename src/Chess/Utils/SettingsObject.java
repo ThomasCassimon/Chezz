@@ -6,8 +6,8 @@ package Chess.Utils;
 public class SettingsObject
 {
 	private boolean undo;
-	private boolean chronometer;
-	private long time_ms;
+	private long time_ms_W;
+	private long time_ms_B;
 
 	public SettingsObject ()
 	{
@@ -17,14 +17,14 @@ public class SettingsObject
 	public SettingsObject (boolean undoEnabled, long time_seconds, boolean chronometer)
 	{
 		this.undo = undoEnabled;
-		this.time_ms = time_seconds;
-		this.chronometer = chronometer;
+		this.time_ms_W = time_seconds;
+		this.time_ms_B = time_seconds;
 	}
 
 	public SettingsObject (SettingsObject so)
 	{
 		this.undo = so.undo;
-		this.time_ms = so.time_ms;
+		this.time_ms_W = so.time_ms_W;
 	}
 
 	public boolean undoEnabled ()
@@ -32,9 +32,9 @@ public class SettingsObject
 		return this.undo;
 	}
 
-	public long getTime_ms()
+	public long getTime_ms_W()
 	{
-		return this.time_ms;
+		return this.time_ms_W;
 	}
 
 	public void setUndo(boolean undo)
@@ -42,13 +42,18 @@ public class SettingsObject
 		this.undo = undo;
 	}
 
-	public void setTime_ms(long ms)
+	public void setTime_ms_W(long ms)
 	{
-		this.time_ms = ms;
+		this.time_ms_W = ms;
 	}
 
-	public void setChronometer(boolean chronometer)
+	public void setTime_ms_B(long ms)
 	{
-		this.chronometer = chronometer;
+		this.time_ms_B = ms;
+	}
+
+	public long getTime_ms_B()
+	{
+		return this.time_ms_B;
 	}
 }

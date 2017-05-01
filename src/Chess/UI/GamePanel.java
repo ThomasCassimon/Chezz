@@ -3,12 +3,19 @@ package Chess.UI;
 import Chess.Exceptions.Checked.GameOverException;
 import Chess.Game.*;
 import Chess.Utils.Parser;
+//import com.apple.eawt.Application;
 
+import javax.imageio.ImageIO;
+import javax.naming.ldap.SortResponseControl;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 
 
@@ -26,6 +33,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		super("Chezz!");
 		this.gameManager = gameManager;
 		this.mainFrame = mainFrame;
+
 
 		//
 		panel = new JPanel();
@@ -110,6 +118,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 				board.setPiece(gameManager.get(historyMove.getSrc()));
 				board.setPiece(gameManager.get(historyMove.getDst()));
+
+				if(historyMove.isQueenCastle()| historyMove.isKingCastle())
+				{
+					this.handleUndoCastling(historyMove);
+				}
 
 
 				board.update(gameManager.getActiveColorByte());
@@ -312,6 +325,40 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 	}
 
+	public void handleUndoCastling(HistoryMove historyMove)
+	{
+		int src, dst;
+		if(historyMove.isKingCastle())
+		{
+			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+			{
+				src = UIData.ROOK_KINGSIDE_CASTLING_B.getSrc();
+				dst = UIData.ROOK_KINGSIDE_CASTLING_B.getDst();
+			}
+			else
+			{
+				src = UIData.ROOK_KINGSIDE_CASTLING_W.getSrc();
+				dst = UIData.ROOK_KINGSIDE_CASTLING_W.getDst();
+			}
+		}
+		else
+		{
+			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+			{
+				src = UIData.ROOK_QUEENSIDE_CASTLING_B.getSrc();
+				dst = UIData.ROOK_QUEENSIDE_CASTLING_B.getDst();
+			}
+			else
+			{
+				src = UIData.ROOK_QUEENSIDE_CASTLING_W.getSrc();
+				dst = UIData.ROOK_QUEENSIDE_CASTLING_W.getDst();
+			}
+		}
+
+		board.setPiece(gameManager.get(src));
+		board.setPiece(gameManager.get(dst));
+	}
+
 	public void makeMove(Move move)
 	{
 		gameManager.makeMove(move);
@@ -358,9 +405,9 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		return gameManager;
 	}
 
-	public void refreshTimePanel(long timelimit)
+	public void refreshTimePanel(long timelimit_W, long timelimit_B)
 	{
-		sidePanel.refreshTimePanel(timelimit);
+		sidePanel.refreshTimePanel(timelimit_W, timelimit_B);
 	}
 
 
