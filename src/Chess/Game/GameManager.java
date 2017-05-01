@@ -970,7 +970,7 @@ public class GameManager
 	 */
 	public GameManager makeMove (Move m)
 	{
-		System.out.println("[makeMove]");
+		System.out.println("[makeMove] attempting to make move");
 		if (this.chronometer.isRunning())
 		{
 			int color = this.activeColor;
