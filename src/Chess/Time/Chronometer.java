@@ -59,6 +59,7 @@ public class Chronometer
 
 		this.activeWhite = true;
 		this.enabled = true;
+		this.running = true;
 	}
 
 	public Chronometer()
@@ -76,6 +77,7 @@ public class Chronometer
 
 		this.activeWhite = true;
 		this.enabled = true;
+		this.running = true;
 	}
 
 	/**
