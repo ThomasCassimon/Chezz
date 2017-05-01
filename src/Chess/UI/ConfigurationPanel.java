@@ -23,7 +23,7 @@ public class ConfigurationPanel extends JFrame
 	private GameManager gameManager;
 
 
-	public ConfigurationPanel(GameManager gameManager)
+	public ConfigurationPanel(GameManager gameManager, MainFrame mainFrame)
 	{
 
 		super("Settings");
@@ -85,9 +85,9 @@ public class ConfigurationPanel extends JFrame
 
 		this.undo.setSelected(true);
 
-
-
-
+		this.start.addActionListener(mainFrame);
+		this.load.addActionListener(mainFrame);
+		this.exit.addActionListener(mainFrame);
 
 
 		//ADDING COMPONENTS

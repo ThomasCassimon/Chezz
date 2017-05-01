@@ -19,12 +19,8 @@ public class MainFrame implements ActionListener
 	{
 		gameManager = new GameManager();
 		gameManager.init();
-		configurationPanel = new ConfigurationPanel(gameManager);
+		configurationPanel = new ConfigurationPanel(gameManager, this);
 		gamePanel = new GamePanel(gameManager, this);
-
-		configurationPanel.getStart().addActionListener(this);
-		configurationPanel.getLoad().addActionListener(this);
-		configurationPanel.getExit().addActionListener(this);
 
 		configurationPanel.setVisible(true);
 	}
@@ -44,12 +40,14 @@ public class MainFrame implements ActionListener
 		}
 		if(e.getSource() == configurationPanel.getLoad())
 		{
-			gameManager.startChronometer();
-			Parser.readFromFile(gameManager,configurationPanel,this);
-			configurationPanel.setVisible(false);
-			gamePanel.initBoard();
-			gamePanel.setVisible(true);
 
+			if(Parser.readFromFile(gameManager,configurationPanel,this))
+			{
+				gameManager.startChronometer();
+				configurationPanel.setVisible(false);
+				gamePanel.initBoard();
+				gamePanel.setVisible(true);
+			}
 		}
 		else if(e.getSource() == gamePanel.getExit())
 		{
@@ -58,10 +56,12 @@ public class MainFrame implements ActionListener
 
 			if(choice == JOptionPane.YES_OPTION)
 			{
-				configurationPanel.setVisible(true);
-				gamePanel.setVisible(false);
+
 				gameManager = new GameManager();
 				gameManager.init();
+				configurationPanel = new ConfigurationPanel(gameManager, this);
+				configurationPanel.setVisible(true);
+				gamePanel.setVisible(false);
 				gamePanel = new GamePanel(gameManager, this);
 			}
 		}

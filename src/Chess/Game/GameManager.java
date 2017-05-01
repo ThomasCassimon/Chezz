@@ -1201,12 +1201,16 @@ public class GameManager
 	public boolean isCheck (int color )
 	{
 		Piece king = null;
+
 		ArrayList <Piece> pieces = this.getAllPieces(color);
+
+		System.out.println("Pieces: " + pieces.size());
 
 		for (int i = 0; i < pieces.size(); i++)
 		{
 			if (pieces.get(i).getPieceWithoutColorByte() == PieceData.KING_BYTE)
 			{
+				System.out.println("King detected");
 				king = pieces.get(i);
 				break;
 			}

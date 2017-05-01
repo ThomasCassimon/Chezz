@@ -180,7 +180,7 @@ public class Parser
 	/**
 	 * Reads moves from a file and the moves are made immediately.
 	 */
-	public static void readFromFile(GameManager gm, JFrame gp, MainFrame mf)
+	public static boolean readFromFile(GameManager gm, JFrame gp, MainFrame mf)
 	{
 		JFileChooser fc = new JFileChooser();
 
@@ -223,12 +223,14 @@ public class Parser
 					gm.makeMove(move);
 				}
 
-
+				return true;
 			}
 			catch(Exception e)
 			{
 
 			}
 		}
+		return false;
+
 	}
 }

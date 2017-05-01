@@ -47,8 +47,11 @@ public class SidePanel extends JPanel
 		this.leftPanel.setBackground(UIData.BACKGROUND_COLOR);
 		this.leftPanel.add(timePanel);
 		this.leftPanel.add(pause);
+		this.leftPanel.add(Box.createRigidArea(UIData.SPACING));
 		this.leftPanel.add(undo);
+		this.leftPanel.add(Box.createRigidArea(UIData.SPACING));
 		this.leftPanel.add(save);
+		this.leftPanel.add(Box.createRigidArea(UIData.SPACING));
 		this.leftPanel.add(exit);
 
 		this.pause.setAlignmentX(CENTER_ALIGNMENT);
@@ -73,6 +76,7 @@ public class SidePanel extends JPanel
 		this.rightPanel.add(history);
 		this.rightPanel.add(moveInput);
 
+		//BUTTON FUNCTIONALITY
 		this.pause.addActionListener(gamePanel);
 		this.undo.addActionListener(gamePanel);
 		this.save.addActionListener(gamePanel);

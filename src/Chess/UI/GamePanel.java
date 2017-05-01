@@ -305,22 +305,22 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
 			{
-				this.makeMove(UIData.ROOK_KINGSIDE_CASTLING_W);
+				board.makeMove(UIData.ROOK_KINGSIDE_CASTLING_W,PieceData.getOpponentColor(gameManager.getActiveColorByte()));
 			}
 			else
 			{
-				this.makeMove(UIData.ROOK_KINGSIDE_CASTLING_B);
+				board.makeMove(UIData.ROOK_KINGSIDE_CASTLING_B, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
 			}
 		}
 		else
 		{
 			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
 			{
-				this.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_W);
+				board.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_W,PieceData.getOpponentColor(gameManager.getActiveColorByte()));
 			}
 			else
 			{
-				this.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_B);
+				board.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_B,PieceData.getOpponentColor(gameManager.getActiveColorByte()));
 			}
 		}
 	}
