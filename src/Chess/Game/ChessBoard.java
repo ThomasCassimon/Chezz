@@ -208,6 +208,28 @@ public class ChessBoard
 	}
 
 	/**
+	 * Returns a string representation of the board
+	 * @param localeByte A locale byte to indicate the desired locale
+	 * @return A string (containing newlines) that is a textual representation of the board
+	 */
+	public String toString ()
+	{
+		String res = "";
+
+		for (byte i = 0; i < 8; i++)
+		{
+			for (byte j = 0; j < 8; j++)
+			{
+				res += PieceData.toShortFromNum( (this.get(j, i) & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE);
+			}
+
+			res += "\n";
+		}
+
+		return res;
+	}
+
+	/**
 	 * Wrapper method for {@link ChessBoard#toString()}
 	 * @param localeByte A byte representing the desired locale
 	 */

@@ -702,13 +702,14 @@ public class GameManager
 		gm.makeMove(m);
 		*/
 
-		this.cb.set(m.getDst(), p.getPieceByte());
+		int piece = p.getPieceByte();
+		this.cb.set(m.getDst(), piece);
 		this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
 
 		boolean check = this.isCheckMate(p.getColor());
 
 		this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
-		this.cb.set(m.getSrc(), p.getPieceByte());
+		this.cb.set(m.getSrc(), piece);
 
 		System.out.println("[isLegalMove] Move: " + m.toString() + " almost: " + almost + " checkMate: " + check);
 
@@ -885,7 +886,7 @@ public class GameManager
 	 */
 	public ArrayList<Move> getLegalMoves (Piece p)
 	{
-		//System.out.println("[getLegalMoves] requested legal moves for " + p.toString());
+		System.out.println("[getLegalMoves] requested legal moves for " + p.toString());
 		int color = p.getColor();
 		//TableRecord tr = null;
 
@@ -1208,6 +1209,7 @@ public class GameManager
 	public boolean isCheckMate (int color)
 	{
 		System.out.println("[isCheckMate] called for " + PieceData.getColorString(color));
+		System.out.println("[isCheckMate] chessboard:\n"  + this.cb.toString());
 		Piece king = null;
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 
@@ -1241,7 +1243,8 @@ public class GameManager
 			{
 				//gm.makeMove(m);
 
-				this.cb.set(m.getDst(), this.get(m.getSrc()).getPieceByte());
+				int piece = this.get(m.getSrc()).getPieceByte();
+				this.cb.set(m.getDst(), piece);
 				this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
 
 				if (!this.isCheck(color))
@@ -1250,9 +1253,11 @@ public class GameManager
 				}
 
 				this.cb.set(m.getDst(), PieceData.EMPTY_BYTE);
-				this.cb.set(m.getSrc(), this.get(m.getSrc()).getPieceByte());
+				this.cb.set(m.getSrc(), piece);
 			}
 
+
+			System.out.println("[isCheckMate] chessboard:\n"  + this.cb.toString());
 			return this.isCheck(color) && !checkPreventionPossible;
 		}
 		else
