@@ -235,7 +235,7 @@ public final class PieceData
 					case KING_BYTE:
 						return EN_UK.KING_SHORT;
 					case EMPTY_BYTE:
-						return " ";
+						return "_";
 					default:
 						throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 				}
@@ -255,7 +255,7 @@ public final class PieceData
 					case KING_BYTE:
 						return NL_BE.KING_SHORT;
 					case EMPTY_BYTE:
-						return " ";
+						return "_";
 					default:
 						throw new IllegalPieceException(Integer.toString(pieceNum) + " is not a valid piece.");
 				}

@@ -209,7 +209,6 @@ public class ChessBoard
 
 	/**
 	 * Returns a string representation of the board
-	 * @param localeByte A locale byte to indicate the desired locale
 	 * @return A string (containing newlines) that is a textual representation of the board
 	 */
 	public String toString ()
