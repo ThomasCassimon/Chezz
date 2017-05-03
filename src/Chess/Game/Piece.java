@@ -274,7 +274,7 @@ public class Piece
 	 */
 	public boolean isEmpty ()
 	{
-		return (this.pieceByte == 0);
+		return ((this.pieceByte & PieceData.PIECE_MASK) == 0);
 	}
 
 	@Override
