@@ -297,6 +297,7 @@ public class GameManager
 	 */
 	public boolean isValidBishopMove (Move m)
 	{
+		//System.out.println("[isValidBishopMove()] chessboard: \n" + this.cb.toString());
 		//System.out.println("Move: " + m.toString());
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
@@ -314,10 +315,12 @@ public class GameManager
 			int rankDir = deltaRank / abs(deltaRank);
 			int fileDir = deltaFile / abs(deltaFile);
 
-			for (int i = 1; i < abs(deltaRank); i++)
+			for (int i = 1; i <= abs(deltaRank); i++)
 			{
 				int file = m.get2DSrc()[0] + (fileDir * i);
 				int rank = m.get2DSrc()[1] + (rankDir * i);
+
+				//System.out.println("[isValidBishopMove()] Checking file: " + file + " rank: " + rank + " result: " + this.get(file, rank).isEmpty());
 
 				if (!this.get(file, rank).isEmpty())
 				{
@@ -405,7 +408,7 @@ public class GameManager
 
 		//System.out.println("");
 
-		if (m.isCapture())
+		if (this.isCapture(color, m))
 		{
 			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
 			{
@@ -415,7 +418,7 @@ public class GameManager
 			}
 		}
 
-		if ((!this.get(m.get2DDst()).isEmpty()) && (!m.isCapture()))
+		if ((!this.get(m.get2DDst()).isEmpty()) && (!this.isCapture(color, m)))
 		{
 			//System.out.println("Destination isn't empty");
 			return false;
@@ -692,41 +695,41 @@ public class GameManager
 	public boolean isLegalMove (Piece p, Move m)
 	{
 		System.out.println("[isLegalMove] called for " + p.toString() + " making move " + m.toString());
-		boolean almost = this.isAlmostLegalMove(p,m);
 
-		/*
-		GameManager gm = new GameManager(this);
-		//gm.startChronometer();
-		gm.disableChronometer();
 
-		//gm.makeMove(m);
-		*/
-
-		int capturedPiece = PieceData.EMPTY_BYTE;
-
-		if (m.isCapture())
+		if (this.isAlmostLegalMove(p,m))
 		{
-			capturedPiece = this.get(m.getDst()).getPieceByte();
+			int capturedPiece = PieceData.EMPTY_BYTE;
+
+			if (this.isCapture(p.getColor(), m))
+			{
+				capturedPiece = this.get(m.getDst()).getPieceByte();
+			}
+
+			boolean check = false;
+
+			if (this.get(m.getDst()).getPieceWithoutColorByte() != PieceData.KING_BYTE)
+			{
+
+				int piece = p.getPieceByte();
+
+				this.cb.set(m.getDst(), piece);
+				this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
+
+				check = this.isCheckMate(p.getColor());
+
+				this.cb.set(m.getDst(), capturedPiece);
+				this.cb.set(m.getSrc(), piece);
+
+				System.out.println("[isLegalMove] Move: " + m.toString() + " checkMate: " + check);
+			}
+
+			return !check;
 		}
-
-		boolean check = false;
-
-		if (this.get(m.getDst()).getPieceWithoutColorByte() != PieceData.KING_BYTE)
+		else
 		{
-
-			int piece = p.getPieceByte();
-			this.cb.set(m.getDst(), piece);
-			this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
-
-			check = this.isCheckMate(p.getColor());
-
-			this.cb.set(m.getDst(), capturedPiece);
-			this.cb.set(m.getSrc(), piece);
-
-			System.out.println("[isLegalMove] Move: " + m.toString() + " almost: " + almost + " checkMate: " + check);
+			return false;
 		}
-
-		return almost && !check;
 	}
 
 	public boolean isAlmostLegalMove (Piece p, Move m)
@@ -750,7 +753,7 @@ public class GameManager
 			return false;
 		}
 
-		if ((m.isCapture()) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
+		if ((this.isCapture(p.getColor(), m)) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
 		{
 			//System.out.println("[isAlmostLegalMove] " + m.toString() + " captures king");
 			return false;
@@ -1051,7 +1054,7 @@ public class GameManager
 
 			this.get(m.getSrc()).incMoves();
 
-			if (m.isCapture())
+			if (this.isCapture(color, m))
 			{
 				this.moveHistory.add(new HistoryMove(m, this.get(m.getDst())));
 			}
@@ -1201,9 +1204,10 @@ public class GameManager
 				}
 			}
 
-			this.cb.set(m.getSrc(), this.get(m.getDst()).getPieceByte());    // Empty the source square
+			Piece piece = this.get(m.getDst());
+			this.cb.set(m.getSrc(), piece.getPieceByte());    // Empty the source square
 
-			if (m.isCapture())
+			if (this.isCapture(piece.getColor(), m))
 			{
 				this.cb.set(m.getDst(), m.getCapturedPiece().getPieceByte());
 			}
@@ -1280,6 +1284,7 @@ public class GameManager
 
 						if (!this.isCheck(color))
 						{
+							System.out.println("");
 							checkPreventionPossible = true;
 						}
 
@@ -1301,6 +1306,16 @@ public class GameManager
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Returns true if the specified colour is in checkmate
+	 * @param color	the colour to be checked
+	 * @return	true if the player is stalemate'd, false if he is not
+	 */
+	public boolean isStaleMate (int color)
+	{
+		return (this.getAllLegalMoves(color).size() == 0) && (!this.isCheck(color));
 	}
 
 	/**
