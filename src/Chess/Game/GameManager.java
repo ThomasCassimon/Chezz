@@ -123,7 +123,7 @@ public class GameManager
 	 */
 	public void toggleActivePlayer ()
 	{
-		System.out.println("Toggling active playah");
+		//System.out.println("Toggling active playah");
 		if (this.activeColor == PieceData.WHITE_BYTE)
 		{
 			this.activeColor = this.activeColor << 1;
@@ -279,7 +279,7 @@ public class GameManager
 				return this.isValidBishopMove(m);
 
 			case PieceData.QUEEN_BYTE:
-				System.out.println("[isValidMove] isValidRookMove: " + Boolean.toString(this.isValidRookMove(m)) + " isValidBishopMove: " + this.isValidBishopMove(m) +  " for move: " + m.toString());
+				//System.out.println("[isValidMove] isValidRookMove: " + Boolean.toString(this.isValidRookMove(m)) + " isValidBishopMove: " + this.isValidBishopMove(m) +  " for move: " + m.toString());
 				return this.isValidRookMove(m) || this.isValidBishopMove(m);
 
 			case PieceData.KING_BYTE:
@@ -694,7 +694,7 @@ public class GameManager
 
 	public boolean isLegalMove (Piece p, Move m)
 	{
-		System.out.println("[isLegalMove] called for " + p.toString() + " making move " + m.toString());
+		//System.out.println("[isLegalMove] called for " + p.toString() + " making move " + m.toString());
 
 
 		if (this.isAlmostLegalMove(p,m))
@@ -721,7 +721,7 @@ public class GameManager
 				this.cb.set(m.getDst(), capturedPiece);
 				this.cb.set(m.getSrc(), piece);
 
-				System.out.println("[isLegalMove] Move: " + m.toString() + " checkMate: " + check);
+				//System.out.println("[isLegalMove] Move: " + m.toString() + " checkMate: " + check);
 			}
 
 			return !check;
@@ -734,7 +734,7 @@ public class GameManager
 
 	public boolean isAlmostLegalMove (Piece p, Move m)
 	{
-		System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
+		//System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
 		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceWithoutColorByte()));
 		//int src = m.getSrc();
 		//int srcFile = m.get2DSrc()[0];
@@ -908,7 +908,7 @@ public class GameManager
 	 */
 	public ArrayList<Move> getLegalMoves (Piece p)
 	{
-		System.out.println("[getLegalMoves] requested legal moves for " + p.toString());
+		//System.out.println("[getLegalMoves] requested legal moves for " + p.toString());
 		int color = p.getColor();
 		//TableRecord tr = null;
 
@@ -923,7 +923,7 @@ public class GameManager
 			//System.out.println("NEW");
 			//int piece = p.getPieceWithoutColorByte();
 
-			System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
+			//System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
 
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
@@ -995,8 +995,8 @@ public class GameManager
 	 */
 	public GameManager makeMove (Move m)
 	{
-		System.out.println("[makeMove] attempting to make move");
-		System.out.println("[makeMove] chronometer running = " + chronometer.isRunning());
+		//System.out.println("[makeMove] attempting to make move");
+		//System.out.println("[makeMove] chronometer running = " + chronometer.isRunning());
 		if (this.chronometer.isRunning())
 		{
 			int color = this.activeColor;
@@ -1069,12 +1069,12 @@ public class GameManager
 			this.toggleActivePlayer();
 			this.chronometer.toggle();
 
-			System.out.println("[makeMove] Made move: " + m.toString());
+			//System.out.println("[makeMove] Made move: " + m.toString());
 
 			return this;
 		}
 
-		System.out.println("[makeMove] chrono not running, no moves made");
+		//System.out.println("[makeMove] chrono not running, no moves made");
 
 		return null;
 	}
@@ -1152,7 +1152,8 @@ public class GameManager
 
 			if (m.isKingCastle())
 			{
-				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				//System.out.println("Kingside castling detected");
+				ArrayList<Piece> pieces = this.getAllPieces(PieceData.getOpponentColor(this.activeColor));
 				ArrayList<Piece> rooks = new ArrayList<>(2);
 
 				for (Piece p : pieces)
@@ -1165,10 +1166,10 @@ public class GameManager
 
 				for (Piece r : rooks)
 				{
-					System.out.println("Analyzing rook: " + r.toString());
+					//System.out.println("Analyzing rook: " + r.toString());
 					if (r.get2DCoord()[0] == 5)
 					{
-						System.out.println("Putting back rook");
+						//System.out.println("Putting back rook");
 						this.cb.set(r.getPositionByte() + 0x0002, r.getPieceByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
 						this.get(r.getPositionByte() + 0x0002).decMoves();
@@ -1363,7 +1364,7 @@ public class GameManager
 	 */
 	public ArrayList <Move> getAllLegalMoves(int color)
 	{
-		System.out.println("[getAllLegalMoves] called for " + PieceData.getColorString(color));
+		//System.out.println("[getAllLegalMoves] called for " + PieceData.getColorString(color));
 		ArrayList <Piece> pieces = this.getAllPieces(color);
 		ArrayList <Move> pieceMoves;
 		ArrayList <Move> moves = new ArrayList<>();

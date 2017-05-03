@@ -172,7 +172,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
-			System.out.println("Active color is: " + PieceData.getColorString(this.gameManager.getActiveColorByte()));
+			//System.out.println("Active color is: " + PieceData.getColorString(this.gameManager.getActiveColorByte()));
 			int[] indexArr;
 			ArrayList<Move> moves;
 			Piece piece;
