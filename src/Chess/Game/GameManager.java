@@ -279,7 +279,7 @@ public class GameManager
 				return this.isValidBishopMove(m);
 
 			case PieceData.QUEEN_BYTE:
-				System.out.println("[isValidMove] isValidRookMove: " + Boolean.toString(this.isValidRookMove(m)) + " isValidBishopMove: " + this.isValidBishopMove(m) +  " for move: " + m.toString());
+				//System.out.println("[isValidMove] isValidRookMove: " + Boolean.toString(this.isValidRookMove(m)) + " isValidBishopMove: " + this.isValidBishopMove(m) +  " for move: " + m.toString());
 				return this.isValidRookMove(m) || this.isValidBishopMove(m);
 
 			case PieceData.KING_BYTE:
@@ -1152,7 +1152,7 @@ public class GameManager
 
 			if (m.isKingCastle())
 			{
-				System.out.println("Kingside castling detected");
+				//System.out.println("Kingside castling detected");
 				ArrayList<Piece> pieces = this.getAllPieces(PieceData.getOpponentColor(this.activeColor));
 				ArrayList<Piece> rooks = new ArrayList<>(2);
 
@@ -1166,10 +1166,10 @@ public class GameManager
 
 				for (Piece r : rooks)
 				{
-					System.out.println("Analyzing rook: " + r.toString());
+					//System.out.println("Analyzing rook: " + r.toString());
 					if (r.get2DCoord()[0] == 5)
 					{
-						System.out.println("Putting back rook");
+						//System.out.println("Putting back rook");
 						this.cb.set(r.getPositionByte() + 0x0002, r.getPieceByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
 						this.get(r.getPositionByte() + 0x0002).decMoves();
