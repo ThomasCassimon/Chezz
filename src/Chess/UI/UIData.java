@@ -23,7 +23,7 @@ public final class UIData
 	public static final Dimension BUTTONS_DIMENSION = new Dimension(300, 25);
 	public static final Dimension BOARD_DIMENSION = new Dimension(800, 800);
 	public static final Dimension GAMEPANEL_DIMENSION = new Dimension(1400, 850);
-	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(350, 500);
+	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(350, 550);
 	public static final Dimension HISTORY_DIMENSION = new Dimension(200, 750);
 	public static final Dimension CONFIGURATIONPANEL_TEXTBOX = new Dimension(300, 1);
 
@@ -74,13 +74,13 @@ public final class UIData
 	public static final Border BORDER_BLACK = BorderFactory.createLineBorder(Color.BLACK);
 
 	//MOVES
-	public static final Move ROOK_KINGSIDE_CASTLING_W = new Move(0, 7, 3, 7, 0);
-	public static final Move ROOK_QUEENSIDE_CASTLING_W = new Move(7, 0, 5, 0, 0);
-	public static final Move ROOK_QUEENSIDE_CASTLING_B = new Move(0, 7, 3, 7, 0);
+	public static final Move ROOK_QUEENSIDE_CASTLING_W = new Move(0, 7, 3, 7, 0);
+	public static final Move ROOK_KINGSIDE_CASTLING_W = new Move(7, 7, 5, 7, 0);
+	public static final Move ROOK_QUEENSIDE_CASTLING_B = new Move(0, 0, 3, 0, 0);
 	public static final Move ROOK_KINGSIDE_CASTLING_B = new Move(7, 0, 5, 0, 0);
 
-	public static final Move KING_KINGSIDE_CASTLING_W = new Move(4, 7, 6, 7, Move.KING_SIDE_CASTLE_MASK);
-	public static final Move KING_KINGSIDE_CASTLING_B = new Move(4, 0, 6, 0, Move.KING_SIDE_CASTLE_MASK);
-	public static final Move KING_QUEENSIDE_CASTLING_W = new Move(4, 7, 2, 7, Move.QUEEN_SIDE_CASTLE_MASK);
-	public static final Move KING_QUEENSIDE_CASTLING_B = new Move(4, 0, 2, 0, Move.QUEEN_SIDE_CASTLE_MASK);
+	public static final Move KING_KINGSIDE_CASTLING_W = new Move(4, 0, 6, 0, Move.KING_SIDE_CASTLE_MASK);
+	public static final Move KING_KINGSIDE_CASTLING_B = new Move(4, 7, 6, 7, Move.KING_SIDE_CASTLE_MASK);
+	public static final Move KING_QUEENSIDE_CASTLING_W = new Move(4, 0, 2, 0, Move.QUEEN_SIDE_CASTLE_MASK);
+	public static final Move KING_QUEENSIDE_CASTLING_B = new Move(4, 7, 2, 7, Move.QUEEN_SIDE_CASTLE_MASK);
 }

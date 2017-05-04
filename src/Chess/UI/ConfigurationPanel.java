@@ -10,6 +10,7 @@ import java.awt.*;
 public class ConfigurationPanel extends JFrame
 {
 	private JLabel title;
+	private JLabel newGame;
 	private JButton load;
 	private JButton start;
 	private JButton exit;
@@ -45,6 +46,8 @@ public class ConfigurationPanel extends JFrame
 		this.undoText = new JLabel("");
 		this.undo = new JCheckBox("Undo enabled");
 
+		this.newGame = new JLabel("New Game Settings");
+
 		this.timeLimitText = new JLabel("");
 
 
@@ -75,6 +78,9 @@ public class ConfigurationPanel extends JFrame
 
 		this.exit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+		this.newGame.setFont(newGame.getFont().deriveFont(Font.BOLD));
+		this.newGame.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
 
 //		this.load.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -99,9 +105,7 @@ public class ConfigurationPanel extends JFrame
 		startPanel.add(Box.createRigidArea(UIData.SPACING));
 		startPanel.add(start);
 
-		//panel.add(Box.createRigidArea(UIData.SPACING));
-		//panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
+
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
@@ -113,6 +117,9 @@ public class ConfigurationPanel extends JFrame
 
 		panel.add(Box.createRigidArea(UIData.SPACING));
 		panel.add(Box.createRigidArea(UIData.SPACING));
+		panel.add(Box.createRigidArea(UIData.SPACING));
+
+		panel.add(newGame);
 		panel.add(Box.createRigidArea(UIData.SPACING));
 
 		panel.add(timeLimitText);
