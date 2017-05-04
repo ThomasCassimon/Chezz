@@ -1187,9 +1187,7 @@ public class GameManager
 						this.cb.set(r.getPositionByte() + 0x0002, r.getPieceByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
 						this.get(r.getPositionByte() + 0x0002).decMoves();
-
 						break;
-
 					}
 				}
 			}
@@ -1210,11 +1208,11 @@ public class GameManager
 				{
 					if (r.get2DCoord()[0] == 3)
 					{
+						System.out.println("Putting back rook");
 						this.cb.set(r.getPositionByte() - 0x0003, r.getPieceByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
 						this.get(r.getPositionByte() - 0x0003).decMoves();
 						break;
-
 					}
 				}
 			}
