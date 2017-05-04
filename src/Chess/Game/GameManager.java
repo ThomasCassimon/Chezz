@@ -1193,7 +1193,8 @@ public class GameManager
 			}
 			else if (m.isQueenCastle())
 			{
-				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				System.out.println("QueenSideCastle");
+				ArrayList<Piece> pieces = this.getAllPieces(PieceData.getOpponentColor(this.activeColor));
 				ArrayList<Piece> rooks = new ArrayList<>(2);
 
 				for (Piece p : pieces)
@@ -1204,8 +1205,11 @@ public class GameManager
 					}
 				}
 
+				System.out.println("Found " + rooks.size() + " rooks");
+
 				for (Piece r : rooks)
 				{
+					System.out.println("Rook: " + r.toString());
 					if (r.get2DCoord()[0] == 3)
 					{
 						System.out.println("Putting back rook");
