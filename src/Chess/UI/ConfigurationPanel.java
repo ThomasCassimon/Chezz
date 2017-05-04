@@ -10,6 +10,7 @@ import java.awt.*;
 public class ConfigurationPanel extends JFrame
 {
 	private JLabel title;
+	private JLabel newGame;
 	private JButton load;
 	private JButton start;
 	private JButton exit;
@@ -30,7 +31,8 @@ public class ConfigurationPanel extends JFrame
 
 		this.gameManager = gameManager;
 
-		JPanel panel = new JPanel();
+		JPanel contentPanel = new JPanel();
+		JPanel newGameSettingsPanel = new JPanel();
 
 
 		//
@@ -45,6 +47,8 @@ public class ConfigurationPanel extends JFrame
 		this.undoText = new JLabel("");
 		this.undo = new JCheckBox("Undo enabled");
 
+		this.newGame = new JLabel("New Game Settings");
+
 		this.timeLimitText = new JLabel("");
 
 
@@ -53,15 +57,19 @@ public class ConfigurationPanel extends JFrame
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		//LAYOUT
-		panel.setBackground(UIData.BACKGROUND_COLOR);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		contentPanel.setBackground(UIData.BACKGROUND_COLOR);
+		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+		newGameSettingsPanel.setBorder(UIData.BORDER_BLACK);
+		newGameSettingsPanel.setBackground(UIData.BACKGROUND_COLOR);
+		newGameSettingsPanel.setLayout(new BoxLayout(newGameSettingsPanel, BoxLayout.Y_AXIS));
 
 		this.title.setFont(title.getFont().deriveFont(UIData.TITLE_FONT_SIZE));
 		this.title.setFont(title.getFont().deriveFont(Font.BOLD));
 		this.title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		this.timeLimitText.setAlignmentX(Component.CENTER_ALIGNMENT);
-		this.timeLimitText.setText("<html>Please enter a timelimit for your game (in mins) <br> or select one of the default options. </html>");
+		this.timeLimitText.setText("Select a time limit.");
 
 		this.timeLimit.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.timeLimit.setBackground(UIData.BACKGROUND_COLOR);
@@ -74,6 +82,10 @@ public class ConfigurationPanel extends JFrame
 		this.undo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		this.exit.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		this.newGame.setFont(newGame.getFont().deriveFont(UIData.FONT_SIZE));
+		this.newGame.setFont(newGame.getFont().deriveFont(Font.BOLD));
+		this.newGame.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
 
@@ -99,42 +111,50 @@ public class ConfigurationPanel extends JFrame
 		startPanel.add(Box.createRigidArea(UIData.SPACING));
 		startPanel.add(start);
 
-		//panel.add(Box.createRigidArea(UIData.SPACING));
-		//panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(title);
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+
+		contentPanel.add(title);
 
 
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
+		newGameSettingsPanel.add(Box.createRigidArea(UIData.SPACING));
+		newGameSettingsPanel.add(newGame);
 
-		panel.add(timeLimitText);
-		panel.add(timeLimit);
+		newGameSettingsPanel.add(Box.createRigidArea(UIData.SPACING));
+		newGameSettingsPanel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(Box.createRigidArea(UIData.SPACING));
+		newGameSettingsPanel.add(timeLimitText);
+		newGameSettingsPanel.add(timeLimit);
 
-		panel.add(undoText);
-		panel.add(undo);
+		newGameSettingsPanel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(Box.createRigidArea(UIData.SPACING));
-		panel.add(Box.createRigidArea(UIData.SPACING));
+		newGameSettingsPanel.add(undoText);
+		newGameSettingsPanel.add(undo);
 
-		panel.add(startPanel);
-		panel.add(Box.createRigidArea(UIData.SPACING));
+		newGameSettingsPanel.add(Box.createRigidArea(UIData.SPACING));
 
-		panel.add(exit);
-		panel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(newGameSettingsPanel);
+
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+
+		contentPanel.add(startPanel);
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
+
+		contentPanel.add(exit);
+		contentPanel.add(Box.createRigidArea(UIData.SPACING));
 
 
 
-		this.setContentPane(panel);
+		this.setContentPane(contentPanel);
 
 		this.setResizable(false);
 	}

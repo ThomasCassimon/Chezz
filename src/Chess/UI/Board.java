@@ -1,6 +1,7 @@
 package Chess.UI;
 
 import Chess.Exceptions.Unchecked.IllegalPieceException;
+import Chess.Game.GameManager;
 import Chess.Game.Move;
 import Chess.Game.Piece;
 import Chess.Game.PieceData;
@@ -232,14 +233,15 @@ public class Board extends JPanel
 	/**
 	 * makes a move. moves the icons from src to dst. Board gets switched according to given active color
 	 * @param move move that needs to be made
-	 * @param color active color after move has been made
+	 * @param gameManager GameManager of the game
 	 */
-	public void makeMove(Move move, int color)
+	public void makeMove(Move move, GameManager gameManager)
 	{
-		tiles[getIndex(move.get2DDst())].setIcon(tiles[getIndex(move.get2DSrc())].getIcon());
-		tiles[getIndex(move.get2DSrc())].setIcon(null);
 
-		if (color == PieceData.WHITE_BYTE)
+		this.setPiece(gameManager.get(move.get2DDst()));
+		this.setPiece(gameManager.get(move.get2DSrc()));
+
+		if (gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
 		{
 			this.setBoardWhite();
 		}

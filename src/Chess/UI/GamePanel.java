@@ -130,6 +130,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				this.setHistory();
 
 			}
+			this.resetHighlight();
 
 		}
 		else if (e.getSource() == sidePanel.getSave())                                                //SAVE
@@ -149,7 +150,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			if (move != null)
 			{
 
-					this.makeMove(move);
+				this.makeMove(move);
 
 				System.out.println("Move input: " + input);
 				sidePanel.setMoveInput("");
@@ -212,11 +213,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 					for (Move move : moves)
 					{
-						board.setNormalTileColor(move.get2DDst());
+						//board.setNormalTileColor(move.get2DDst());
 						if (i == board.getIndex(move.get2DDst()))
 						{
 							this.makeMove(move);
-							this.handleMove(move);
+							//this.handleMove(move);
 
 
 						}
@@ -224,8 +225,12 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 					}
 				}
 			}
-			gameManager.resetCachedMoves();
+			this.resetHighlight();
+			//gameManager.resetCachedMoves();
+
 		}
+
+
 	}
 
 
@@ -305,22 +310,22 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
 			{
-				board.makeMove(UIData.ROOK_KINGSIDE_CASTLING_W,PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+				board.makeMove(UIData.ROOK_KINGSIDE_CASTLING_W,gameManager);
 			}
 			else
 			{
-				board.makeMove(UIData.ROOK_KINGSIDE_CASTLING_B, PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+				board.makeMove(UIData.ROOK_KINGSIDE_CASTLING_B, gameManager);
 			}
 		}
 		else
 		{
 			if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
 			{
-				board.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_W,PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+				board.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_W,gameManager);
 			}
 			else
 			{
-				board.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_B,PieceData.getOpponentColor(gameManager.getActiveColorByte()));
+				board.makeMove(UIData.ROOK_QUEENSIDE_CASTLING_B,gameManager);
 			}
 		}
 	}
@@ -363,13 +368,17 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	{
 		gameManager.makeMove(move);
 
-		board.makeMove(move, gameManager.getActiveColorByte());
+		board.makeMove(move, gameManager);
+
 		this.setHistory();
+
+		this.handleMove(move);
+
 	}
 
 	public void handleMove(Move move)
 	{
-		if (gameManager.isCheckMate(PieceData.getOpponentColor(gameManager.getActiveColorByte())))
+		if (gameManager.isCheckMate(gameManager.getActiveColorByte()))
 		{
 			this.handleCheckMate();
 		}
@@ -386,10 +395,21 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	public void setHistory()
 	{
 		String history = "";
+		ArrayList<HistoryMove> move_history = gameManager.getMoveHistory();
+		int startIndex;
 
-		for(Move move_history : gameManager.getMoveHistory())
+		if(move_history.size()>40)
 		{
-			history += Parser.moveToString(move_history) + "\n";
+			startIndex = move_history.size()-40;
+		}
+		else
+		{
+			startIndex = 0;
+		}
+
+		for(int i= startIndex; i<move_history.size();i++)
+		{
+			history += (i+1) + ": " + Parser.moveToString(move_history.get(i)) + "\n";
 		}
 
 		sidePanel.setHistory(history);
@@ -408,6 +428,25 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 	public void refreshTimePanel(long timelimit_W, long timelimit_B)
 	{
 		sidePanel.refreshTimePanel(timelimit_W, timelimit_B);
+	}
+
+	public void resetHighlight()
+	{
+		ArrayList<Move> moves;
+
+		moves = gameManager.getCachedMoves();
+
+		if(!moves.isEmpty())
+		{
+			board.setNormalTileColor(moves.get(0).get2DSrc());
+
+			for (Move move : moves)
+			{
+				board.setNormalTileColor(move.get2DDst());
+			}
+
+			gameManager.resetCachedMoves();
+		}
 	}
 
 

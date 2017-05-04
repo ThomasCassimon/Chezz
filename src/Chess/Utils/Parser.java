@@ -34,30 +34,30 @@ public class Parser
 
 
 		//System.out.println("Parsing move: " + string);
-		if(string == "o-o-o")
+		if(string.equals("o-o-o"))
 		{
 			//System.out.println("Q-castle");
 			//QUEEN SIDE CASTLING
 			if(gm.getActiveColorByte() == PieceData.WHITE_BYTE)
 			{
-				move = UIData.KING_QUEENSIDE_CASTLING_W;
+				return UIData.KING_QUEENSIDE_CASTLING_W;
 			}
 			else
 			{
-				move = UIData.KING_QUEENSIDE_CASTLING_B;
+				return UIData.KING_QUEENSIDE_CASTLING_B;
 			}
 		}
-		else if(string == "o-o")
+		else if(string.equals("o-o"))
 		{
 			//System.out.println("K-castle");
 			//KING SIDE CASTLING
 			if(gm.getActiveColorByte() == PieceData.WHITE_BYTE)
 			{
-				move = UIData.KING_KINGSIDE_CASTLING_W;
+				return UIData.KING_KINGSIDE_CASTLING_W;
 			}
 			else
 			{
-				move = UIData.KING_KINGSIDE_CASTLING_B;
+				return UIData.KING_KINGSIDE_CASTLING_B;
 			}
 		}
 		else if(string.length() != 5)
@@ -87,6 +87,7 @@ public class Parser
 
 			if(gm.isAlmostLegalMove(piece, move))
 			{
+				System.out.println("[Parser]: " + move.toString());
 				return move;
 			}
 			else
@@ -95,6 +96,8 @@ public class Parser
 				System.out.println("invalid move (no piece can move there)");
 			}
 		}
+
+
 
 		return null;
 	}
@@ -108,12 +111,22 @@ public class Parser
 	{
 		String string = "";
 
-		string += (char) (move.get2DSrc()[0] + 'a');
-		string += Integer.toString(move.get2DSrc()[1] + 1);
-		string += "-";
-		string += (char) (move.get2DDst()[0] + 'a');
-		string += Integer.toString(move.get2DDst()[1] + 1);
-
+		if(move.isKingCastle())
+		{
+			string = "o-o";
+		}
+		else if(move.isQueenCastle())
+		{
+			string = "o-o-o";
+		}
+		else
+		{
+			string += (char) (move.get2DSrc()[0] + 'a');
+			string += Integer.toString(move.get2DSrc()[1] + 1);
+			string += "-";
+			string += (char) (move.get2DDst()[0] + 'a');
+			string += Integer.toString(move.get2DDst()[1] + 1);
+		}
 		return string;
 	}
 
@@ -186,6 +199,8 @@ public class Parser
 
 		int returnValue = fc.showDialog(gp, "Read from...");
 
+		boolean succes = false;
+
 		if(returnValue == JFileChooser.APPROVE_OPTION)
 		{
 			try
@@ -194,7 +209,7 @@ public class Parser
 				String str;
 				SettingsObject so = new SettingsObject();
 
-				if( reader.readLine() == "1")
+				if( reader.readLine().equals("1"))
 				{
 					System.out.println("Undo enabled via file");
 					so.setUndo(true);
@@ -205,7 +220,7 @@ public class Parser
 					so.setUndo(false);
 				}
 
-				if((str = reader.readLine()) == "/")
+				if((str = reader.readLine()).equals("/"))
 				{
 					System.out.println("Chronometer disabled via file");
 					gm.getChronometer().disable();
@@ -213,24 +228,30 @@ public class Parser
 				else
 				{
 					System.out.println("Chronometer values set via file");
+					System.out.println("Values " + str);
 					so.setTime_ms_W(Long.valueOf(str));
 					so.setTime_ms_B(Long.valueOf(reader.readLine()));
 				}
+				succes = true;
 				gm.setSettings(so, mf.getGamePanel());
-				while((str =reader.readLine()) != null & str.length() != 0)
+				while((str = reader.readLine()) != null & str.length() != 0)
 				{
+					System.out.println("[Parser] " + str);
 					Move move = Parser.stringToMove(str, gm);
+					System.out.println("[Parser] " + move.toString());
 					gm.makeMove(move);
+
 				}
 
-				return true;
+				reader.close();
+
 			}
 			catch(Exception e)
 			{
 
 			}
 		}
-		return false;
+		return succes;
 
 	}
 }
