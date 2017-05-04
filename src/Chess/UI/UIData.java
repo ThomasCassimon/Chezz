@@ -23,7 +23,7 @@ public final class UIData
 	public static final Dimension BUTTONS_DIMENSION = new Dimension(300, 25);
 	public static final Dimension BOARD_DIMENSION = new Dimension(800, 800);
 	public static final Dimension GAMEPANEL_DIMENSION = new Dimension(1400, 850);
-	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(350, 550);
+	public static final Dimension CONFIGURATIONPANEL_DIMENSION = new Dimension(450, 650);
 	public static final Dimension HISTORY_DIMENSION = new Dimension(200, 750);
 	public static final Dimension CONFIGURATIONPANEL_TEXTBOX = new Dimension(300, 1);
 
@@ -68,7 +68,7 @@ public final class UIData
 
 	//FONTS
 	public static final float FONT_SIZE = 25.0f;
-	public static final float TITLE_FONT_SIZE = 60.0f;
+	public static final float TITLE_FONT_SIZE = 80.0f;
 
 	//BORDERS
 	public static final Border BORDER_BLACK = BorderFactory.createLineBorder(Color.BLACK);
