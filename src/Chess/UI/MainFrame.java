@@ -43,7 +43,7 @@ public class MainFrame implements ActionListener
 
 			if(Parser.readFromFile(gameManager,configurationPanel,this))
 			{
-				gameManager.startChronometer();
+				//gameManager.startChronometer();
 				configurationPanel.setVisible(false);
 				gamePanel.initBoard();
 				gamePanel.setVisible(true);
@@ -51,18 +51,30 @@ public class MainFrame implements ActionListener
 		}
 		else if(e.getSource() == gamePanel.getExit())
 		{
-			System.out.println("Exit");
-			int choice = JOptionPane.showConfirmDialog(gamePanel, "Are you sure you want to exit the game? All unsaved progress will be lost.", "Exit", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,UIData.BK);
-
-			if(choice == JOptionPane.YES_OPTION)
+			if(e.getActionCommand().equals("Exit"))
 			{
-
 				gameManager = new GameManager();
 				gameManager.init();
 				configurationPanel = new ConfigurationPanel(gameManager, this);
 				configurationPanel.setVisible(true);
 				gamePanel.setVisible(false);
 				gamePanel = new GamePanel(gameManager, this);
+			}
+			else
+			{
+				System.out.println("Exit");
+				int choice = JOptionPane.showConfirmDialog(gamePanel, "Are you sure you want to exit the game? All unsaved progress will be lost.", "Exit", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,UIData.BK);
+
+
+				if(choice == JOptionPane.YES_OPTION)
+				{
+					gameManager = new GameManager();
+					gameManager.init();
+					configurationPanel = new ConfigurationPanel(gameManager, this);
+					configurationPanel.setVisible(true);
+					gamePanel.setVisible(false);
+					gamePanel = new GamePanel(gameManager, this);
+				}
 			}
 		}
 		else if(e.getSource() == configurationPanel.getExit())

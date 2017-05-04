@@ -14,6 +14,7 @@ public final class UIData
 	//CONSTANTS
 	public static final int NUMBER_TILES = 8;
 	public static final int TOTAL_TILES = UIData.NUMBER_TILES * UIData.NUMBER_TILES;
+	public static final int MAX_HISTORY_ELEMENTS = 43;
 
 	//STRINGS
 	public static final String[] timeOptions = {"No time limit", "1 min" , "2.5 min", "5 min", "30 min", "1 hour"};

@@ -228,9 +228,8 @@ public class Parser
 				else
 				{
 					System.out.println("Chronometer values set via file");
-					System.out.println("Values " + str);
-					so.setTime_ms_W(Long.valueOf(str));
-					so.setTime_ms_B(Long.valueOf(reader.readLine()));
+					so.setTime_ms_W(Long.parseLong(str));
+					so.setTime_ms_B(Long.parseLong(reader.readLine()));
 				}
 				succes = true;
 				gm.setSettings(so, mf.getGamePanel());
