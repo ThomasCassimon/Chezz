@@ -211,12 +211,12 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 				if (e.getSource() == board.getTile(i))
 				{
 
-					for (Move move : moves)
+					for (int j = 0; j<moves.size();j++)
 					{
 						//board.setNormalTileColor(move.get2DDst());
-						if (i == board.getIndex(move.get2DDst()))
+						if (i == board.getIndex(moves.get(j).get2DDst()))
 						{
-							this.makeMove(move);
+							this.makeMove(moves.get(j));
 							//this.handleMove(move);
 
 
@@ -290,18 +290,38 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 	public void handleCheckMate()
 	{
-		Object[] options = { "Exit","Save & Exit","Save & Start New Game","Start New Game"};
+		final int EXIT = 0;
+		final int SAVE_EXIT = 1;
+
+		this.resetHighlight();
+
+		Object[] options = {"Exit", "Save & Exit"};
 		String winner;
-		if(gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
+		ImageIcon winnerIcon = null;
+
+		if (gameManager.getActiveColorByte() == PieceData.WHITE_BYTE)
 		{
 			winner = "Black";
+			winnerIcon = UIData.BK;
 		}
 		else
 		{
 			winner = "White";
+			winnerIcon = UIData.WK;
 		}
 
-		int choice = JOptionPane.showOptionDialog(this,"Checkmate! " + winner + " wins!", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,  UIData.BK, options, null);
+		int choice = JOptionPane.showOptionDialog(this, "Checkmate! " + winner + " wins!", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, winnerIcon, options, null);
+
+		switch (choice)
+		{
+			case EXIT:
+				mainFrame.actionPerformed(new ActionEvent(getExit(), 1, "Exit"));
+				break;
+			case SAVE_EXIT:
+				Parser.saveToFile(gameManager.getMoveHistory(), this);
+				mainFrame.actionPerformed(new ActionEvent(getExit(), 1, "Exit"));
+				break;
+		}
 	}
 
 	public void handleCastling(Move move)
@@ -398,9 +418,9 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		ArrayList<HistoryMove> move_history = gameManager.getMoveHistory();
 		int startIndex;
 
-		if(move_history.size()>40)
+		if(move_history.size()>UIData.MAX_HISTORY_ELEMENTS)
 		{
-			startIndex = move_history.size()-40;
+			startIndex = move_history.size()-UIData.MAX_HISTORY_ELEMENTS;
 		}
 		else
 		{

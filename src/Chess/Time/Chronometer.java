@@ -36,7 +36,7 @@ public class Chronometer
 
 
 
-
+		running = true;
 		activeWhite = true;
 		enabled = true;
 	}
@@ -136,7 +136,7 @@ public class Chronometer
 	{
 		if(enabled)
 		{
-			//System.out.println("Chronometer toggled");
+			System.out.println("Chronometer toggled");
 			timeWhite = timerTickWhite.getTime();
 			timeBlack = timerTickBlack.getTime();
 
