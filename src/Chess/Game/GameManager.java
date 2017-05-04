@@ -283,11 +283,11 @@ public class GameManager
 				return true;
 
 			case PieceData.BISHOP_BYTE:
-				System.out.println("[isValidMove()] Bishop");
+				//System.out.println("[isValidMove()] Bishop");
 				return this.isValidBishopMove(m);
 
 			case PieceData.QUEEN_BYTE:
-				System.out.println("[isValidMove()] Queen");
+				//System.out.println("[isValidMove()] Queen");
 				//System.out.println("[isValidMove] isValidRookMove: " + Boolean.toString(this.isValidRookMove(m)) + " isValidBishopMove: " + this.isValidBishopMove(m) +  " for move: " + m.toString());
 				return this.isValidRookMove(m) || this.isValidBishopMove(m);
 
@@ -307,18 +307,18 @@ public class GameManager
 	public boolean isValidBishopMove (Move m)
 	{
 		//System.out.println("[isValidBishopMove()] chessboard: \n" + this.cb.toString());
-		System.out.println("[isValidBishopMove]\tMove: " + m.toString());
+		//System.out.println("[isValidBishopMove]\tMove: " + m.toString());
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
 
 		if (abs(deltaRank) != abs(deltaFile))
 		{
-			System.out.println("deltaRank != deltaFile");
+			//System.out.println("deltaRank != deltaFile");
 			return false;
 		}
 		else if (deltaRank == 0)
 		{
-			System.out.println("deltaRank == 0");
+			//System.out.println("deltaRank == 0");
 			return false;
 		}
 		else
@@ -337,7 +337,7 @@ public class GameManager
 
 				if (!this.get(file, rank).isEmpty())
 				{
-					System.out.println("Piece in the way on " + (char)(file + 'a') + (rank + 1));
+					//System.out.println("Piece in the way on " + (char)(file + 'a') + (rank + 1));
 					return false;
 				}
 			}
@@ -692,11 +692,11 @@ public class GameManager
 			// Piece is a king
 			if (!p.hasMoved())
 			{
-				if (m.get2DDst()[0] < m.get2DSrc()[0])
+				if (m.getSrc() - 0x00000002 == m.getDst())
 				{
 					m.setQueenSideCastle();
 				}
-				else if (m.get2DSrc()[0] < m.get2DDst()[0])
+				else if (m.getSrc() + 0x00000002 == m.getDst())
 				{
 					m.setKingSideCastle();
 				}
@@ -712,6 +712,10 @@ public class GameManager
 
 		if (this.isAlmostLegalMove(p,m))
 		{
+			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			{
+				System.out.println("[isLegalMove()]\tAnalyzing " + m.toString() + " by " + p.toString());
+			}
 			int capturedPiece = PieceData.EMPTY_BYTE;
 
 			if (this.isCapture(p.getColor(), m))
@@ -723,6 +727,10 @@ public class GameManager
 
 			if (this.get(m.getDst()).getPieceWithoutColorByte() != PieceData.KING_BYTE)
 			{
+				if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+				{
+					System.out.println("[isLegalMove()]\tMove didn't end on a king ");
+				}
 
 				int piece = p.getPieceByte();
 
@@ -735,6 +743,11 @@ public class GameManager
 				this.cb.set(m.getSrc(), piece);
 
 				//System.out.println("[isLegalMove] Move: " + m.toString() + " checkMate: " + check);
+			}
+
+			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			{
+				System.out.println("[isLegalMove()]\t" + m.toString() +  " leaves the king in check: " + Boolean.toString(check));
 			}
 
 			//System.out.println("Move: " + m.toString() + " check: " + Boolean.toString(check));
@@ -922,7 +935,7 @@ public class GameManager
 	 */
 	public ArrayList<Move> getLegalMoves (Piece p)
 	{
-		//System.out.println("[getLegalMoves] requested legal moves for " + p.toString());
+		System.out.println("[getLegalMoves()] requested legal moves for " + p.toString());
 		int color = p.getColor();
 		//TableRecord tr = null;
 
@@ -941,7 +954,7 @@ public class GameManager
 
 			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
-			//System.out.println("[getLegalMoves] Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
+			System.out.println("[getLegalMoves()] Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
@@ -951,9 +964,19 @@ public class GameManager
 
 				if (!this.isLegalMove(p, m))
 				{
-					//System.out.println("[getLegalMoves] removing: " + m.toString());
+					System.out.println("[getLegalMoves()]\tremoving: " + m.toString());
 					possibleMoves.remove(i);
 					i--;
+				}
+			}
+
+			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			{
+				System.out.println("[getLegalMoves()]\tApproved moves: ");
+
+				for (Move m : possibleMoves)
+				{
+					System.out.println("[getLegalMoves()]\t" + m.toString());
 				}
 			}
 
@@ -1083,7 +1106,7 @@ public class GameManager
 			this.toggleActivePlayer();
 			this.chronometer.toggle();
 
-			//System.out.println("[makeMove] Made move: " + m.toString());
+			System.out.println("[makeMove] MADE MOVE: " + m.toString() + " BY " + this.get(m.getDst()).toString());
 
 			return this;
 		}
@@ -1193,7 +1216,8 @@ public class GameManager
 			}
 			else if (m.isQueenCastle())
 			{
-				ArrayList<Piece> pieces = this.getAllPieces(this.activeColor);
+				//System.out.println("QueenSideCastle");
+				ArrayList<Piece> pieces = this.getAllPieces(PieceData.getOpponentColor(this.activeColor));
 				ArrayList<Piece> rooks = new ArrayList<>(2);
 
 				for (Piece p : pieces)
@@ -1204,11 +1228,14 @@ public class GameManager
 					}
 				}
 
+				//System.out.println("Found " + rooks.size() + " rooks");
+
 				for (Piece r : rooks)
 				{
+					//System.out.println("Rook: " + r.toString());
 					if (r.get2DCoord()[0] == 3)
 					{
-						System.out.println("Putting back rook");
+						//System.out.println("Putting back rook");
 						this.cb.set(r.getPositionByte() - 0x0003, r.getPieceByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
 						this.get(r.getPositionByte() - 0x0003).decMoves();
@@ -1246,11 +1273,12 @@ public class GameManager
 	 */
 	public boolean isCheckMate (int color)
 	{
-		//System.out.println("[isCheckMate] called for " + PieceData.getColorString(color));
+		System.out.println("[isCheckMate] called for " + PieceData.getColorString(color));
 		//System.out.println("[isCheckMate] PRE chessboard:\n"  + this.cb.toString());
 
 		if (this.isCheck(color))
 		{
+			System.out.println("[isCheckMate] king is in check");
 			Piece king = null;
 			ArrayList<Piece> pieces = this.getAllPieces(color);
 
@@ -1266,7 +1294,7 @@ public class GameManager
 
 			if (king != null)
 			{
-				pieces.remove(king);
+				//pieces.remove(king);
 
 				ArrayList<Move> almostLegalMoves = new ArrayList<Move>();
 
@@ -1279,6 +1307,7 @@ public class GameManager
 
 				for (Move m : almostLegalMoves)
 				{
+					System.out.println("Attempting to resolve check by " + m.toString() + " made by " + this.get(m.getSrc()).toString());
 					int capturedPiece = PieceData.EMPTY_BYTE;
 
 					if (m.isCapture())
