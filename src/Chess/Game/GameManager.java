@@ -412,8 +412,8 @@ public class GameManager
 		{
 			if (this.get(m.get2DDst()).getColor() != PieceData.getOpponentColor(color))
 			{
-				System.out.println("Dst Color: " + Integer.toBinaryString(this.get(m.get2DDst()).getColor()));
-				System.out.println(m.toString() + " does not end on opponent's square");
+				//System.out.println("Dst Color: " + Integer.toBinaryString(this.get(m.get2DDst()).getColor()));
+				//System.out.println(m.toString() + " does not end on opponent's square");
 				return false;
 			}
 		}
@@ -723,7 +723,7 @@ public class GameManager
 				//System.out.println("[isLegalMove] Move: " + m.toString() + " checkMate: " + check);
 			}
 
-			System.out.println("Move: " + m.toString() + " check: " + Boolean.toString(check));
+			//System.out.println("Move: " + m.toString() + " check: " + Boolean.toString(check));
 			return !check;
 		}
 		else
@@ -1285,7 +1285,7 @@ public class GameManager
 
 						if (!this.isCheck(color))
 						{
-							System.out.println("");
+							//System.out.println("");
 							checkPreventionPossible = true;
 						}
 
@@ -1349,8 +1349,8 @@ public class GameManager
 
 		if (king != null)
 		{
-			System.out.println("Chessboard:\n" + this.cb.toString());
-			System.out.println("king attacked from " + this.isAttacked(color, king.getPositionByte()) + " sides");
+			//System.out.println("Chessboard:\n" + this.cb.toString());
+			//System.out.println("king attacked from " + this.isAttacked(color, king.getPositionByte()) + " sides");
 			return (this.isAttacked(color, king.getPositionByte()) >= 1);
 		}
 		else
@@ -1457,7 +1457,7 @@ public class GameManager
 
 	public void handlePromotion(int[] position, int piece)
 	{
-		System.out.println("Promo: (" + Integer.toString(position[0]) + Integer.toString(position[1]) + " piecebyte: " + Integer.toBinaryString(piece));
+		//System.out.println("Promo: (" + Integer.toString(position[0]) + Integer.toString(position[1]) + " piecebyte: " + Integer.toBinaryString(piece));
 
 		this.cb.set(position[0],position[1],piece);
 	}
