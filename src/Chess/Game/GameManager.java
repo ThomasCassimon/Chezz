@@ -696,7 +696,6 @@ public class GameManager
 	{
 		//System.out.println("[isLegalMove] called for " + p.toString() + " making move " + m.toString());
 
-
 		if (this.isAlmostLegalMove(p,m))
 		{
 			int capturedPiece = PieceData.EMPTY_BYTE;
@@ -716,7 +715,7 @@ public class GameManager
 				this.cb.set(m.getDst(), piece);
 				this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
 
-				check = this.isCheckMate(p.getColor());
+				check = this.isCheck(p.getColor());
 
 				this.cb.set(m.getDst(), capturedPiece);
 				this.cb.set(m.getSrc(), piece);
@@ -724,6 +723,7 @@ public class GameManager
 				//System.out.println("[isLegalMove] Move: " + m.toString() + " checkMate: " + check);
 			}
 
+			System.out.println("Move: " + m.toString() + " check: " + Boolean.toString(check));
 			return !check;
 		}
 		else
@@ -865,7 +865,7 @@ public class GameManager
 
 	public ArrayList <Move> getAlmostLegalMoves (Piece p)
 	{
-		System.out.println("[getAlmostLegalMoves] called for " + p.toString());
+		//System.out.println("[getAlmostLegalMoves] called for " + p.toString());
 		ArrayList <Move> moves = p.getAllPossibleMoves();
 		ArrayList <Move> removeQueue = new ArrayList<Move>();
 
@@ -1349,6 +1349,8 @@ public class GameManager
 
 		if (king != null)
 		{
+			System.out.println("Chessboard:\n" + this.cb.toString());
+			System.out.println("king attacked from " + this.isAttacked(color, king.getPositionByte()) + " sides");
 			return (this.isAttacked(color, king.getPositionByte()) >= 1);
 		}
 		else
