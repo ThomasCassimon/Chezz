@@ -8,15 +8,15 @@ package Chess.Game;
  */
 public class AttackChecker extends Thread
 {
-	boolean isAttacked;
+	private boolean isAttacked;
 
-	int[] offsetArray;
-	int index0x88;
-	int pieceByte;
-	int color;
-	int opponentColor;
+	private int[] offsetArray;
+	private int pieceByte;
+	private int index0x88;
+	private int color;
+	private int opponentColor;
 
-	GameManager gm;
+	private GameManager gm;
 
 	public AttackChecker (int[] offsetArray, int pieceByte, int color, int index0x88, GameManager gm)
 	{
@@ -32,25 +32,34 @@ public class AttackChecker extends Thread
 	@Override
 	public void run()
 	{
-		int tmp = 0;
-
-		for (int i = 0; i < this.offsetArray.length; i++)
+		// Loop over all moves in move-offset-array
+		for (int moveOffset : this.offsetArray)
 		{
-			if (((tmp = index0x88 + this.offsetArray[i]) & 0x88) == 0)
-			{
-				if (this.gm.get(tmp).getColor() == opponentColor)
-				{
-					if (this.gm.get(tmp).getPieceWithoutColorByte() == this.pieceByte)
-					{
-						Move m;
+			int currentSquare = index0x88 + moveOffset;
 
-						if(this.gm.isValidMove(this.pieceByte, this.opponentColor, m = (new Move (tmp, index0x88, 0x0))))
-						{
-							//System.out.println("Color: " + Integer.toHexString(this.opponentColor));
-							//System.out.println(PieceData.toStringFromNum(this.pieceByte) + " attacks by " + m.toString());
-							this.isAttacked = true;
-							break;
-						}
+			// Check if move is on the board
+			if ((currentSquare & 0x88) == 0)
+			{
+				// We found a piece that matches the given moveset and belongs to the opponent
+				Piece piece = this.gm.get(currentSquare);
+
+				if ((piece.getPieceWithoutColorByte() == this.pieceByte) && (piece.getColor() == this.opponentColor))
+				{
+					System.out.println("[attackChecker()]\tFound a " + PieceData.toStringFromNum(piece.getPieceWithoutColorByte()) + " on its moves (" + piece.toString() + ")");
+					//System.out.println("Checking for " + gm.get(tmp).toString());
+					//System.out.println("Checking attack from: " + (char) (ChessBoard.get2DCoord(tmp)[0] + 'a') + (ChessBoard.get2DCoord(tmp)[1] + 1));
+
+					Move m = new Move(currentSquare, index0x88, 0x0);
+					this.gm.setFlags(this.opponentColor, m);
+
+					System.out.println("[attackChecker()]\tChecking move: " + m.toString());
+
+					if (this.gm.isValidMove(piece.getPieceWithoutColorByte(), piece.getColor(), m))
+					{
+						//System.out.println("Color: " + Integer.toHexString(this.opponentColor));
+						System.out.println(piece.toString() + " is attacking piece " + this.gm.get(index0x88));
+						this.isAttacked = true;
+						break;
 					}
 				}
 			}

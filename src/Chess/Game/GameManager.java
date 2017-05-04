@@ -262,6 +262,13 @@ public class GameManager
 		return pieces;
 	}
 
+	/**
+	 * Requires flags to be set on the given move
+	 * @param pieceByte
+	 * @param color
+	 * @param m
+	 * @return
+	 */
 	public boolean isValidMove (int pieceByte, int color, Move m)
 	{
 		switch(pieceByte & PieceData.PIECE_MASK)
@@ -276,9 +283,11 @@ public class GameManager
 				return true;
 
 			case PieceData.BISHOP_BYTE:
+				System.out.println("[isValidMove()] Bishop");
 				return this.isValidBishopMove(m);
 
 			case PieceData.QUEEN_BYTE:
+				System.out.println("[isValidMove()] Queen");
 				//System.out.println("[isValidMove] isValidRookMove: " + Boolean.toString(this.isValidRookMove(m)) + " isValidBishopMove: " + this.isValidBishopMove(m) +  " for move: " + m.toString());
 				return this.isValidRookMove(m) || this.isValidBishopMove(m);
 
@@ -298,16 +307,18 @@ public class GameManager
 	public boolean isValidBishopMove (Move m)
 	{
 		//System.out.println("[isValidBishopMove()] chessboard: \n" + this.cb.toString());
-		//System.out.println("Move: " + m.toString());
+		System.out.println("[isValidBishopMove]\tMove: " + m.toString());
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
 
 		if (abs(deltaRank) != abs(deltaFile))
 		{
+			System.out.println("deltaRank != deltaFile");
 			return false;
 		}
 		else if (deltaRank == 0)
 		{
+			System.out.println("deltaRank == 0");
 			return false;
 		}
 		else
@@ -315,15 +326,18 @@ public class GameManager
 			int rankDir = deltaRank / abs(deltaRank);
 			int fileDir = deltaFile / abs(deltaFile);
 
-			for (int i = 1; i <= abs(deltaRank); i++)
+			for (int i = 1; i < abs(deltaRank); i++)
 			{
 				int file = m.get2DSrc()[0] + (fileDir * i);
 				int rank = m.get2DSrc()[1] + (rankDir * i);
 
 				//System.out.println("[isValidBishopMove()] Checking file: " + file + " rank: " + rank + " result: " + this.get(file, rank).isEmpty());
 
+				//System.out.println("Chessboard: \n" + this.cb.toString());
+
 				if (!this.get(file, rank).isEmpty())
 				{
+					System.out.println("Piece in the way on " + (char)(file + 'a') + (rank + 1));
 					return false;
 				}
 			}
@@ -1326,7 +1340,7 @@ public class GameManager
 	 */
 	public boolean isCheck (int color)
 	{
-		//System.out.println("[isCheck] called for " + PieceData.getColorString(color));
+		System.out.println("[isCheck] called for " + PieceData.getColorString(color));
 		//System.out.println("[isCheck] PRE: chessboard: \n" + this.cb.toString());
 		Piece king = null;
 
@@ -1350,7 +1364,7 @@ public class GameManager
 		if (king != null)
 		{
 			//System.out.println("Chessboard:\n" + this.cb.toString());
-			//System.out.println("king attacked from " + this.isAttacked(color, king.getPositionByte()) + " sides");
+			System.out.println("king attacked from " + this.isAttacked(color, king.getPositionByte()) + " sides color: " + PieceData.getColorString(color));
 			return (this.isAttacked(color, king.getPositionByte()) >= 1);
 		}
 		else
@@ -1420,6 +1434,7 @@ public class GameManager
 		{
 			pawnCapture = new AttackChecker(Movesets.PAWN_CAPTURE_BLACK, PieceData.PAWN_BYTE, color, index0x88, this);
 		}
+		pawnCapture.setName("pawnCaptureChecker");
 
 		AttackChecker[] threadArray = new AttackChecker[6];
 
@@ -1430,18 +1445,20 @@ public class GameManager
 		threadArray[4] = queen;
 		threadArray[5] = king;
 
-		for (AttackChecker aThreadArray : threadArray)
+		for (AttackChecker attackThread : threadArray)
 		{
-			aThreadArray.start();
+			attackThread.start();
 		}
 
 		try
 		{
-			for (AttackChecker aThreadArray : threadArray)
+			for (AttackChecker attackThread : threadArray)
 			{
-				aThreadArray.join();
+				attackThread.join();
 
-				if (aThreadArray.getResult())
+				//System.out.println(attackThread.getName() + " attacking: " + attackThread.getResult());
+
+				if (attackThread.getResult())
 				{
 					attacked++;
 				}
