@@ -951,30 +951,35 @@ public class GameManager
 
 		}
 		else*/
-		if ((p.getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) && (color == this.activeColor))
+		if(this.chronometer.isRunning())
+
 		{
-			//System.out.println("NEW");
-			//int piece = p.getPieceWithoutColorByte();
 
-			//System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
 
-			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
-
-			//System.out.println("[getLegalMoves()] Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
-
-			for (int i = 0; i < possibleMoves.size(); i++)
+			if ((p.getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) && (color == this.activeColor))
 			{
-				Move m = possibleMoves.get(i);
+				//System.out.println("NEW");
+				//int piece = p.getPieceWithoutColorByte();
 
-				m = this.setFlags(color, m);
+				//System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
 
-				if (!this.isLegalMove(p, m))
+				ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
+
+				//System.out.println("[getLegalMoves()] Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
+
+				for (int i = 0; i < possibleMoves.size(); i++)
 				{
-					//System.out.println("[getLegalMoves()]\tremoving: " + m.toString());
-					possibleMoves.remove(i);
-					i--;
+					Move m = possibleMoves.get(i);
+
+					m = this.setFlags(color, m);
+
+					if (!this.isLegalMove(p, m))
+					{
+						//System.out.println("[getLegalMoves()]\tremoving: " + m.toString());
+						possibleMoves.remove(i);
+						i--;
+					}
 				}
-			}
 
 			/*
 			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
@@ -988,7 +993,7 @@ public class GameManager
 			}
 			*/
 
-			Collections.sort(possibleMoves);
+				Collections.sort(possibleMoves);
 
 			/*System.out.println("Generated:");
 			for(Move m : possibleMoves)
@@ -996,7 +1001,12 @@ public class GameManager
 				System.out.println(m.toString());
 			}*/
 
-			return possibleMoves;
+				return possibleMoves;
+			}
+			else
+			{
+				return new ArrayList<Move>();
+			}
 		}
 		else
 		{
