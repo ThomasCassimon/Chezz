@@ -181,21 +181,23 @@ public class Chronometer
 			}
 			else
 			{
-
-				timer = new Timer();
-				timerTickWhite = new TimerTick(timeWhite, labelWhite);
-				timerTickBlack = new TimerTick(timeBlack, labelBlack);
-
-				if (activeWhite)
+				if(timerTickBlack.getTime() != 0 && timerTickWhite.getTime() != 0)
 				{
-					timer.scheduleAtFixedRate(timerTickWhite, 0, MILLISECOND);
-				}
-				else
-				{
-					timer.scheduleAtFixedRate(timerTickBlack, 0, MILLISECOND);
-				}
+					timer = new Timer();
+					timerTickWhite = new TimerTick(timeWhite, labelWhite);
+					timerTickBlack = new TimerTick(timeBlack, labelBlack);
 
-				running = true;
+					if (activeWhite)
+					{
+						timer.scheduleAtFixedRate(timerTickWhite, 0, MILLISECOND);
+					}
+					else
+					{
+						timer.scheduleAtFixedRate(timerTickBlack, 0, MILLISECOND);
+					}
+
+					running = true;
+				}
 			}
 		}
 
@@ -271,6 +273,21 @@ public class Chronometer
 
 	public boolean isRunning ()
 	{
+		if(activeWhite)
+		{
+			if(timerTickWhite.getTime() == 0)
+			{
+				running = false;
+			}
+		}
+		else
+		{
+			if(timerTickBlack.getTime() == 0)
+			{
+				running = false;
+			}
+		}
+		System.out.println("[Chronometer isRunning()]  " + running );
 		return this.running;
 	}
 

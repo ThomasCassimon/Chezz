@@ -2,6 +2,7 @@ package Chess.UI;
 
 import Chess.Exceptions.Checked.GameOverException;
 import Chess.Game.*;
+import Chess.Time.Chronometer;
 import Chess.Utils.Parser;
 //import com.apple.eawt.Application;
 
@@ -171,6 +172,16 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			System.out.println("Exit detected in gamepanel");
 			mainFrame.actionPerformed(e);
 		}
+		else if(gameManager.getChronometer().getTimeWhite() == 0)
+		{
+			JOptionPane.showConfirmDialog(this,"Game over! Time for player white has run out. Player black wins!", "Game over!", JOptionPane.CLOSED_OPTION,JOptionPane.QUESTION_MESSAGE, UIData.BK);
+		}
+
+		else if(gameManager.getChronometer().getTimeBlack() == 0)
+		{
+			JOptionPane.showConfirmDialog(this,"Game over! Time for player black has run out. Player white wins!", "Game over!", JOptionPane.CLOSED_OPTION,JOptionPane.QUESTION_MESSAGE, UIData.WK);
+		}
+
 		else if (gameManager.getCachedMoves().isEmpty())                                            //SELECT SOURCE
 		{
 			//System.out.println("Active color is: " + PieceData.getColorString(this.gameManager.getActiveColorByte()));
@@ -229,6 +240,8 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 			//gameManager.resetCachedMoves();
 
 		}
+
+
 
 
 	}
