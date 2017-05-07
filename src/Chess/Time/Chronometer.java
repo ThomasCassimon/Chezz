@@ -24,22 +24,7 @@ public class Chronometer
 
 
 
-	public Chronometer(long initialWhite, long initialBlack)
-	{
-		timer= new Timer();
 
-		timeWhite = initialWhite;
-		timeBlack = initialBlack;
-
-		timerTickWhite = new TimerTick(timeWhite);
-		timerTickBlack = new TimerTick(timeBlack);
-
-
-
-		running = true;
-		activeWhite = true;
-		enabled = true;
-	}
 
 	public Chronometer(long initialWhite, long initialBlack, JLabel labelWhite, JLabel labelBlack)
 	{
@@ -275,16 +260,22 @@ public class Chronometer
 	{
 		if(activeWhite)
 		{
-			if(timerTickWhite.getTime() == 0)
+			if(timerTickWhite != null)
 			{
-				running = false;
+				if(timerTickWhite.getTime() == 0)
+				{
+					running = false;
+				}
 			}
 		}
 		else
 		{
-			if(timerTickBlack.getTime() == 0)
+			if(timerTickBlack != null)
 			{
-				running = false;
+				if(timerTickBlack.getTime() == 0)
+				{
+					running = false;
+				}
 			}
 		}
 		System.out.println("[Chronometer isRunning()]  " + running );
