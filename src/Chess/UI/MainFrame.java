@@ -22,6 +22,9 @@ public class MainFrame implements ActionListener
 		configurationPanel = new ConfigurationPanel(gameManager, this);
 		gamePanel = new GamePanel(gameManager, this);
 
+		gamePanel.setIconImage(UIData.BK.getImage());
+		configurationPanel.setIconImage(UIData.BK.getImage());
+
 		configurationPanel.setVisible(true);
 	}
 
