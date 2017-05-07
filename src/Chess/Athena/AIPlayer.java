@@ -52,7 +52,7 @@ public class AIPlayer extends Player
 			{
 				if (gm.get(i,j).getColor() == color)  // True if the piece's colorByte is identical to the player's
 				{
-					score += PieceData.getPieceScore(gm.get(i,j).getPieceWithoutColorByte());
+					score += PieceData.getPieceScore(gm.get(i,j).getPieceByte());
 					pieces.add(gm.get(i,j));
 				}
 			}
@@ -64,17 +64,17 @@ public class AIPlayer extends Player
 
 		for (Piece p : pieces)
 		{
-			if (p.getPieceWithoutColorByte() == (PieceData.BISHOP_BYTE | color))
+			if (p.getPieceByte() == (PieceData.BISHOP_BYTE | color))
 			{
 				bishopCount++;
 			}
 
-			if (p.getPieceWithoutColorByte() == (PieceData.ROOK_BYTE | color))
+			if (p.getPieceByte() == (PieceData.ROOK_BYTE | color))
 			{
 				rookCount++;
 			}
 
-			if (p.getPieceWithoutColorByte() == (PieceData.KNIGHT_BYTE | color))
+			if (p.getPieceByte() == (PieceData.KNIGHT_BYTE | color))
 			{
 				knightCount++;
 			}
@@ -123,7 +123,7 @@ public class AIPlayer extends Player
 
 			score = alphaBeta(gm_alt, maxSearchDepth, -inf, inf, true, true);
 
-			if (gm.isValidMove(gm.get(m.getSrc()).getPieceWithoutColorByte(), gm.getActiveColorByte(), m))
+			if (gm.isValidMove(gm.get(m.getSrc()).getPieceByte(), gm.getActiveColorByte(), m))
 			{
 				if (score > maxScore)
 				{

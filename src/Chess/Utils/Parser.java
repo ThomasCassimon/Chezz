@@ -71,23 +71,23 @@ public class Parser
 			file = chars[0] - 'a';
 			rank = chars[1] - '1';
 			source = ChessBoard.get0x88Index(file,rank);
-			System.out.println("[PARSER] Source: File: " + file + " Rank: " + rank);
+			//System.out.println("[PARSER] Source: File: " + file + " Rank: " + rank);
 
 
 			file = chars[3] - 'a';
 			rank = chars[4] - '1';
 			destination = ChessBoard.get0x88Index(file, rank);
-			System.out.println("[PARSER] Destination: File: " + file + " Rank: " + rank);
+			//System.out.println("[PARSER] Destination: File: " + file + " Rank: " + rank);
 
 			move = new Move(source, destination,0);
 			move = gm.setFlags(gm.getActiveColorByte(), move);
 
 			piece = gm.get(source);
-			System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+			//System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
 
 			if(gm.isAlmostLegalMove(piece, move))
 			{
-				System.out.println("[Parser]: " + move.toString());
+				//System.out.println("[Parser]: " + move.toString());
 				return move;
 			}
 			else
@@ -240,21 +240,24 @@ public class Parser
 				}
 				succes = true;
 				gm.setSettings(so, mf.getGamePanel());
-				while((str = reader.readLine()) != null & str.length() != 0)
+				while((str = reader.readLine()) != null && str.length() != 0)
 				{
+					System.out.println("Read " + str);
 					System.out.println("[Parser] " + str);
 					Move move = Parser.stringToMove(str, gm);
 					System.out.println("[Parser] " + move.toString());
-					gm.makeMove(move);
 
+					gm.makeMove(move);
 				}
+
+				System.out.println("Done reading");
 
 				reader.close();
 
 			}
-			catch(Exception e)
+			catch(IOException ioe)
 			{
-
+				//ioe.printStackTrace();
 			}
 		}
 		return succes;
