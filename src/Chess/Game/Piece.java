@@ -23,6 +23,7 @@ public class Piece
 	 *	XXXX XXXX XXXX XXXX XXXX XXXX XXXX XBBB: BBB is the type of the piece
 	 */
 
+	private int moveCounter;
 	private int pieceByte;
 	private int positionByte;
 
@@ -59,7 +60,54 @@ public class Piece
 		this.positionByte = ChessBoard.get0x88Index(file, rank);
 	}
 
-	public int getDataByte()
+	/**
+	 * Constructor, takes a pieceString, localeByte and (0x88) positionByte
+	 * The sting can be either in long, human-readable format or in short
+	 * 1-character format
+	 * @param pieceString can be either in long, human-readable format or in short 1-character format
+	 * @param positionByte a 0x88 position byte
+	 * @param localeByte a locale that goes with pieceString
+	 */
+	public Piece (String pieceString, int positionByte, int localeByte)
+	{
+		switch (pieceString.length())
+		{
+			case 1:
+				this.pieceByte = PieceData.toNumFromShort(pieceString, localeByte);
+				break;
+			default:
+				this.pieceByte = PieceData.toNumFromString(pieceString, localeByte);
+				break;
+		}
+
+		this.positionByte = positionByte;
+	}
+
+	/**
+	 * Constructor, takes a pieceString, localeByte and a file and rank byte.
+	 * The sting can be either in long, human-readable format or in short
+	 * 1-character format
+	 * @param pieceString can be either in long, human-readable format or in short 1-character format
+	 * @param file  piece file
+	 * @param rank  piece rank
+	 * @param localeByte locale that goes with pieceString
+	 */
+	public Piece (String pieceString, int file, int rank, int localeByte)
+	{
+		switch (pieceString.length())
+		{
+			case 1:
+				this.pieceByte = PieceData.toNumFromShort(pieceString, localeByte);
+				break;
+			default:
+				this.pieceByte = PieceData.toNumFromString(pieceString, localeByte);
+				break;
+		}
+
+		this.positionByte = ChessBoard.get0x88Index(file,rank);
+	}
+
+	public int getPieceByte ()
 	{
 		return this.pieceByte;
 	}
@@ -215,7 +263,7 @@ public class Piece
 		return  (this.pieceByte & (PieceData.WHITE_BYTE | PieceData.BLACK_BYTE));
 	}
 
-	public int getPieceByte()
+	public int getPieceWithoutColorByte ()
 	{
 		return  this.pieceByte & PieceData.PIECE_MASK;
 	}
@@ -233,13 +281,13 @@ public class Piece
 	public String toString ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.positionByte);
-		return PieceData.getColorString(this.pieceByte & PieceData.COLOR_MASK) + " " + PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1) + " moved " + Integer.toString(this.getMoveCount()) + " times";
+		return PieceData.getColorString(this.pieceByte & PieceData.COLOR_MASK) + " " + PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + ((char) (coords[0] + 'a')) + Integer.toString(coords[1] + 1) + " moved " + Integer.toString(this.moveCounter) + " times";
 	}
 
 	public String toLongString ()
 	{
 		int[] coords = ChessBoard.get2DCoord(this.positionByte);
-		return PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + Integer.toBinaryString(this.positionByte)  + " moved " + Integer.toString(this.getMoveCount()) + " times";
+		return PieceData.toStringFromNum( (this.pieceByte & PieceData.PIECE_MASK), PieceData.EN_UK.LOCALE_BYTE) + " @ " + Integer.toBinaryString(this.positionByte)  + " moved " + Integer.toString(this.moveCounter) + " times";
 	}
 
 	/**
@@ -251,52 +299,19 @@ public class Piece
 		return ChessBoard.get2DCoord(this.positionByte);
 	}
 
-	/**
-	 * @return Returns true if, and only if, the piece has moved atleast once
-	 */
 	public Boolean hasMoved ()
 	{
-		System.out.println("data byte: " + Integer.toBinaryString(this.pieceByte) + " hasMoved: " + Boolean.toString((((this.pieceByte & PieceData.COUNTER_MASK) >> 24) & 0x000000FF) > 0));
-		return this.getMoveCount() > 0;
+		return this.moveCounter > 0;
 	}
 
-	public int getMoveCount ()
+	public void incMoves()
 	{
-		return ((this.pieceByte & PieceData.COUNTER_MASK) >> 24) & 0x000000FF;
+		this.moveCounter++;
 	}
 
-	/**
-	 * Increments the piece's move count by 1, when the move count reaches 255, it goes back to zero
-	 */
-	public Piece incMoves()
+	public void decMoves()
 	{
-		if ((((this.pieceByte & PieceData.COUNTER_MASK) >> 24) & 0x000000FF) < 255)
-		{
-			this.pieceByte += 0x01000000;
-		}
-		else
-		{
-			this.pieceByte &= 0x00FFFFFF;
-		}
-
-		return this;
-	}
-
-	/**
-	 * Decrements the piece's move count by 1, when the move count reaches zero, it won't decrease any further
-	 */
-	public Piece decMoves()
-	{
-		if ((((this.pieceByte & PieceData.COUNTER_MASK) >> 24) & 0x000000FF) > 0)
-		{
-			this.pieceByte -= 0x01000000;
-		}
-		else
-		{
-			this.pieceByte &= 0x00FFFFFF;
-		}
-
-		return this;
+		this.moveCounter--;
 	}
 
 	@Override
@@ -304,7 +319,7 @@ public class Piece
 	{
 		if (o instanceof Piece)
 		{
-			return (this.getDataByte() == ((Piece) o).getDataByte()) && (this.getPositionByte() == ((Piece) o).getPositionByte());
+			return (this.getPieceByte() == ((Piece) o).getPieceByte()) && (this.getPositionByte() == ((Piece) o).getPositionByte());
 		}
 		else
 		{
