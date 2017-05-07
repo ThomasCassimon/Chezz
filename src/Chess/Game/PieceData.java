@@ -15,20 +15,18 @@ import Chess.UI.UIData;
  */
 public final class PieceData
 {
-	public static final int WHITE_BYTE =	0x00000010;
-	public static final int BLACK_BYTE =	0x00000020;
-	public static final int COLOR_MASK = 	0x00000030;
+	public static final int WHITE_BYTE =	0x10;
+	public static final int BLACK_BYTE =	0x20;
+	public static final int COLOR_MASK = 	0x30;
 
-	public static final int COUNTER_MASK = 0xFF000000;
-
-	public static final int PIECE_MASK =	0x00000007;
-	public static final int EMPTY_BYTE =    0x00000000;
-	public static final int PAWN_BYTE =	 	0x00000001;
-	public static final int ROOK_BYTE =	 	0x00000002;
-	public static final int KNIGHT_BYTE =	0x00000003;
-	public static final int BISHOP_BYTE =	0x00000004;
-	public static final int QUEEN_BYTE =	0x00000005;
-	public static final int KING_BYTE =	 	0x00000006;
+	public static final int PIECE_MASK =	0x07;
+	public static final int EMPTY_BYTE =    0x00;
+	public static final int PAWN_BYTE =	 	0x01;
+	public static final int ROOK_BYTE =	 	0x02;
+	public static final int KNIGHT_BYTE =	0x03;
+	public static final int BISHOP_BYTE =	0x04;
+	public static final int QUEEN_BYTE =	0x05;
+	public static final int KING_BYTE =	 	0x06;
 
 	public static final int PAWN_SCORE =    100;
 	public static final int ROOK_SCORE =    500;

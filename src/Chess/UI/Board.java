@@ -56,7 +56,7 @@ public class Board extends JPanel
 		int colorByte;
 
 		index = getIndex(piece);
-		pieceByte = piece.getPieceByte();
+		pieceByte = piece.getPieceWithoutColorByte();
 		colorByte = piece.getColor();
 
 		if (colorByte == PieceData.WHITE_BYTE)
