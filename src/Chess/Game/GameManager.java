@@ -11,7 +11,6 @@ import Chess.Utils.SettingsObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
 /**
@@ -74,7 +73,7 @@ public class GameManager
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				this.cb.set(i,j,gm.get(i,j).getPieceByte());
+				this.cb.set(i,j,gm.get(i,j).getDataByte());
 			}
 		}
 
@@ -358,8 +357,8 @@ public class GameManager
 	public boolean isValidPawnMove (int color, Move m)
 	{
 		//System.out.println("Checking: " + m.toString());
-		//System.out.println("Src: " + this.get(m.getSrc()).getPieceByte());
-		//System.out.println("Dst: " + this.get(m.getDst()).getPieceByte());
+		//System.out.println("Src: " + this.get(m.getSrc()).getDataByte());
+		//System.out.println("Dst: " + this.get(m.getDst()).getDataByte());
 
 		int initRank = 1;
 		int colorMult = 1;
@@ -399,7 +398,7 @@ public class GameManager
 				return false;
 			}
 
-			if ((this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (colorMult))).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE)
+			if ((this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (colorMult))).getPieceByte() != PieceData.EMPTY_BYTE)
 			{
 				//System.out.println("Piece in the way of double move: " + this.get(m.get2DSrc()[0], m.get2DSrc()[1] + (1 * colorMult)));
 				return false;
@@ -414,7 +413,7 @@ public class GameManager
 				//System.out.println(m.toString() + " is trying to capture own color");
 				return false;
 			}
-			else if (this.get(m.get2DDst()).getPieceWithoutColorByte() == PieceData.EMPTY_BYTE)
+			else if (this.get(m.get2DDst()).getPieceByte() == PieceData.EMPTY_BYTE)
 			{
 				//System.out.println("Trying to capture empty sqaure");
 				return false;
@@ -446,7 +445,7 @@ public class GameManager
 			{
 				if ((p = this.get((to + Movesets.PAWN_CAPTURE_WHITE[i]))).getColor() == opponentColor)
 				{
-					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+					if (p.getPieceByte() == PieceData.PAWN_BYTE)
 					{
 						return false;
 					}
@@ -459,7 +458,7 @@ public class GameManager
 			{
 				if ((p = this.get((to + Movesets.PAWN_CAPTURE_BLACK[i]))).getColor() == opponentColor)
 				{
-					if (p.getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+					if (p.getPieceByte() == PieceData.PAWN_BYTE)
 					{
 						return false;
 					}
@@ -473,7 +472,7 @@ public class GameManager
 			{
 				if (this.get(tmp).getColor() == opponentColor)
 				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					if (this.get(tmp).getPieceByte() == PieceData.ROOK_BYTE)
 					{
 						if(this.isValidRookMove(new Move (tmp, to, 0x0)))
 						{
@@ -490,7 +489,7 @@ public class GameManager
 			{
 				if (this.get(tmp).getColor() == opponentColor)
 				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KNIGHT_BYTE)
+					if (this.get(tmp).getPieceByte() == PieceData.KNIGHT_BYTE)
 					{
 						return false;
 					}
@@ -504,7 +503,7 @@ public class GameManager
 			{
 				if (this.get(tmp).getColor() == opponentColor)
 				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.BISHOP_BYTE)
+					if (this.get(tmp).getPieceByte() == PieceData.BISHOP_BYTE)
 					{
 						if(this.isValidBishopMove(new Move (tmp, to, 0x0)))
 						{
@@ -521,7 +520,7 @@ public class GameManager
 			{
 				if (this.get(tmp).getColor() == opponentColor)
 				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.QUEEN_BYTE)
+					if (this.get(tmp).getPieceByte() == PieceData.QUEEN_BYTE)
 					{
 						if ((this.isValidRookMove(new Move (tmp, to, 0x0)) || this.isValidBishopMove(new Move (tmp, to, 0x0))))
 						{
@@ -538,7 +537,7 @@ public class GameManager
 			{
 				if (this.get(tmp).getColor() == opponentColor)
 				{
-					if (this.get(tmp).getPieceWithoutColorByte() == PieceData.KING_BYTE)
+					if (this.get(tmp).getPieceByte() == PieceData.KING_BYTE)
 					{
 						return false;
 					}
@@ -557,11 +556,11 @@ public class GameManager
 	public boolean isCapture (int color, Move m)
 	{
 		//System.out.println("[isCapture] Color: " + Integer.toBinaryString(color) + " Move: " + m.toString());
-		if (this.get(m.getSrc()).getPieceWithoutColorByte() != PieceData.PAWN_BYTE)
+		if (this.get(m.getSrc()).getPieceByte() != PieceData.PAWN_BYTE)
 		{
 			return this.get(m.getDst()).getColor() == PieceData.getOpponentColor(color);
 		}
-		else if (this.get(m.getSrc()).getPieceWithoutColorByte() == PieceData.PAWN_BYTE)
+		else if (this.get(m.getSrc()).getPieceByte() == PieceData.PAWN_BYTE)
 		{
 			if (m.get2DSrc()[0] != m.get2DDst()[0])
 			{
@@ -581,11 +580,11 @@ public class GameManager
 	{
 		if (color == PieceData.WHITE_BYTE)
 		{
-			return (m.get2DDst()[1] == 7)  && (this.get(m.get2DSrc()).getPieceWithoutColorByte() == PieceData.PAWN_BYTE);
+			return (m.get2DDst()[1] == 7)  && (this.get(m.get2DSrc()).getPieceByte() == PieceData.PAWN_BYTE);
 		}
 		else if (color == PieceData.BLACK_BYTE)
 		{
-			return (m.get2DDst()[1] == 0)  && (this.get(m.get2DSrc()).getPieceWithoutColorByte() == PieceData.PAWN_BYTE);
+			return (m.get2DDst()[1] == 0)  && (this.get(m.get2DSrc()).getPieceByte() == PieceData.PAWN_BYTE);
 		}
 		else
 		{
@@ -634,24 +633,21 @@ public class GameManager
 			m.setPromo();
 		}
 
-		if ((deltaRank == 2) && ((m.getSrc() >> 4) == initRank) && ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceWithoutColorByte() == PieceData.EMPTY_BYTE))
+		if ((deltaRank == 2) && ((m.getSrc() >> 4) == initRank) && ((this.get(m.get2DDst()[0], m.get2DDst()[1] + 1)).getPieceByte() == PieceData.EMPTY_BYTE))
 		{
 			m.setDoublePawnPush();
 		}
 
-		if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+		if (p.getPieceByte() == PieceData.KING_BYTE)
 		{
 			// Piece is a king
-			if (!p.hasMoved())
+			if (m.getSrc() - 0x00000002 == m.getDst())
 			{
-				if (m.getSrc() - 0x00000002 == m.getDst())
-				{
-					m.setQueenSideCastle();
-				}
-				else if (m.getSrc() + 0x00000002 == m.getDst())
-				{
-					m.setKingSideCastle();
-				}
+				m.setQueenSideCastle();
+			}
+			else if (m.getSrc() + 0x00000002 == m.getDst())
+			{
+				m.setKingSideCastle();
 			}
 		}
 
@@ -665,7 +661,7 @@ public class GameManager
 		if (this.isAlmostLegalMove(p,m))
 		{
 			/*
-			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (p.getPieceByte() == PieceData.KING_BYTE)
 			{
 				System.out.println("[isLegalMove()]\tAnalyzing " + m.toString() + " by " + p.toString());
 			}
@@ -674,21 +670,21 @@ public class GameManager
 
 			if (this.isCapture(p.getColor(), m))
 			{
-				capturedPiece = this.get(m.getDst()).getPieceByte();
+				capturedPiece = this.get(m.getDst()).getDataByte();
 			}
 
 			boolean check = false;
 
-			if (this.get(m.getDst()).getPieceWithoutColorByte() != PieceData.KING_BYTE)
+			if (this.get(m.getDst()).getPieceByte() != PieceData.KING_BYTE)
 			{
 				/*
-				if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+				if (p.getPieceByte() == PieceData.KING_BYTE)
 				{
 					System.out.println("[isLegalMove()]\tMove didn't end on a king ");
 				}
 				*/
 
-				int piece = p.getPieceByte();
+				int piece = p.getDataByte();
 
 				this.cb.set(m.getDst(), piece);
 				this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
@@ -702,7 +698,7 @@ public class GameManager
 			}
 
 			/*
-			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (p.getPieceByte() == PieceData.KING_BYTE)
 			{
 				System.out.println("[isLegalMove()]\t" + m.toString() +  " leaves the king in check: " + Boolean.toString(check));
 			}
@@ -719,8 +715,8 @@ public class GameManager
 
 	public boolean isAlmostLegalMove (Piece p, Move m)
 	{
-		//System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
-		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceWithoutColorByte()));
+		System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
+		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceByte()));
 		//int src = m.getSrc();
 		//int srcFile = m.get2DSrc()[0];
 		//int srcRank = m.get2DSrc()[1];
@@ -729,7 +725,9 @@ public class GameManager
 		//int dstFile = m.get2DSrc()[0];
 		//int dstRank = m.get2DSrc()[1];
 		int color = p.getColor();
-		int piece = p.getPieceWithoutColorByte();
+		int piece = p.getPieceByte();
+
+		m = this.setFlags(p.getColor(), m);
 
 		// You can't end on one of your own pieces
 		if (this.isCollision(color, m))
@@ -738,7 +736,7 @@ public class GameManager
 			return false;
 		}
 
-		if ((this.isCapture(p.getColor(), m)) && (this.get(dst).getPieceWithoutColorByte() == PieceData.KING_BYTE))
+		if ((this.isCapture(p.getColor(), m)) && (this.get(dst).getPieceByte() == PieceData.KING_BYTE))
 		{
 			//System.out.println("[isAlmostLegalMove] " + m.toString() + " captures king");
 			return false;
@@ -746,15 +744,22 @@ public class GameManager
 
 		if (m.isKingCastle())
 		{
+			System.out.println("Analyzing King-side castle");
 			ArrayList <Piece> pieces = this.getAllPieces(p.getColor());
 			ArrayList <Piece> rooks = new ArrayList<>(2);
 
 			for (Piece r : pieces)
 			{
-				if (r.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+				if (r.getPieceByte() == PieceData.ROOK_BYTE)
 				{
 					rooks.add(r);
 				}
+			}
+
+			if (rooks.size() == 0)
+			{
+				// No more rooks left to castle with
+				return false;
 			}
 
 			for (Piece rook : rooks)
@@ -770,12 +775,12 @@ public class GameManager
 					if (p.hasMoved())
 					{
 						// King move, castling no longer possible
-						//System.out.println("[K] King moved, no castling possible");
+						System.out.println("[isAlmostLegalMove()][K] King moved, no castling possible");
 						return false;
 					}
 					else
 					{
-						if ((this.get(src + 0x0001).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src + 0x0002).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE))
+						if ((this.get(src + 0x0001).getPieceByte() != PieceData.EMPTY_BYTE) || (this.get(src + 0x0002).getPieceByte() != PieceData.EMPTY_BYTE))
 						{
 							// One of squares between king and rook is occupied
 							//System.out.println("[K] One of the spaces is occupied, no castling possible");
@@ -796,15 +801,22 @@ public class GameManager
 		}
 		else if (m.isQueenCastle())
 		{
+			System.out.println("Analyzing Queen-side castle");
 			ArrayList <Piece> pieces = this.getAllPieces(p.getColor());
 			ArrayList <Piece> rooks = new ArrayList<>(2);
 
 			for (Piece r : pieces)
 			{
-				if (r.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+				if (r.getPieceByte() == PieceData.ROOK_BYTE)
 				{
 					rooks.add(r);
 				}
+			}
+
+			if (rooks.size() == 0)
+			{
+				// No more rooks left to castle with
+				return false;
 			}
 
 			for (Piece rook : rooks)
@@ -820,12 +832,12 @@ public class GameManager
 					if (p.hasMoved())
 					{
 						// King move, castling no longer possible
-						//System.out.println("[Q] King moved, no castling possible");
+						System.out.println("[isAlmostLegalMove()][Q] King moved, no castling possible");
 						return false;
 					}
 					else
 					{
-						if ((this.get(src - 0x0001).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0002).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0003).getPieceWithoutColorByte() != PieceData.EMPTY_BYTE))
+						if ((this.get(src - 0x0001).getPieceByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0002).getPieceByte() != PieceData.EMPTY_BYTE) || (this.get(src - 0x0003).getPieceByte() != PieceData.EMPTY_BYTE))
 						{
 							// One of squares between king and rook
 							//System.out.println("[Q] Squares between king and rook occupied, no castling possible");
@@ -903,10 +915,10 @@ public class GameManager
 
 		}
 		else*/
-		if ((p.getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) && (color == this.activeColor))
+		if ((p.getPieceByte() != PieceData.EMPTY_BYTE) && (color == this.activeColor))
 		{
 			//System.out.println("NEW");
-			//int piece = p.getPieceWithoutColorByte();
+			//int piece = p.getPieceByte();
 
 			//System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
 
@@ -916,9 +928,11 @@ public class GameManager
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
+				possibleMoves.set(i, this.setFlags(color, possibleMoves.get(i)));
+
 				Move m = possibleMoves.get(i);
 
-				m = this.setFlags(color, m);
+				//System.out.println("Analyzing " + m.toString());
 
 				if (!this.isLegalMove(p, m))
 				{
@@ -929,7 +943,7 @@ public class GameManager
 			}
 
 			/*
-			if (p.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (p.getPieceByte() == PieceData.KING_BYTE)
 			{
 				//System.out.println("[getLegalMoves()]\tApproved moves: ");
 
@@ -1005,7 +1019,7 @@ public class GameManager
 
 				for (Piece p : pieces)
 				{
-					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					if (p.getPieceByte() == PieceData.ROOK_BYTE)
 					{
 						rooks.add(p);
 					}
@@ -1015,9 +1029,10 @@ public class GameManager
 				{
 					if (r.get2DCoord()[0] == 7)
 					{
-						this.cb.set(r.getPositionByte() - 0x0002, r.getPieceByte());
+						this.cb.set(r.getPositionByte() - 0x00000002, r.getDataByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
-						this.get(r.getPositionByte() - 0x0002).incMoves();
+						this.cb.set(r.getPositionByte() - 0x00000002, r.incMoves().getDataByte());
+						//this.get(r.getPositionByte() + 0x0003).incMoves();
 						break;
 
 					}
@@ -1030,7 +1045,7 @@ public class GameManager
 
 				for (Piece p : pieces)
 				{
-					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					if (p.getPieceByte() == PieceData.ROOK_BYTE)
 					{
 						rooks.add(p);
 					}
@@ -1040,16 +1055,18 @@ public class GameManager
 				{
 					if (r.get2DCoord()[0] == 0)
 					{
-						this.cb.set(r.getPositionByte() + 0x0003, r.getPieceByte());
+						this.cb.set(r.getPositionByte() + 0x00000003, r.getDataByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
-						this.get(r.getPositionByte() + 0x0003).incMoves();
+						this.cb.set(r.getPositionByte() + 0x00000003, r.incMoves().getDataByte());
+						//this.get(r.getPositionByte() + 0x00000003).incMoves();
 						break;
 
 					}
 				}
 			}
 
-			this.get(m.getSrc()).incMoves();
+			//this.get(m.getSrc()).incMoves();
+			this.cb.set(m.getSrc(), this.get(m.getSrc()).incMoves().getDataByte());
 
 			if (this.isCapture(color, m))
 			{
@@ -1059,6 +1076,8 @@ public class GameManager
 			{
 				this.moveHistory.add(new HistoryMove(m));
 			}
+
+			//System.out.println("[makeMove()]\tMoving piece: " + this.get(m.getSrc()).toString());
 
 			this.cb.set(m.getDst(), this.cb.get(m.getSrc()));
 			this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);    // Empty the source square
@@ -1155,7 +1174,7 @@ public class GameManager
 
 				for (Piece p : pieces)
 				{
-					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					if (p.getPieceByte() == PieceData.ROOK_BYTE)
 					{
 						rooks.add(p);
 					}
@@ -1167,9 +1186,10 @@ public class GameManager
 					if (r.get2DCoord()[0] == 5)
 					{
 						//System.out.println("Putting back rook");
-						this.cb.set(r.getPositionByte() + 0x0002, r.getPieceByte());
+						this.cb.set(r.getPositionByte() + 0x00000002, r.getDataByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
-						this.get(r.getPositionByte() + 0x0002).decMoves();
+						//this.get(r.getPositionByte() + 0x0002).decMoves();
+						this.cb.set(r.getPositionByte() + 0x00000002, r.decMoves().getDataByte());
 						break;
 					}
 				}
@@ -1182,7 +1202,7 @@ public class GameManager
 
 				for (Piece p : pieces)
 				{
-					if (p.getPieceWithoutColorByte() == PieceData.ROOK_BYTE)
+					if (p.getPieceByte() == PieceData.ROOK_BYTE)
 					{
 						rooks.add(p);
 					}
@@ -1196,20 +1216,20 @@ public class GameManager
 					if (r.get2DCoord()[0] == 3)
 					{
 						//System.out.println("Putting back rook");
-						this.cb.set(r.getPositionByte() - 0x0003, r.getPieceByte());
+						this.cb.set(r.getPositionByte() - 0x00000003, r.getDataByte());
 						this.cb.set(r.getPositionByte(), PieceData.EMPTY_BYTE);
-						this.get(r.getPositionByte() - 0x0003).decMoves();
+						this.cb.set(r.getPositionByte() - 0x00000003, r.decMoves().getDataByte());
 						break;
 					}
 				}
 			}
 
-			Piece piece = this.get(m.getDst());
-			this.cb.set(m.getSrc(), piece.getPieceByte());    // Empty the source square
+			Piece piece = this.get(m.getDst()).decMoves();
+			this.cb.set(m.getSrc(), piece.getDataByte());    // Empty the source square
 
 			if (this.isCapture(piece.getColor(), m))
 			{
-				this.cb.set(m.getDst(), m.getCapturedPiece().getPieceByte());
+				this.cb.set(m.getDst(), m.getCapturedPiece().getDataByte());
 			}
 			else
 			{
@@ -1245,7 +1265,7 @@ public class GameManager
 			for (Piece piece : pieces)
 			{
 				//System.out.println("[isCheckMate] found piece: " + piece.toString());
-				if (piece.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+				if (piece.getPieceByte() == PieceData.KING_BYTE)
 				{
 					king = piece;
 					break;
@@ -1272,15 +1292,15 @@ public class GameManager
 
 					if (m.isCapture())
 					{
-						capturedPiece = this.get(m.getDst()).getPieceByte();
+						capturedPiece = this.get(m.getDst()).getDataByte();
 					}
 
 					//System.out.println("Ending on: " + this.get(m.getDst()).toString());
 
-					if (this.get(m.getDst()).getPieceWithoutColorByte() != PieceData.KING_BYTE)
+					if (this.get(m.getDst()).getPieceByte() != PieceData.KING_BYTE)
 					{
 						//System.out.println("Analyzing move: " + m.toString() + " by " + this.get(m.getSrc()).toString());
-						int piece = this.get(m.getSrc()).getPieceByte();
+						int piece = this.get(m.getSrc()).getDataByte();
 						this.cb.set(m.getDst(), piece);
 						this.cb.set(m.getSrc(), PieceData.EMPTY_BYTE);
 
@@ -1338,7 +1358,7 @@ public class GameManager
 		for (Piece piece : pieces)
 		{
 			//System.out.println("[isCheck] found piece: " + piece.toString());
-			if (piece.getPieceWithoutColorByte() == PieceData.KING_BYTE)
+			if (piece.getPieceByte() == PieceData.KING_BYTE)
 			{
 				//System.out.println("King detected");
 				king = piece;

@@ -139,7 +139,7 @@ public class ChessBoard
 	 */
 	public void set (int index, int piece) throws IllegalSquareException, IllegalPieceException
 	{
-		byte bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK); // First two disable color-bits, last one disables piece-bits
+		int bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK | PieceData.COUNTER_MASK); // First two disable color-bits, last one disables piece-bits
 
 		if (((piece & bitMask) != 0) || ((piece & PieceData.PIECE_MASK) == PieceData.PIECE_MASK))
 		{
