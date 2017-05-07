@@ -28,26 +28,6 @@ public class PieceTest
 	}
 
 	@Test
-	public void getPieceByte() throws Exception
-	{
-		byte locationByte = 0x44;
-		byte[] pieceBytes = {PieceData.PAWN_BYTE, PieceData.ROOK_BYTE, PieceData.KNIGHT_BYTE, PieceData.BISHOP_BYTE, PieceData.QUEEN_BYTE, PieceData.KING_BYTE};
-		Piece p;
-		String pieceString;
-
-		for (byte pieceByte : pieceBytes)
-		{
-			pieceString = PieceData.toStringFromNum(pieceByte, PieceData.EN_UK.LOCALE_BYTE);
-			p = new Piece(pieceString, locationByte, PieceData.EN_UK.LOCALE_BYTE);
-			assertEquals(pieceByte, p.getPieceByte());
-
-			pieceString = PieceData.toShortFromNum(pieceByte, PieceData.EN_UK.LOCALE_BYTE);
-			p = new Piece(pieceString, locationByte, PieceData.EN_UK.LOCALE_BYTE);
-			assertEquals(pieceByte, p.getPieceByte());
-		}
-	}
-
-	@Test
 	public void getPositionByte() throws Exception
 	{
 		byte pieceByte = PieceData.PAWN_BYTE;
