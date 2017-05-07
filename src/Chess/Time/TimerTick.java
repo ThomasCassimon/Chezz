@@ -40,6 +40,7 @@ public class TimerTick extends TimerTask
 		{
 			timeDisplay.setText("00:00");
 			timeDisplay.setForeground(Color.RED);
+
 		}
 
 		//System.out.println("Timer: " + getPrettyTime());

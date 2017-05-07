@@ -920,11 +920,14 @@ public class GameManager
 			//System.out.println("NEW");
 			//int piece = p.getPieceByte();
 
-			//System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
+		if(this.chronometer.isRunning())
+		{
+			if ((p.getPieceWithoutColorByte() != PieceData.EMPTY_BYTE) && (color == this.activeColor))
+			{
+				//System.out.println("NEW");
+				//int piece = p.getPieceWithoutColorByte();
 
-			ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
-
-			//System.out.println("[getLegalMoves()] Generated " + Integer.toString(possibleMoves.size()) + " possible moves.");
+				//System.out.println("[getLegalMoves] chessboard: \n" + this.cb.toString());
 
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
@@ -933,14 +936,15 @@ public class GameManager
 				Move m = possibleMoves.get(i);
 
 				//System.out.println("Analyzing " + m.toString());
+				ArrayList<Move> possibleMoves = p.getAllPossibleMoves();
 
-				if (!this.isLegalMove(p, m))
-				{
-					//System.out.println("[getLegalMoves()]\tremoving: " + m.toString());
-					possibleMoves.remove(i);
-					i--;
+					if (!this.isLegalMove(p, m))
+					{
+						//System.out.println("[getLegalMoves()]\tremoving: " + m.toString());
+						possibleMoves.remove(i);
+						i--;
+					}
 				}
-			}
 
 			/*
 			if (p.getPieceByte() == PieceData.KING_BYTE)
@@ -954,7 +958,7 @@ public class GameManager
 			}
 			*/
 
-			Collections.sort(possibleMoves);
+				Collections.sort(possibleMoves);
 
 			/*System.out.println("Generated:");
 			for(Move m : possibleMoves)
@@ -962,7 +966,12 @@ public class GameManager
 				System.out.println(m.toString());
 			}*/
 
-			return possibleMoves;
+				return possibleMoves;
+			}
+			else
+			{
+				return new ArrayList<Move>();
+			}
 		}
 		else
 		{
