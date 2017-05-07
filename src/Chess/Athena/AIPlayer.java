@@ -19,16 +19,13 @@ import static java.lang.Integer.min;
 public class AIPlayer extends Player
 {
 	private static final int inf = Integer.MAX_VALUE;
-	private static final int NullMoveReduction = 2;
 	private int maxSearchDepth;
-	private int maxNullSearchDepth;
 
 	public AIPlayer(int colorByte, int maxSearchDepth)
 	{
 		super(colorByte);
 
 		this.maxSearchDepth = maxSearchDepth;
-		this.maxNullSearchDepth = maxSearchDepth;
 	}
 
 	/**
@@ -159,29 +156,6 @@ public class AIPlayer extends Player
 		{
 			int v = -inf;
 
-			/* NULL MOVE PRUNING
-			if (allowNull)
-			{
-				if (!gm.isCheckMate(color))
-				{
-					gm.toggleActivePlayer();
-					GameManager.chronometer.toggle();
-
-					v = max(v, this.alphaBeta(gm, depth - 1 - AIPlayer.NullMoveReduction, alpha, beta, false, false));
-					alpha =
-
-					gm.toggleActivePlayer();
-					GameManager.chronometer.toggle();
-
-					if (beta <= v)
-					{
-						return v;
-					}
-				}
-			}
-			// END NULL MOVE PRUNING
-			*/
-
 			ArrayList <Move> moves = gm.getAllPseudoLegalMoves(color);
 
 			for (Move m : moves)
@@ -206,28 +180,6 @@ public class AIPlayer extends Player
 		{
 			int v = inf;
 
-			/* NULL MOVE PRUNING
-			if (allowNull)
-			{
-				if (!gm.isCheckMate(color))
-				{
-					gm.toggleActivePlayer();
-					GameManager.chronometer.toggle();
-
-					v = this.alphaBeta(gm, depth - 1 - AIPlayer.NullMoveReduction, alpha, beta, true, false);
-
-					gm.toggleActivePlayer();
-					GameManager.chronometer.toggle();
-
-					if (beta <= v)
-					{
-						return v;
-					}
-				}
-			}
-			// END NULL MOVE PRUNING
-			*/
-
 			ArrayList <Move> moves = gm.getAllPseudoLegalMoves(color);
 
 			for (Move m : moves)
@@ -248,48 +200,4 @@ public class AIPlayer extends Player
 			return v;
 		}
 	}
-	/*
-	private static int negaScout(GameManager gm, int depth, int alpha, int beta, int color)
-	{
-		if (depth == 0 || gm.isCheckMate(color))
-		{
-			// Do Quiescence search here
-			return AIPlayer.scoreGame(gm, color);
-		}
-
-		System.out.println("Entered NegaScout: depth: " + depth + " alpha: " + alpha + " beta: " + beta);
-
-		int d = depth - 1;
-
-		ArrayList <Move> moves = gm.getAllPseudoLegalMoves(color);
-
-		int opponent_color =PieceData.getOpponentColor(color);
-
-		int b = beta;
-
-		for (int i = 0; i < moves.size(); i++)
-		{
-			GameManager alt = gm.makeMove(moves.get(i));
-
-			int score = -negaScout(alt, d, -b, -alpha, opponent_color);
-
-			if ((alpha < score) && (score < beta) && (1 < i))
-			{
-				// Re-search
-				score = -negaScout(alt, d, -beta,-alpha, opponent_color);
-			}
-
-			alpha = max(alpha, score);
-
-			if (alpha >= beta)
-			{
-				return alpha;
-			}
-
-			b = alpha + 1;
-		}
-
-		return alpha;
-	}
-	*/
 }
