@@ -1,22 +1,14 @@
 package Chess.UI;
 
-import Chess.Exceptions.Checked.GameOverException;
 import Chess.Game.*;
-import Chess.Time.Chronometer;
 import Chess.Utils.Parser;
 //import com.apple.eawt.Application;
 
-import javax.imageio.ImageIO;
-import javax.naming.ldap.SortResponseControl;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 
 
@@ -24,7 +16,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 {
 	private GameManager gameManager;
 
-	private JPanel panel;
+	private JPanel contentPanel;
 	private Board board;
 	private SidePanel sidePanel;
 	private MainFrame mainFrame;
@@ -37,12 +29,12 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 
 
 		//
-		panel = new JPanel();
+		contentPanel = new JPanel();
 		board = new Board(this);
 		sidePanel = new SidePanel(this);
 
 
-		panel.setBackground(UIData.BACKGROUND_COLOR);
+		contentPanel.setBackground(UIData.BACKGROUND_COLOR);
 		this.setSize(UIData.GAMEPANEL_DIMENSION);
 
 
@@ -50,10 +42,10 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
-		panel.add(board);
-		panel.add(sidePanel);
+		contentPanel.add(board);
+		contentPanel.add(sidePanel);
 
-		this.setContentPane(panel);
+		this.setContentPane(contentPanel);
 		this.initBoard();
 
 		this.setResizable(false);
@@ -414,6 +406,11 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		if (gameManager.isCheckMate(gameManager.getActiveColorByte()))
 		{
 			this.handleCheckMate();
+		}
+		if(gameManager.isStaleMate(gameManager.getActiveColorByte()))
+		{
+			this.resetHighlight();
+			JOptionPane.showConfirmDialog(this,"Stalemate! It's a draw.","Game over!",JOptionPane.CLOSED_OPTION,JOptionPane.QUESTION_MESSAGE,UIData.BK );
 		}
 		if (move.isPromotion())
 		{

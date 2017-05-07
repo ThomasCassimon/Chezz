@@ -11,7 +11,6 @@ import Chess.Utils.SettingsObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
 /**
@@ -1533,8 +1532,8 @@ public class GameManager
 	{
 		this.so = settings;
 
-		//System.out.println("Setting chronometer to " + settings.getTime_ms_W());
-		gamePanel.refreshTimePanel(settings.getTime_ms_W(),settings.getTime_ms_B());
+		//System.out.println("Setting chronometer to " + settings.getTimeMsW());
+		gamePanel.refreshTimePanel(settings.getTimeMsW(),settings.getTimeMsB());
 	}
 
 	public void startChronometer()

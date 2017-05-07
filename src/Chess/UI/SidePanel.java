@@ -84,14 +84,6 @@ public class SidePanel extends JPanel
 		this.moveInput.addMouseListener(gamePanel);
 		this.exit.addActionListener(gamePanel);
 
-		if(MainFrame.isSpecialLayout())
-		{
-			this.pause.setPreferredSize(UIData.BUTTONS_DIMENSION);
-			this.save.setPreferredSize(UIData.BUTTONS_DIMENSION);
-			this.exit.setPreferredSize(UIData.BUTTONS_DIMENSION);
-			this.undo.setPreferredSize(UIData.BUTTONS_DIMENSION);
-		}
-
 
 		this.add(leftPanel);
 		this.add(rightPanel);

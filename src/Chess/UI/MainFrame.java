@@ -84,21 +84,6 @@ public class MainFrame implements ActionListener
 
 	}
 
-
-	public static boolean isSpecialLayout()
-	{
-		String os = System.getProperty("os.name").toLowerCase();
-
-		if (os.indexOf("mac") >= 0)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
 	public GamePanel getGamePanel()
 	{
 		return this.gamePanel;

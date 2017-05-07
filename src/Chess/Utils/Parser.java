@@ -169,7 +169,14 @@ public class Parser
 
 		if(returnvalue == JFileChooser.APPROVE_OPTION)
 		{
-			file = new File(fc.getSelectedFile().getParent(), fc.getSelectedFile().getName()+ ".pgn");
+			if(!text.endsWith(".pgn"))
+			{
+				file = new File(fc.getSelectedFile().getParent(), fc.getSelectedFile().getName()+ ".pgn");
+			}
+			else
+			{
+				file = new File(fc.getSelectedFile().getParent(), fc.getSelectedFile().getName());
+			}
 
 			try
 			{
@@ -228,8 +235,8 @@ public class Parser
 				else
 				{
 					System.out.println("Chronometer values set via file");
-					so.setTime_ms_W(Long.parseLong(str));
-					so.setTime_ms_B(Long.parseLong(reader.readLine()));
+					so.setTimeMsW(Long.parseLong(str));
+					so.setTimeMsB(Long.parseLong(reader.readLine()));
 				}
 				succes = true;
 				gm.setSettings(so, mf.getGamePanel());
