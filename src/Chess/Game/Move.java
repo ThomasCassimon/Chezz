@@ -189,15 +189,6 @@ public class Move implements Comparable<Move>
 		this.special = this.special | CAPTURE_MASK;
 	}
 
-
-	/**
-	 * Resets the capture flag to 0
-	 */
-	public void resetCapture ()
-	{
-		this.special = this.special & ~CAPTURE_MASK;
-	}
-
 	/**
 	 * Sets the promo flag to 1
 	 */
@@ -214,14 +205,6 @@ public class Move implements Comparable<Move>
 	public void setQueenSideCastle ()
 	{
 		this.special |= QUEEN_SIDE_CASTLE_MASK;
-	}
-
-	/**
-	 * Resets the capture flag to 0
-	 */
-	public void resetPromo()
-	{
-		this.special = this.special & ~PROMO_MASK;
 	}
 
 	/**

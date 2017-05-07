@@ -43,9 +43,9 @@ public class AttackChecker extends Thread
 				// We found a piece that matches the given moveset and belongs to the opponent
 				Piece piece = this.gm.get(currentSquare);
 
-				if ((piece.getPieceWithoutColorByte() == this.pieceByte) && (piece.getColor() == this.opponentColor))
+				if ((piece.getPieceByte() == this.pieceByte) && (piece.getColor() == this.opponentColor))
 				{
-					//System.out.println("[attackChecker()]\tFound a " + PieceData.toStringFromNum(piece.getPieceWithoutColorByte()) + " on its moves (" + piece.toString() + ")");
+					//System.out.println("[attackChecker()]\tFound a " + PieceData.toStringFromNum(piece.getPieceByte()) + " on its moves (" + piece.toString() + ")");
 					//System.out.println("Checking for " + gm.get(tmp).toString());
 					//System.out.println("Checking attack from: " + (char) (ChessBoard.get2DCoord(tmp)[0] + 'a') + (ChessBoard.get2DCoord(tmp)[1] + 1));
 
@@ -54,7 +54,7 @@ public class AttackChecker extends Thread
 
 					//System.out.println("[attackChecker()]\tChecking move: " + m.toString());
 
-					if (this.gm.isValidMove(piece.getPieceWithoutColorByte(), piece.getColor(), m))
+					if (this.gm.isValidMove(piece.getPieceByte(), piece.getColor(), m))
 					{
 						//System.out.println("Color: " + Integer.toHexString(this.opponentColor));
 						//System.out.println(piece.toString() + " is attacking piece " + this.gm.get(index0x88));
