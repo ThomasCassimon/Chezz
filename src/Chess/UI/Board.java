@@ -220,7 +220,7 @@ public class Board extends JPanel
 	{
 		int index = getIndex(indexArr);
 
-		if ((indexArr[0] + indexArr[1]) % 2 != 0)
+		if ((indexArr[0] + indexArr[1]) % 2 == 0)
 		{
 			tiles[index].setBackground(UIData.BROWN);
 		}
