@@ -227,13 +227,4 @@ public class ChessBoard
 
 		return res;
 	}
-
-	/**
-	 * Wrapper method for {@link ChessBoard#toString()}
-	 * @param localeByte A byte representing the desired locale
-	 */
-	public void print (byte localeByte)
-	{
-		System.out.println(this.toString(localeByte));
-	}
 }

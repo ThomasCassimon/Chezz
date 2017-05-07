@@ -215,54 +215,6 @@ public class GameManager
 	}
 
 	/**
-	 * Returns an array of all pieces belonging to the white player
-	 * @return	All white pieces
-	 * @Deprecated Please use getAllPieces() with the correct color byte instead
-	 */
-	@Deprecated
-	public ArrayList<Piece> getAllWhitePieces ()
-	{
-		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
-
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				if ((this.cb.get(i, j) & PieceData.WHITE_BYTE) != 0)
-				{
-					pieces.add(new Piece (this.cb.get(i, j), i, j));
-				}
-			}
-		}
-
-		return pieces;
-	}
-
-	/**
-	 * Returns an array of all pieces belonging to the Black player
-	 * @return	All black pieces
-	 * @Deprecated Please use getAllPieces() with the correct color byte instead
-	 */
-	@Deprecated
-	public ArrayList<Piece> getAllBlackPieces ()
-	{
-		ArrayList<Piece> pieces = new ArrayList <Piece> (16);
-
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				if ((this.cb.get(i,j) & PieceData.BLACK_BYTE) != 0)
-				{
-					pieces.add(new Piece (this.cb.get(i,j), i, j));
-				}
-			}
-		}
-
-		return pieces;
-	}
-
-	/**
 	 * Requires flags to be set on the given move
 	 * @param pieceByte
 	 * @param color

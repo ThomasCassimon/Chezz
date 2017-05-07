@@ -1,6 +1,5 @@
 package Chess.Athena;
 
-import Chess.Exceptions.Checked.GameOverException;
 import Chess.Game.*;
 import Chess.Utils.Telemetry;
 
