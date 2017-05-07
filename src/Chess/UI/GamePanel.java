@@ -414,7 +414,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 		if (move.isPromotion())
 		{
-			board.getTile(board.getIndex(move.get2DSrc())).setIcon(this.handlePromotion(move.get2DSrc()));
+			board.getTile(board.getIndex(move.get2DDst())).setIcon(this.handlePromotion(move.get2DDst()));
 		}
 		if(move.isKingCastle()|move.isQueenCastle())
 		{
