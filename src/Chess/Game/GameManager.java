@@ -1224,9 +1224,15 @@ public class GameManager
 			}
 
 			Piece piece = this.get(m.getDst()).decMoves();
-			this.cb.set(m.getSrc(), piece.getDataByte());    // Empty the source square
 
-			if (this.isCapture(piece.getColor(), m))
+			if (m.isPromotion())
+			{
+				piece = new Piece((piece.getDataByte() & (~PieceData.PIECE_MASK)) | PieceData.PAWN_BYTE, piece.getPositionByte());
+			}
+
+			this.cb.set(m.getSrc(), piece.getDataByte());    // Put the piece back on the source square
+
+			if (m.isCapture())
 			{
 				this.cb.set(m.getDst(), m.getCapturedPiece().getDataByte());
 			}
