@@ -715,7 +715,7 @@ public class GameManager
 
 	public boolean isAlmostLegalMove (Piece p, Move m)
 	{
-		System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
+		//System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
 		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceByte()));
 		//int src = m.getSrc();
 		//int srcFile = m.get2DSrc()[0];

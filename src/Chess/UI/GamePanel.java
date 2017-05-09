@@ -161,7 +161,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		}
 		else if(e.getSource() == sidePanel.getExit())
 		{
-			System.out.println("Exit detected in gamepanel");
+			//System.out.println("Exit detected in gamepanel");
 			mainFrame.actionPerformed(e);
 		}
 		else if(gameManager.getChronometer().getTimeWhite() == 0)

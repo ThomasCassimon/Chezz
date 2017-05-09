@@ -65,7 +65,7 @@ public class MainFrame implements ActionListener
 			}
 			else
 			{
-				System.out.println("Exit");
+				//System.out.println("Exit");
 				int choice = JOptionPane.showConfirmDialog(gamePanel, "Are you sure you want to exit the game? All unsaved progress will be lost.", "Exit", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,UIData.BK);
 
 
