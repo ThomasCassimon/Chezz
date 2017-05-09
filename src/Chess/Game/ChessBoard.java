@@ -139,7 +139,7 @@ public class ChessBoard
 	 */
 	public void set (int index, int piece) throws IllegalSquareException, IllegalPieceException
 	{
-		byte bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK); // First two disable color-bits, last one disables piece-bits
+		int bitMask =  ~(PieceData.BLACK_BYTE | PieceData.WHITE_BYTE | PieceData.PIECE_MASK | PieceData.COUNTER_MASK); // First two disable color-bits, last one disables piece-bits
 
 		if (((piece & bitMask) != 0) || ((piece & PieceData.PIECE_MASK) == PieceData.PIECE_MASK))
 		{
@@ -226,14 +226,5 @@ public class ChessBoard
 		}
 
 		return res;
-	}
-
-	/**
-	 * Wrapper method for {@link ChessBoard#toString()}
-	 * @param localeByte A byte representing the desired locale
-	 */
-	public void print (byte localeByte)
-	{
-		System.out.println(this.toString(localeByte));
 	}
 }
