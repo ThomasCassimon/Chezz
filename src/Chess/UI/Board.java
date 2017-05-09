@@ -172,6 +172,7 @@ public class Board extends JPanel
 	}
 
 
+
 	/**
 	 * Highlights a move
 	 * @param move move to be highlighted
@@ -179,27 +180,33 @@ public class Board extends JPanel
 	public void highlightMove(Move move)
 	{
 		int i = this.getIndex(move.get2DDst());
+		int indexArr[] = move.get2DDst();
+
+		Color c = UIData.HIGHLIGHT;
 
 		if (move.isCapture())
 		{
 			if(move.isPromotion())
 			{
-				tiles[i].setBackground(UIData.CAPTURE_AND_PROMOTION);
+				c = UIData.CAPTURE_AND_PROMOTION;
 			}
 			else
 			{
-				tiles[i].setBackground(UIData.CAPTURE);
+				c = UIData.CAPTURE;
 			}
 		}
 		else if (move.isPromotion())
 		{
-			tiles[i].setBackground(UIData.PROMOTION);
-		}
-		else
-		{
-			tiles[i].setBackground(UIData.HIGHLIGHT);
+			c = UIData.PROMOTION;
 		}
 
+
+		if ((indexArr[0] + indexArr[1]) % 2 != 0)
+		{
+			c = new Color(c.getRed() + 20, c.getGreen() + 20, c.getBlue() + 20);
+		}
+
+		tiles[i].setBackground(c);
 	}
 
 
