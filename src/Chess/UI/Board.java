@@ -171,7 +171,6 @@ public class Board extends JPanel
 		return tiles[index];
 	}
 
-
 	/**
 	 * Highlights a move
 	 * @param move move to be highlighted
