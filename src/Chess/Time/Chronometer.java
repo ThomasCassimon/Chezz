@@ -278,7 +278,7 @@ public class Chronometer
 				}
 			}
 		}
-		System.out.println("[Chronometer isRunning()]  " + running );
+		//System.out.println("[Chronometer isRunning()]  " + running );
 		return this.running;
 	}
 
