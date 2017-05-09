@@ -178,6 +178,7 @@ public class Board extends JPanel
 	public void highlightMove(Move move)
 	{
 		int i = this.getIndex(move.get2DDst());
+		int indexArr[] = move.get2DDst();
 
 		Color c = UIData.HIGHLIGHT;
 
@@ -197,19 +198,8 @@ public class Board extends JPanel
 			c = UIData.PROMOTION;
 		}
 
-		if (((move.get2DDst()[0] % 2) == 0) && ((move.get2DDst()[1] % 2) == 0))
-		{
-			c = new Color(c.getRed() + 20, c.getGreen() + 20, c.getBlue() + 20);
-		}
-		else if (((move.get2DDst()[0] % 2) == 0) && ((move.get2DDst()[1] % 2) == 1))
-		{
-			//c is fine
-		}
-		else if (((move.get2DDst()[0] % 2) == 1) && ((move.get2DDst()[1] % 2) == 0))
-		{
-			// c is fine
-		}
-		else if (((move.get2DDst()[0] % 2) == 1) && ((move.get2DDst()[1] % 2) == 1))
+
+		if ((indexArr[0] + indexArr[1]) % 2 != 0)
 		{
 			c = new Color(c.getRed() + 20, c.getGreen() + 20, c.getBlue() + 20);
 		}
