@@ -63,7 +63,7 @@ public class Parser
 		else if(string.length() != 5)
 		{
 			System.out.println(string);
-			System.out.println("invalid move (too long/short)");
+			//System.out.println("invalid move (too long/short)");
 		}
 		else
 		{
@@ -85,7 +85,7 @@ public class Parser
 			piece = gm.get(source);
 			//System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
 
-			if(gm.isAlmostLegalMove(piece, move))
+			if(gm.isLegalMove(piece, move))
 			{
 				//System.out.println("[Parser]: " + move.toString());
 				return move;
@@ -93,7 +93,7 @@ public class Parser
 			else
 			{
 				System.out.println(string);
-				System.out.println("invalid move (no piece can move there)");
+				//System.out.println("invalid move (no piece can move there)");
 			}
 		}
 
@@ -190,7 +190,7 @@ public class Parser
 			}
 			catch (Exception e)
 			{
-				System.out.println("file not found");
+				//System.out.println("file not found");
 			}
 
 		}
@@ -218,23 +218,23 @@ public class Parser
 
 				if( reader.readLine().equals("1"))
 				{
-					System.out.println("Undo enabled via file");
+					//System.out.println("Undo enabled via file");
 					so.setUndo(true);
 				}
 				else
 				{
-					System.out.println("Undo disabled via file");
+					//System.out.println("Undo disabled via file");
 					so.setUndo(false);
 				}
 
 				if((str = reader.readLine()).equals("/"))
 				{
-					System.out.println("Chronometer disabled via file");
+					//System.out.println("Chronometer disabled via file");
 					gm.getChronometer().disable();
 				}
 				else
 				{
-					System.out.println("Chronometer values set via file");
+					//System.out.println("Chronometer values set via file");
 					so.setTimeMsW(Long.parseLong(str));
 					so.setTimeMsB(Long.parseLong(reader.readLine()));
 				}
@@ -242,15 +242,15 @@ public class Parser
 				gm.setSettings(so, mf.getGamePanel());
 				while((str = reader.readLine()) != null && str.length() != 0)
 				{
-					System.out.println("Read " + str);
-					System.out.println("[Parser] " + str);
+					//System.out.println("Read " + str);
+					//System.out.println("[Parser] " + str);
 					Move move = Parser.stringToMove(str, gm);
-					System.out.println("[Parser] " + move.toString());
+					//System.out.println("[Parser] " + move.toString());
 
 					gm.makeMove(move);
 				}
 
-				System.out.println("Done reading");
+				//System.out.println("Done reading");
 
 				reader.close();
 

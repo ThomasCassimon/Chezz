@@ -49,6 +49,7 @@ public class MainFrame implements ActionListener
 				//gameManager.startChronometer();
 				configurationPanel.setVisible(false);
 				gamePanel.initBoard();
+				gamePanel.setHistory();
 				gamePanel.setVisible(true);
 			}
 		}
