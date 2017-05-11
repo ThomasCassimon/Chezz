@@ -120,7 +120,7 @@ public class GameManager
 	/**
 	 * Toggles the active player
 	 */
-	public void toggleActivePlayer ()
+	private void toggleActivePlayer ()
 	{
 		//System.out.println("Toggling active playah");
 		if (this.activeColor == PieceData.WHITE_BYTE)
@@ -220,7 +220,7 @@ public class GameManager
 	 * @param m
 	 * @return
 	 */
-	public boolean isValidMove (int pieceByte, int color, Move m)
+	private boolean isValidMove (int pieceByte, int color, Move m)
 	{
 		switch(pieceByte & PieceData.PIECE_MASK)
 		{
@@ -255,7 +255,7 @@ public class GameManager
 	 * @param m The move to be checked
 	 * @return True if and only if the move is a valid bishop-type move, otherwise false
 	 */
-	public boolean isValidBishopMove (Move m)
+	private boolean isValidBishopMove (Move m)
 	{
 		//System.out.println("[isValidBishopMove()] chessboard: \n" + this.cb.toString());
 		//System.out.println("[isValidBishopMove]\tMove: " + m.toString());
@@ -302,7 +302,7 @@ public class GameManager
 	 * @param m The move to be checked
 	 * @return	True if and only if the move is a valid Rook-type move, otherwise false
 	 */
-	public boolean isValidRookMove(Move m)
+	private boolean isValidRookMove(Move m)
 	{
 		int deltaRank = (m.getDst() >> 4) - (m.getSrc() >> 4);
 		int deltaFile = (m.getDst() & PieceData.PIECE_MASK) - (m.getSrc() & PieceData.PIECE_MASK);
@@ -354,7 +354,7 @@ public class GameManager
 	 * @param m The move a pawn wishes to make
 	 * @return True if and oly if the move is a valid pawn-type move, otherwise false
 	 */
-	public boolean isValidPawnMove (int color, Move m)
+	private boolean isValidPawnMove (int color, Move m)
 	{
 		//System.out.println("Checking: " + m.toString());
 		//System.out.println("Src: " + this.get(m.getSrc()).getDataByte());
@@ -430,7 +430,7 @@ public class GameManager
 	 * @param m	The move to be analyzed
 	 * @return True of and only if the specified move is a valid king-type move, otherwise false.
 	 */
-	public boolean isValidKingMove(int color, Move m)
+	private boolean isValidKingMove(int color, Move m)
 	{
 		int opponentColor = PieceData.getOpponentColor(color);
 		int from = m.getSrc();
@@ -553,7 +553,7 @@ public class GameManager
 	 * @param m the move we're trying to make
 	 * @return True if the destination square is inhabited by an enemy piece
 	 */
-	public boolean isCapture (int color, Move m)
+	private boolean isCapture (int color, Move m)
 	{
 		//System.out.println("[isCapture] Color: " + Integer.toBinaryString(color) + " Move: " + m.toString());
 		if (this.get(m.getSrc()).getPieceByte() != PieceData.PAWN_BYTE)
@@ -576,7 +576,7 @@ public class GameManager
 	 * @param m The move to be analyzed
 	 * @return true if the pawn reaches the back rank
 	 */
-	public boolean isPromo (int color, Move m)
+	private boolean isPromo (int color, Move m)
 	{
 		if (color == PieceData.WHITE_BYTE)
 		{
@@ -598,7 +598,7 @@ public class GameManager
 	 * @param m The move to be analyzed
 	 * @return true if the destination square is owned by color
 	 */
-	public boolean isCollision (int color, Move m)
+	private boolean isCollision (int color, Move m)
 	{
 		return this.get(m.get2DDst()).getColor() == color;
 	}
@@ -713,7 +713,7 @@ public class GameManager
 		}
 	}
 
-	public boolean isAlmostLegalMove (Piece p, Move m)
+	private boolean isAlmostLegalMove (Piece p, Move m)
 	{
 		//System.out.println("[isAlmostLegalMove] checking " + m.toString() + " for " + p.toString());
 		//System.out.println("Checking " + p.toString() + " pieceByte: " + Integer.toBinaryString(p.getPieceByte()));
@@ -859,7 +859,7 @@ public class GameManager
 		return this.isValidMove(piece, color, m);
 	}
 
-	public ArrayList <Move> getAlmostLegalMoves (Piece p)
+	private ArrayList <Move> getAlmostLegalMoves (Piece p)
 	{
 		//System.out.println("[getAlmostLegalMoves] called for " + p.toString());
 		ArrayList <Move> moves = p.getAllPossibleMoves();
@@ -884,7 +884,7 @@ public class GameManager
 		return moves;
 	}
 
-	public ArrayList <Move> getAllAlmostLegalMoves (int color)
+	private ArrayList <Move> getAllAlmostLegalMoves (int color)
 	{
 		//System.out.println("[getAllAlmostLegalMoves] called for " + PieceData.getColorString(color));
 		ArrayList <Move> moves = new ArrayList<Move>();
@@ -1420,7 +1420,7 @@ public class GameManager
 		return moves;
 	}
 
-	public int isAttacked (int color, int index0x88)
+	private int isAttacked (int color, int index0x88)
 	{
 		//System.out.println("[isAttacked] color: " + Integer.toHexString(color));
 		int attacked = 0;
