@@ -24,7 +24,7 @@ public class GameManagerTest
 		gm.init();
 
 		assertEquals(PieceData.WHITE_BYTE, gm.getActiveColorByte());
-		gm.toggleActivePlayer();
+		//gm.toggleActivePlayer();
 		assertEquals(PieceData.BLACK_BYTE, gm.getActiveColorByte());
 	}
 
