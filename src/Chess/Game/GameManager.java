@@ -220,7 +220,7 @@ public class GameManager
 	 * @param m
 	 * @return
 	 */
-	private boolean isValidMove (int pieceByte, int color, Move m)
+	public boolean isValidMove (int pieceByte, int color, Move m)
 	{
 		switch(pieceByte & PieceData.PIECE_MASK)
 		{
