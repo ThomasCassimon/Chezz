@@ -135,6 +135,7 @@ public class GamePanel extends JFrame implements ActionListener, MouseListener
 		{
 			String input = sidePanel.getMoveInput().getText();
 			Move move = Parser.stringToMove(input, gameManager);
+			//move = this.gameManager.setFlags(this.gameManager.getActiveColorByte(), move);
 			//System.out.println("Move: " + move.toString());
 			//System.out.println("Move: " + move.getPrettySrcCoords() + " - " + move.getPrettyDstCoords());
 			//System.out.println("Pieces: Src: " + this.gameManager.get(move.getSrc()).toString() + " Dst: " + this.gameManager.get(move.getDst()).toString());

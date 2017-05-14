@@ -660,6 +660,7 @@ public class GameManager
 
 		if (this.isAlmostLegalMove(p,m))
 		{
+			System.out.println(m.toString() + " is almost legal");
 			/*
 			if (p.getPieceByte() == PieceData.KING_BYTE)
 			{
@@ -728,6 +729,12 @@ public class GameManager
 		int piece = p.getPieceByte();
 
 		m = this.setFlags(p.getColor(), m);
+
+		if (this.activeColor != p.getColor())
+		{
+			// It wasn't this players turn to move
+			return false;
+		}
 
 		// You can't end on one of your own pieces
 		if (this.isCollision(color, m))
