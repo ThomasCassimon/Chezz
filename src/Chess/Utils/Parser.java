@@ -80,20 +80,24 @@ public class Parser
 			//System.out.println("[PARSER] Destination: File: " + file + " Rank: " + rank);
 
 			move = new Move(source, destination,0);
-			move = gm.setFlags(gm.getActiveColorByte(), move);
 
 			piece = gm.get(source);
-			//System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
 
-			if(gm.isLegalMove(piece, move))
+			if (piece.getAllPossibleMoves().contains(move))
 			{
-				//System.out.println("[Parser]: " + move.toString());
-				return move;
-			}
-			else
-			{
-				System.out.println(string);
-				//System.out.println("invalid move (no piece can move there)");
+				move = gm.setFlags(gm.getActiveColorByte(), move);
+				//System.out.println("[PARSER] Checking move PIECE: " +piece.toString() + "MOVE: " + move.toString());
+
+				if(gm.isLegalMove(piece, move) && piece.getAllPossibleMoves().contains(move))
+				{
+					//System.out.println("[Parser]: " + move.toString());
+					return move;
+				}
+				else
+				{
+					System.out.println(string);
+					//System.out.println("invalid move (no piece can move there)");
+				}
 			}
 		}
 
@@ -107,7 +111,7 @@ public class Parser
 	 * @param move Move to be translated.
 	 * @return String with algebraic notation of the Move.
 	 */
-	public static String moveToString(Move move)
+	public static String moveToString (Move move)
 	{
 		String string = "";
 
