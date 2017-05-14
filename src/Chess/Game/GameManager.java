@@ -660,7 +660,7 @@ public class GameManager
 
 		if (this.isAlmostLegalMove(p,m))
 		{
-			System.out.println(m.toString() + " is almost legal");
+			//System.out.println(m.toString() + " is almost legal");
 			/*
 			if (p.getPieceByte() == PieceData.KING_BYTE)
 			{
@@ -751,7 +751,7 @@ public class GameManager
 
 		if (m.isKingCastle())
 		{
-			System.out.println("Analyzing King-side castle");
+			//System.out.println("Analyzing King-side castle");
 			ArrayList <Piece> pieces = this.getAllPieces(p.getColor());
 			ArrayList <Piece> rooks = new ArrayList<>(2);
 
@@ -781,7 +781,7 @@ public class GameManager
 					if (p.hasMoved())
 					{
 						// King move, castling no longer possible
-						System.out.println("[isAlmostLegalMove()][K] King moved, no castling possible");
+						//System.out.println("[isAlmostLegalMove()][K] King moved, no castling possible");
 						return false;
 					}
 					else
@@ -807,7 +807,7 @@ public class GameManager
 		}
 		else if (m.isQueenCastle())
 		{
-			System.out.println("Analyzing Queen-side castle");
+			//System.out.println("Analyzing Queen-side castle");
 			ArrayList <Piece> pieces = this.getAllPieces(p.getColor());
 			ArrayList <Piece> rooks = new ArrayList<>(2);
 
@@ -838,7 +838,7 @@ public class GameManager
 					if (p.hasMoved())
 					{
 						// King move, castling no longer possible
-						System.out.println("[isAlmostLegalMove()][Q] King moved, no castling possible");
+						//System.out.println("[isAlmostLegalMove()][Q] King moved, no castling possible");
 						return false;
 					}
 					else
