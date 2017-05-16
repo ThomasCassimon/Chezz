@@ -1,8 +1,6 @@
 package Chess.Game;
 
 /**
- * @author Thomas
- * @date 21/02/2017
  * <p>
  * Project: ChessGame
  * Package: Chess.Game

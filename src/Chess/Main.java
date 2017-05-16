@@ -8,8 +8,6 @@ import Chess.UI.MainFrame;
 import Chess.Utils.Telemetry;
 
 /**
- * @author Thomas
- * @since 20/02/2017
  *
  * Project: ChessGame
  * Package: Chess
@@ -18,25 +16,7 @@ public class Main
 {
 	public static void main (String[] args)
 	{
-		/*
-		System.out.println("Press ENTER to begin");
-		try
-		{
-			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-			in.readLine();
-		}
-		catch (IOException ioe)
-		{
-
-		}
-
-		Main.testAI();
-
-		System.exit(0);
-		*/
-
 		MainFrame mf = new MainFrame();
-
 	}
 
 	public static void testAI ()

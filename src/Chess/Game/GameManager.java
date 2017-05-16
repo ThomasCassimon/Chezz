@@ -14,8 +14,6 @@ import java.util.Collections;
 import static java.lang.Math.abs;
 
 /**
- * @author Thomas
- * @since 21/02/2017
  *
  * Project: ChessGame
  * Package: Chess.Game

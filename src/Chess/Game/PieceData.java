@@ -5,8 +5,6 @@ import Chess.Exceptions.Unchecked.IllegalColorException;
 import Chess.UI.UIData;
 
 /**
- * @author Thomas
- * @since 20/02/2017
  *
  * Project: ChessGame
  * Package: Chess.Game
