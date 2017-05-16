@@ -1,8 +1,6 @@
 package Chess.Utils;
 
-/**
- * Created by thomas on 20/04/17.
- */
+
 public class SettingsObject
 {
 	private boolean undo;

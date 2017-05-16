@@ -1,7 +1,6 @@
 package Chess.Game;
 
 /**
- * Created by thomas on 25/03/17.
  * Checks wheter or not the given square is being attacked
  * It uses the given offset-array to determine this
  * Used for parallelising GameManager.isAttacked()

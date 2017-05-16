@@ -6,8 +6,6 @@ import Chess.Exceptions.Unchecked.IllegalSideException;
 import java.util.ArrayList;
 
 /**
- * @author Thomas
- * @since 20/02/2017
  *
  * Project: ChessGame
  * Package: Chess.Game

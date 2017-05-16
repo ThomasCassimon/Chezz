@@ -4,8 +4,7 @@ import Chess.Exceptions.Unchecked.IllegalPieceException;
 import Chess.Exceptions.Unchecked.IllegalSquareException;
 
 /**
- * @author Thomas
- * @since 20/02/2017
+ *
  *
  * Project: ChessGame
  * Package: Chess.Game
