@@ -90,13 +90,11 @@ public class Parser
 
 				if(gm.isLegalMove(piece, move))
 				{
-					System.out.println("Move is possible and legel");
 					//System.out.println("[Parser]: " + move.toString());
 					return move;
 				}
 				else
 				{
-					System.out.println("Move is possible but nog legal");
 					System.out.println(string);
 					//System.out.println("invalid move (no piece can move there)");
 				}
